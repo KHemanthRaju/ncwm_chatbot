@@ -17,3 +17,74 @@ export const COGNITO_CONFIG = {
 // Feature flags
 export const ALLOW_FILE_UPLOAD = true;
 export const ALLOW_MARKDOWN_BOT = true;
+
+// Feature flags
+export const ALLOW_MULTLINGUAL_TOGGLE = true;
+export const ALLOW_LANDING_PAGE = true;
+
+// UI Color constants
+export const HEADER_TEXT_GRADIENT = 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)';
+export const BOTMESSAGE_BACKGROUND = '#f5f5f5';
+export const ABOUT_US_HEADER_BACKGROUND = '#e3f2fd';
+export const FAQ_HEADER_BACKGROUND = '#fff3e0';
+
+// Landing page text for multilingual support
+export const LANDING_PAGE_TEXT = {
+  EN: {
+    CHOOSE_LANGUAGE: 'Choose Your Language',
+    ENGLISH: 'English',
+    SPANISH: 'Spanish',
+    SAVE_CONTINUE: 'Save and Continue'
+  },
+  ES: {
+    CHOOSE_LANGUAGE: 'Elige tu idioma',
+    ENGLISH: 'Inglés',
+    SPANISH: 'Español',
+    SAVE_CONTINUE: 'Guardar y continuar'
+  }
+};
+
+// UI Text constants
+export const TEXT = {
+  EN: {
+    CHAT_TITLE: 'Blueberry Farming Assistant',
+    PLACEHOLDER: 'Type your message...',
+    SEND_BUTTON: 'Send',
+    ABOUT_US_TITLE: 'About Us',
+    ABOUT_US_TEXT: 'We provide AI-powered assistance for blueberry farmers.',
+    FAQ_TITLE: 'Frequently Asked Questions'
+  },
+  ES: {
+    CHAT_TITLE: 'Asistente de Cultivo de Arándanos',
+    PLACEHOLDER: 'Escribe tu mensaje...',
+    SEND_BUTTON: 'Enviar',
+    ABOUT_US_TITLE: 'Sobre Nosotros',
+    ABOUT_US_TEXT: 'Proporcionamos asistencia impulsada por IA para cultivadores de arándanos.',
+    FAQ_TITLE: 'Preguntas Frecuentes'
+  }
+};
+
+export const ABOUT_US_TEXT = TEXT;
+export const FAQ_TEXT = {
+  EN: [
+    { question: 'How do I plant blueberries?', answer: 'Plant blueberries in acidic soil with good drainage...' },
+    { question: 'What is the best fertilizer?', answer: 'Use an acidic fertilizer designed for blueberries...' }
+  ],
+  ES: [
+    { question: '¿Cómo planto arándanos?', answer: 'Plante arándanos en suelo ácido con buen drenaje...' },
+    { question: '¿Cuál es el mejor fertilizante?', answer: 'Use un fertilizante ácido diseñado para arándanos...' }
+  ]
+};
+
+export const SWITCH_TEXT = {
+  EN: {
+    LANGUAGE_SWITCH: 'Switch to Spanish',
+    CHAT: 'Chat',
+    ADMIN: 'Admin'
+  },
+  ES: {
+    LANGUAGE_SWITCH: 'Cambiar a inglés',
+    CHAT: 'Chat',
+    ADMIN: 'Administrador'
+  }
+};
