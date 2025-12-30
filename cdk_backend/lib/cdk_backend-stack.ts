@@ -209,9 +209,13 @@ export class BlueberryStackLatest extends cdk.Stack {
       description: 'Production alias for the agent',
     })
 
-    const senderIdentity = new ses.EmailIdentity(this, 'SenderIdentity', {
-      identity: ses.Identity.email(adminEmail),
-    });
+    // Import existing SES email identity instead of creating a new one
+    // This prevents conflicts if the email identity already exists
+    const senderIdentity = ses.EmailIdentity.fromEmailIdentityName(
+      this,
+      'SenderIdentity',
+      adminEmail
+    );
 
     const notificationFn = new lambda.Function(this, 'NotifyAdminFn', {
       runtime: lambda.Runtime.PYTHON_3_12,
