@@ -1,5 +1,5 @@
 // src/Components/AdminLogin.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   TextField,
@@ -10,11 +10,20 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Logo from "../Assets/logo.svg";
-import {
-  CognitoUser,
-  AuthenticationDetails
-} from "amazon-cognito-identity-js";
-import UserPool from "../utilities/cognitoConfig";
+import { Amplify } from 'aws-amplify';
+import { signIn, fetchAuthSession } from 'aws-amplify/auth';
+import { COGNITO_CONFIG } from '../utilities/constants';
+
+// Configure Amplify
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      userPoolId: COGNITO_CONFIG.userPoolId,
+      userPoolClientId: COGNITO_CONFIG.userPoolWebClientId,
+      region: COGNITO_CONFIG.region
+    }
+  }
+});
 
 function AdminLogin() {
   const [fullName, setFullName] = useState("");
@@ -22,78 +31,40 @@ function AdminLogin() {
   const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setLoginError("");
-    const user = new CognitoUser({
-      Username: fullName,
-      Pool: UserPool,
-    });
-    const authDetails = new AuthenticationDetails({
-      Username: fullName,
-      Password: password,
-    });
+    try {
+      const { isSignedIn, nextStep } = await signIn({
+        username: fullName,
+        password: password
+      });
 
-    user.authenticateUser(authDetails, {
-      onSuccess: (session) => {
-        // Successful login with permanent password
-        const accessToken = session.getAccessToken().getJwtToken();
-        const idToken     = session.getIdToken().getJwtToken();
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("idToken",     idToken);
-        navigate("/admin-dashboard", { replace: true });
-      },
+      if (isSignedIn) {
+        // Get tokens
+        const session = await fetchAuthSession();
+        const accessToken = session.tokens?.accessToken?.toString();
+        const idToken = session.tokens?.idToken?.toString();
 
-      onFailure: (err) => {
-        setLoginError(err.message || "Authentication failed");
-      },
-
-      newPasswordRequired: (userAttributes, requiredAttributes) => {
-        // 1) Prompt for the new password
+        if (accessToken && idToken) {
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("idToken", idToken);
+          navigate("/admin-dashboard", { replace: true });
+        }
+      } else if (nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
         const newPass = window.prompt(
           "Your password must be reset. Please enter a new password:"
         );
-        if (!newPass) {
+        if (newPass) {
+          // Handle new password requirement
+          setLoginError("Password reset required. Please contact administrator.");
+        } else {
           setLoginError("A new password is required to continue.");
-          return;
         }
-
-        // 2) Prompt for *all* other required attributes
-        const updatedAttrs = {};
-        requiredAttributes.forEach((attrName) => {
-          const cleanName = attrName.replace(/^custom:/, "");
-          const val = window.prompt(
-            `Please enter ${cleanName.replace(/_/g, " ")}:`
-          );
-          if (val) {
-            updatedAttrs[attrName] = val;
-          } else {
-            setLoginError(`You must supply ${cleanName} to continue.`);
-          }
-        });
-
-        // 3) Remove immutable attributes
-        delete userAttributes.email_verified;
-
-        // 4) Complete the challenge
-        user.completeNewPasswordChallenge(
-          newPass,
-          updatedAttrs,
-          {
-            onSuccess: (session) => {
-              // Now permanent password is set
-              const accessToken = session.getAccessToken().getJwtToken();
-              const idToken     = session.getIdToken().getJwtToken();
-              localStorage.setItem("accessToken", accessToken);
-              localStorage.setItem("idToken",     idToken);
-              navigate("/admin-dashboard", { replace: true });
-            },
-            onFailure: (err) => {
-              setLoginError(err.message || "Failed to set new password");
-            },
-          }
-        );
-      },
-    });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setLoginError(error.message || "Authentication failed");
+    }
   };
 
   return (
