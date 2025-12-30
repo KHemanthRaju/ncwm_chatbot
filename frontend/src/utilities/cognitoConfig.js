@@ -1,13 +1,11 @@
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import { COGNITO_CONFIG } from './constants';
 
-const cognitoConfig = {
-  Auth: {
-    Cognito: {
-      userPoolId: COGNITO_CONFIG.userPoolId,
-      userPoolClientId: COGNITO_CONFIG.userPoolWebClientId,
-      region: COGNITO_CONFIG.region
-    }
-  }
+const poolData = {
+  UserPoolId: COGNITO_CONFIG.userPoolId,
+  ClientId: COGNITO_CONFIG.userPoolWebClientId
 };
 
-export default cognitoConfig;
+const UserPool = new CognitoUserPool(poolData);
+
+export default UserPool;
