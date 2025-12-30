@@ -122,10 +122,40 @@ function AdminLogin() {
             fontSize: "1rem",
             borderRadius: "8px",
             boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
+            mb: 2
           }}
         >
           Login
         </Button>
+
+        <Button
+          variant="outlined"
+          onClick={() => {
+            // Set guest mode flags
+            localStorage.setItem("guestMode", "true");
+            localStorage.setItem("accessToken", "guest-demo-token");
+            localStorage.setItem("idToken", "guest-demo-token");
+            navigate("/admin/dashboard", { replace: true });
+          }}
+          sx={{
+            borderColor: "#D63F09",
+            color: "#D63F09",
+            "&:hover": {
+              borderColor: "#B53207",
+              backgroundColor: "rgba(214, 63, 9, 0.04)"
+            },
+            fontWeight: "bold",
+            padding: "0.75rem 2rem",
+            fontSize: "1rem",
+            borderRadius: "8px",
+          }}
+        >
+          Continue as Guest
+        </Button>
+
+        <Typography variant="caption" sx={{ mt: 2, color: "text.secondary" }}>
+          Guest mode provides read-only access for demonstration purposes
+        </Typography>
       </Container>
     </>
   );
