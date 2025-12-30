@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Typography, Radio, RadioGroup, FormControlLabel } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import AppHeader from './AppHeader';
 import ChatHeader from './ChatHeader'; // Import ChatHeader
 import { useLanguage } from '../utilities/LanguageContext';
@@ -11,6 +12,7 @@ const LandingPage = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('EN');
   const { setLanguage } = useLanguage();
   const [, setCookie] = useCookies(['language']);
+  const navigate = useNavigate();
 
   const handleLanguageChange = (event) => {
     setSelectedLanguage(event.target.value);
@@ -19,7 +21,7 @@ const LandingPage = () => {
   const handleSaveLanguage = () => {
     setLanguage(selectedLanguage);
     setCookie('language', selectedLanguage, { path: '/' });
-    window.location.reload(); // Reload the page to apply the new language setting
+    navigate('/chat'); // Navigate to chat page after saving language preference
   };
 
   const texts = LANDING_PAGE_TEXT[selectedLanguage];
