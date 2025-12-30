@@ -26,16 +26,16 @@ function LeftNav({ showLeftNav = true, setLeftNav }) {
                 <Typography variant="h6" sx={{fontWeight:"bold"}} color={ABOUT_US_HEADER_BACKGROUND}>{TEXT["EN"].ABOUT_US_TITLE}</Typography>
               </Grid>
               <Grid item>
-                <Typography variant="subtitle1" color={ABOUT_US_TEXT} >{TEXT["EN"].ABOUT_US}</Typography>
+                <Typography variant="subtitle1">{TEXT["EN"].ABOUT_US_TEXT}</Typography>
               </Grid>
               <Grid item>
                 <Typography variant="h6" sx={{fontWeight:"bold"}} color={FAQ_HEADER_BACKGROUND}>{TEXT["EN"].FAQ_TITLE}</Typography>
               </Grid>
               <Grid item>
                 <ul >
-                  {TEXT["EN"].FAQS.map((question, index) => (
+                  {FAQ_TEXT["EN"].map((faq, index) => (
                     <li key={index} >
-                      <Typography variant="subtitle1" color={FAQ_TEXT}>{question}</Typography>
+                      <Typography variant="subtitle1">{faq.question}</Typography>
                     </li>
                   ))}
                 </ul>
