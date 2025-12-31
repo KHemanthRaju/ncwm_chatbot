@@ -26,22 +26,17 @@ import { getIdToken } from "../utilities/auth";
 const ANALYTICS_API = `${DOCUMENTS_API}session-logs`;
 
 const defaultCategories = [
-  "Chemical Registrations and MRL's",
-  "Disease",
-  "Economics",
-  "Field Establishment",
-  "Harvest",
-  "Insects",
-  "Irrigation",
-  "Nutrition",
-  "Pest Management Guide",
-  "Pollination",
-  "Post Harvest Handling, Cold Chain",
-  "Production",
-  "Pruning",
-  "Sanitation",
-  "Varietal Information",
-  "Weeds",
+  "Training & Courses",
+  "Instructor Certification",
+  "Learner Support",
+  "Administrative Procedures",
+  "Course Materials",
+  "MHFA Connect Platform",
+  "Recertification",
+  "Mental Health Resources",
+  "Scheduling & Registration",
+  "Policies & Guidelines",
+  "Technical Support",
   "Unknown",
 ];
 
@@ -201,7 +196,7 @@ export default function AdminAnalytics() {
         {/* ─── Right column: map & user count ─── */}
         <Grid item xs={5} sx={{ p: 2 }}>
           <Typography variant="h6" gutterBottom>
-            Grower Location:
+            User Locations:
           </Typography>
           <MapContainer
             center={[39.8283, -98.5795]}
@@ -221,7 +216,7 @@ export default function AdminAnalytics() {
                       <div>{loc}</div>
                       <div>
                         {locationCounts[loc]}{" "}
-                        {locationCounts[loc] === 1 ? "grower" : "growers"}
+                        {locationCounts[loc] === 1 ? "user" : "users"}
                       </div>
                     </Popup>
                   </Marker>

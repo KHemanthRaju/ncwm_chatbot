@@ -9,7 +9,9 @@ import nationalCouncilTheme from './theme/nationalCouncilTheme';
 import LandingPage from './Components/LandingPage';
 import ChatBody from './Components/ChatBody';
 import AdminLogin from './Components/AdminLogin';
-import AdminMain from './Components/AdminMain';
+import AdminDashboard from './Components/AdminDashboard';
+import ManageDocuments from './Components/ManageDocuments';
+import AdminAnalytics from './Components/AdminAnalytics';
 
 function App() {
   return (
@@ -23,7 +25,9 @@ function App() {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/chat" element={<ChatBody />} />
                 <Route path="/admin" element={<AdminLogin />} />
-                <Route path="/admin/dashboard" element={<AdminMain />} />
+                <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                <Route path="/admin-documents" element={<ManageDocuments />} />
+                <Route path="/admin-analytics" element={<AdminAnalytics />} />
               </Routes>
             </Router>
           </TranscriptProvider>
