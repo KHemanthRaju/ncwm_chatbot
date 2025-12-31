@@ -1,17 +1,17 @@
 // API Endpoints Configuration
-// These values are obtained from the deployed AWS infrastructure
+// These values are obtained from environment variables set by AWS Amplify
 
 // WebSocket API endpoint for real-time chat communication
-export const WEBSOCKET_API = 'wss://t8lev2pyz0.execute-api.us-west-2.amazonaws.com/production';
+export const WEBSOCKET_API = process.env.REACT_APP_WEBSOCKET_API || 'wss://t8lev2pyz0.execute-api.us-west-2.amazonaws.com/production';
 
 // REST API endpoint for admin operations (file management, analytics)
-export const DOCUMENTS_API = 'https://tuvw7wkl4l.execute-api.us-west-2.amazonaws.com/prod/';
+export const DOCUMENTS_API = process.env.REACT_APP_ANALYTICS_API || 'https://tuvw7wkl4l.execute-api.us-west-2.amazonaws.com/prod/';
 
 // Cognito configuration for authentication
 export const COGNITO_CONFIG = {
-  userPoolId: 'us-west-2_F4rwE0BpC',
-  userPoolWebClientId: '42vl26qpi5kkch11ejg1747mj8',
-  region: 'us-west-2'
+  userPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID || 'us-west-2_F4rwE0BpC',
+  userPoolWebClientId: process.env.REACT_APP_COGNITO_CLIENT_ID || '42vl26qpi5kkch11ejg1747mj8',
+  region: process.env.REACT_APP_AWS_REGION || 'us-west-2'
 };
 
 // Feature flags
