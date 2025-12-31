@@ -1,42 +1,66 @@
-import React, { useState } from "react";
-import { TextField, Grid, IconButton } from "@mui/material";
+import React, { useState, useRef, useEffect } from "react";
+import { TextField, Box, IconButton, CircularProgress } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useTheme } from "@mui/material/styles";
-import { useLanguage } from "../utilities/LanguageContext";
-import { TEXT } from "../utilities/constants";
 
-function ChatInput({ onSendMessage, processing }) {
-  const [message, setMessage] = useState("");
-  const [helperText, setHelperText] = useState("");
-  const { language } = useLanguage();
+function ChatInput({ onSendMessage, processing, message, setMessage }) {
+  const [isFocused, setIsFocused] = useState(false);
   const theme = useTheme();
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    // Auto-focus on mount
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   const handleTyping = (event) => {
-    if (helperText) {
-      setHelperText("");
-    }
     setMessage(event.target.value);
   };
 
   const handleSendMessage = () => {
-    if (message.trim() !== "") {
+    if (message?.trim() !== "" && !processing) {
       onSendMessage(message);
       setMessage("");
-    } else {
-      setHelperText(TEXT[language].HELPER_TEXT);
     }
   };
 
   return (
-    <Grid container item xs={12} alignItems="center" className="sendMessageContainer">
-      <Grid item xs={11.5}>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'flex-end',
+        gap: 1.5,
+        position: 'relative',
+      }}
+    >
+      <Box
+        sx={{
+          flex: 1,
+          position: 'relative',
+          backgroundColor: theme.palette.background.paper,
+          borderRadius: '24px',
+          border: `2px solid ${isFocused ? theme.palette.primary.main : theme.palette.divider}`,
+          transition: 'all 0.3s ease',
+          boxShadow: isFocused ? '0 4px 12px rgba(234, 94, 41, 0.15)' : '0 2px 6px rgba(0,0,0,0.08)',
+          '&:hover': {
+            borderColor: theme.palette.primary.light,
+            boxShadow: '0 4px 12px rgba(234, 94, 41, 0.12)',
+          },
+        }}
+      >
         <TextField
+          inputRef={inputRef}
           multiline
           maxRows={4}
           fullWidth
-          placeholder={TEXT["EN"].CHAT_INPUT_PLACEHOLDER}
+          placeholder={!processing ? "Type your message here... (Press Enter to send, Shift+Enter for new line)" : "Processing..."}
           id="USERCHATINPUT"
-          value={message}
+          value={message || ""}
+          disabled={processing}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey && !processing) {
               e.preventDefault();
@@ -44,35 +68,63 @@ function ChatInput({ onSendMessage, processing }) {
             }
           }}
           onChange={handleTyping}
-          helperText={helperText}
-          sx={{ "& fieldset": { border: "none" } }}
-        />
-      </Grid>
-      <Grid item xs={0.5}>
-        <IconButton
-          aria-label="send"
-          disabled={processing}
-          onClick={handleSendMessage}
           sx={{
-            backgroundColor: theme.palette.primary.main,
-            color: "white",
-            width: "48px",
-            height: "48px",
-            borderRadius: "50%",
-            boxShadow: '0 2px 8px rgba(234, 94, 41, 0.3)',
-            "&:hover": {
-              backgroundColor: '#CB5223',
-              boxShadow: '0 4px 12px rgba(234, 94, 41, 0.4)',
+            "& .MuiOutlinedInput-root": {
+              padding: "14px 20px",
+              fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
+              fontSize: '0.95rem',
+              "& fieldset": {
+                border: "none",
+              },
             },
-            "&:disabled": {
-              backgroundColor: theme.palette.grey[300],
+            "& .MuiInputBase-input": {
+              "&::placeholder": {
+                color: theme.palette.text.secondary,
+                opacity: 0.7,
+                fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
+              },
+            },
+            "& .MuiInputBase-input.Mui-disabled": {
+              WebkitTextFillColor: theme.palette.text.disabled,
             },
           }}
-        >
-          <SendIcon />
-        </IconButton>
-      </Grid>
-    </Grid>
+        />
+      </Box>
+
+      <IconButton
+        aria-label="send"
+        disabled={processing || !message?.trim()}
+        onClick={handleSendMessage}
+        sx={{
+          backgroundColor: theme.palette.primary.main,
+          color: "white",
+          width: "52px",
+          height: "52px",
+          borderRadius: "50%",
+          boxShadow: '0 4px 12px rgba(234, 94, 41, 0.3)',
+          transition: 'all 0.3s ease',
+          "&:hover": {
+            backgroundColor: '#CB5223',
+            boxShadow: '0 6px 16px rgba(234, 94, 41, 0.4)',
+            transform: 'scale(1.05)',
+          },
+          "&:active": {
+            transform: 'scale(0.95)',
+          },
+          "&:disabled": {
+            backgroundColor: theme.palette.grey[300],
+            color: theme.palette.grey[500],
+            boxShadow: 'none',
+          },
+        }}
+      >
+        {processing ? (
+          <CircularProgress size={24} sx={{ color: 'white' }} />
+        ) : (
+          <SendIcon sx={{ fontSize: 24 }} />
+        )}
+      </IconButton>
+    </Box>
   );
 }
 
