@@ -30,23 +30,28 @@ export class LearningNavigatorStack extends cdk.Stack {
     const githubRepo = this.node.tryGetContext('githubRepo');
     const adminEmail = this.node.tryGetContext('adminEmail');
 
-    if (!githubToken || !githubOwner || !githubRepo || !adminEmail) {
+    // Validate required parameters (githubToken is optional for public repos)
+    if (!githubOwner || !githubRepo || !adminEmail) {
       throw new Error(
-        'Please provide all required context values: ' +
-        'githubToken, githubOwner, githubRepo, and adminEmail.\n' +
+        'Please provide required context values: ' +
+        'githubOwner, githubRepo, and adminEmail.\n' +
         'Example: cdk deploy ' +
-        '-c githubToken=your-github-token ' +
         '-c githubOwner=your-github-owner ' +
         '-c githubRepo=your-github-repo ' +
-        '-c adminEmail=alerts@yourdomain.com'
+        '-c adminEmail=alerts@yourdomain.com\n' +
+        'Note: githubToken is optional for public repositories'
       );
     }
 
-    const githubToken_secret_manager = new secretsmanager.Secret(this, 'GitHubToken2', {
-      secretName: 'github-secret-token',
-      description: 'GitHub Personal Access Token for Amplify',
-      secretStringValue: cdk.SecretValue.unsafePlainText(githubToken)
-    });
+    // Create GitHub token secret only if token is provided (for private repos)
+    let githubToken_secret_manager: secretsmanager.Secret | undefined;
+    if (githubToken) {
+      githubToken_secret_manager = new secretsmanager.Secret(this, 'GitHubToken2', {
+        secretName: 'github-secret-token',
+        description: 'GitHub Personal Access Token for Amplify',
+        secretStringValue: cdk.SecretValue.unsafePlainText(githubToken)
+      });
+    }
 
     const aws_region = cdk.Stack.of(this).region;
     const accountId = cdk.Stack.of(this).account;
@@ -636,12 +641,19 @@ export class LearningNavigatorStack extends cdk.Stack {
     });
 
 
+    // Configure Amplify source code provider based on repo visibility
+    const sourceCodeProviderConfig: any = {
+      owner: githubOwner,
+      repository: githubRepo,
+    };
+
+    // Add oauthToken only for private repositories
+    if (githubToken_secret_manager) {
+      sourceCodeProviderConfig.oauthToken = githubToken_secret_manager.secretValue;
+    }
+
     const amplifyApp = new amplify.App(this, 'LearningNavigatorUI', {
-      sourceCodeProvider: new amplify.GitHubSourceCodeProvider({
-        owner: githubOwner,
-        repository: githubRepo,
-        oauthToken: githubToken_secret_manager.secretValue
-      }),
+      sourceCodeProvider: new amplify.GitHubSourceCodeProvider(sourceCodeProviderConfig),
       buildSpec: cdk.aws_codebuild.BuildSpec.fromObjectToYaml({
         version: '1.0',
         frontend: {
@@ -692,7 +704,11 @@ export class LearningNavigatorStack extends cdk.Stack {
     mainBranch.addEnvironment('REACT_APP_COGNITO_CLIENT_ID',    userPoolClient.userPoolClientId);
     mainBranch.addEnvironment('REACT_APP_ANALYTICS_API',       AdminApi.url);
     mainBranch.addEnvironment('REACT_APP_AWS_REGION',          this.region);
-    githubToken_secret_manager.grantRead(amplifyApp);
+
+    // Grant secret read access only if using a private repository
+    if (githubToken_secret_manager) {
+      githubToken_secret_manager.grantRead(amplifyApp);
+    }
 
 
     const triggerAmplifyBuild = new AwsCustomResource(this, 'TriggerAmplifyBuild', {

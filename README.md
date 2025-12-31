@@ -44,13 +44,15 @@ The application features a serverless architecture built on AWS services, with r
   4. Wait for the forking process to complete
   5. You'll now have your own copy at https://github.com/YOUR-USERNAME/ncwm_chatbot_2
 
-- Obtain a GitHub personal access token with repo permissions (needed for CDK deployment):
-  1. Go to GitHub Settings > Developer Settings > Personal Access Tokens > Tokens (classic)
-  2. Click "Generate new token (classic)"
-  3. Give the token a name and select the "repo" and "admin:repo_hook" scope
-  4. Click "Generate token" and save the token securely
-  For detailed instructions, see:
-  - https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+- **(Optional)** Obtain a GitHub personal access token (only required for private repositories):
+  - **Note**: If your repository is public, you can skip this step
+  - For private repositories only:
+    1. Go to GitHub Settings > Developer Settings > Personal Access Tokens > Tokens (classic)
+    2. Click "Generate new token (classic)"
+    3. Give the token a name and select the "repo" and "admin:repo_hook" scope
+    4. Click "Generate token" and save the token securely
+  - For detailed instructions, see:
+    - https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 
 - Verify your admin email in SES:
   1. AWS Console → SES → Verified Identities
@@ -155,20 +157,34 @@ npm install
 
 4. Bootstrap CDK:
 ```bash
+# For public repositories (recommended):
+cdk bootstrap --all \
+  -c githubOwner=YOUR_GITHUB_USERNAME \
+  -c githubRepo=ncwm_chatbot_2 \
+  -c adminEmail=YOUR_ADMIN_EMAIL
+
+# For private repositories (add githubToken):
 cdk bootstrap --all \
   -c githubToken=YOUR_GITHUB_TOKEN \
   -c githubOwner=YOUR_GITHUB_USERNAME \
-  -c adminEmail=YOUR_ADMIN_EMAIL \
-  -c githubRepo=ncwm_chatbot_2
+  -c githubRepo=ncwm_chatbot_2 \
+  -c adminEmail=YOUR_ADMIN_EMAIL
 ```
 
 5. Deploy the stack:
 ```bash
+# For public repositories (recommended):
+cdk deploy --all \
+  -c githubOwner=YOUR_GITHUB_USERNAME \
+  -c githubRepo=ncwm_chatbot_2 \
+  -c adminEmail=YOUR_ADMIN_EMAIL
+
+# For private repositories (add githubToken):
 cdk deploy --all \
   -c githubToken=YOUR_GITHUB_TOKEN \
   -c githubOwner=YOUR_GITHUB_USERNAME \
-  -c adminEmail=YOUR_ADMIN_EMAIL \
-  -c githubRepo=ncwm_chatbot_2
+  -c githubRepo=ncwm_chatbot_2 \
+  -c adminEmail=YOUR_ADMIN_EMAIL
 ```
 
 ## Usage
