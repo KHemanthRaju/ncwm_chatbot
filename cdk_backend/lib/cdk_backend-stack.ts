@@ -59,10 +59,8 @@ export class BlueberryStackLatest extends cdk.Stack {
     const lambdaArchitecture = hostArchitecture === 'arm64' ? lambda.Architecture.ARM_64 : lambda.Architecture.X86_64;
     console.log(`Lambda architecture: ${lambdaArchitecture}`);
 
-    const BlueberryData = new s3.Bucket(this, 'BlueberryData', {
-      enforceSSL: true,
-      removalPolicy: cdk.RemovalPolicy.RETAIN, 
-    });
+    // Import existing S3 bucket for knowledge base data source
+    const BlueberryData = s3.Bucket.fromBucketName(this, 'BlueberryData', 'national-council-s3-pdfs');
 
     const emailBucket = new s3.Bucket(this, 'emailBucket', {
       enforceSSL: true,
