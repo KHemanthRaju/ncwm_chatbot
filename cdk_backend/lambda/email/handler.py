@@ -2,9 +2,15 @@ import os
 import json
 import boto3
 from datetime import datetime
+from uuid import uuid4
 
 # lambda function created based on https://docs.aws.amazon.com/bedrock/latest/userguide/agents-lambda.html#agents-lambda-response
 ses = boto3.client("ses")
+dynamodb = boto3.resource("dynamodb")
+
+# Get table name from environment
+ESCALATED_TABLE = os.environ.get("ESCALATED_QUERIES_TABLE", "NCMWEscalatedQueries")
+escalated_table = dynamodb.Table(ESCALATED_TABLE)
 
 def lambda_handler(event, context):
     print("Event keys:", list(event.keys()))
@@ -46,11 +52,14 @@ def lambda_handler(event, context):
     print(f"Parsed → email:{email}  querytext:{querytext}  agentResponse:{agent_response}")
 
     # ---------------------------------------------------------------------
-    # 2.  BUSINESS LOGIC: Notify admin via SES
+    # 2.  BUSINESS LOGIC: Notify admin via SES and store in DynamoDB
     # ---------------------------------------------------------------------
     try:
         src   = os.environ["VERIFIED_SOURCE_EMAIL"]
         admin = os.environ["ADMIN_EMAIL"]
+
+        timestamp = datetime.utcnow().isoformat() + "Z"
+        query_id = str(uuid4())
 
         body = (
             f"Hello Admin,\n\n"
@@ -58,7 +67,8 @@ def lambda_handler(event, context):
             f"  • User Email: {email}\n"
             f"  • Original Question: {querytext}\n"
             f"  • Agent's Response: {agent_response}\n\n"
-            f"Timestamp: {datetime.utcnow().isoformat()}Z\n\n"
+            f"Query ID: {query_id}\n"
+            f"Timestamp: {timestamp}\n\n"
             "Thanks,\nLearning Navigator bot"
         )
 
@@ -71,11 +81,27 @@ def lambda_handler(event, context):
                 "Body":    {"Text": {"Data": body}}
             }
         )
+
+        # Store in DynamoDB
+        print(f"Storing escalated query in DynamoDB table: {ESCALATED_TABLE}")
+        escalated_table.put_item(
+            Item={
+                'query_id': query_id,
+                'timestamp': timestamp,
+                'user_email': email,
+                'question': querytext,
+                'agent_response': agent_response,
+                'status': 'pending',  # pending, in_progress, resolved
+                'admin_email': admin,
+                'created_at': timestamp
+            }
+        )
+
         ses_fail = False
         result_msg = "Admin has been notified successfully."
 
     except Exception as exc:
-        print("SES error:", exc, flush=True)
+        print("Error:", exc, flush=True)
         ses_fail   = True
         result_msg = f"Failed to notify admin: {exc}"
 

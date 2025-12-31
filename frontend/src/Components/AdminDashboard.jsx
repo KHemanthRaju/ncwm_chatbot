@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import {
   Description as DocumentIcon,
   Analytics as AnalyticsIcon,
-  Psychology as PsychologyIcon
+  Psychology as PsychologyIcon,
+  NotificationsActive as NotificationIcon
 } from "@mui/icons-material";
 
 function AdminDashboard() {
@@ -63,9 +64,9 @@ function AdminDashboard() {
       </Box>
 
       {/* Action Cards */}
-      <Container maxWidth="md">
+      <Container maxWidth="lg">
         <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <Card
               onClick={() => navigate("/admin-documents")}
               sx={{
@@ -120,7 +121,7 @@ function AdminDashboard() {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <Card
               onClick={() => navigate("/admin-analytics")}
               sx={{
@@ -170,6 +171,61 @@ function AdminDashboard() {
                   }}
                 >
                   View usage statistics and user query insights
+                </Typography>
+              </Box>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Card
+              onClick={() => navigate("/admin-queries")}
+              sx={{
+                p: 4,
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                background: 'white',
+                border: '3px solid transparent',
+                '&:hover': {
+                  transform: 'translateY(-8px)',
+                  boxShadow: '0 12px 24px rgba(234, 94, 41, 0.3)',
+                  borderColor: '#EA5E29',
+                },
+              }}
+            >
+              <Box sx={{ textAlign: 'center' }}>
+                <Box
+                  sx={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: '12px',
+                    background: 'linear-gradient(135deg, #EA5E29 0%, #CB5223 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 1.5rem',
+                  }}
+                >
+                  <NotificationIcon sx={{ color: 'white', fontSize: 32 }} />
+                </Box>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
+                    fontWeight: 600,
+                    color: '#064F80',
+                    mb: 1,
+                  }}
+                >
+                  Escalated Queries
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
+                    color: '#666',
+                  }}
+                >
+                  Review and respond to user queries requiring admin attention
                 </Typography>
               </Box>
             </Card>

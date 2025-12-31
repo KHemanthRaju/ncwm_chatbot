@@ -12,6 +12,7 @@ import AdminLogin from './Components/AdminLogin';
 import AdminDashboard from './Components/AdminDashboard';
 import ManageDocuments from './Components/ManageDocuments';
 import AdminAnalytics from './Components/AdminAnalytics';
+import EscalatedQueries from './Components/EscalatedQueries';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
                 <Route path="/admin-documents" element={<ManageDocuments />} />
                 <Route path="/admin-analytics" element={<AdminAnalytics />} />
+                <Route path="/admin-queries" element={<EscalatedQueries />} />
               </Routes>
             </Router>
           </TranscriptProvider>

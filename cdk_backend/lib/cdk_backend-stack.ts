@@ -122,6 +122,21 @@ export class LearningNavigatorStack extends cdk.Stack {
         removalPolicy: cdk.RemovalPolicy.DESTROY,  //for production have retain
       });
 
+      // Table for escalated queries (admin email notifications)
+      const escalatedQueriesTable = new dynamodb.Table(this, 'EscalatedQueriesTable', {
+        tableName: 'NCMWEscalatedQueries',
+        partitionKey: { name: 'query_id', type: dynamodb.AttributeType.STRING },
+        sortKey:      { name: 'timestamp', type: dynamodb.AttributeType.STRING },
+        removalPolicy: cdk.RemovalPolicy.DESTROY,  //for production have retain
+      });
+
+      // Add GSI for querying by status
+      escalatedQueriesTable.addGlobalSecondaryIndex({
+        indexName: 'StatusIndex',
+        partitionKey: { name: 'status', type: dynamodb.AttributeType.STRING },
+        sortKey: { name: 'timestamp', type: dynamodb.AttributeType.STRING },
+      });
+
     const bedrockRoleAgent = new iam.Role(this, 'BedrockRole3', {
       assumedBy: new iam.ServicePrincipal('bedrock.amazonaws.com'),
       managedPolicies: [
@@ -239,14 +254,18 @@ export class LearningNavigatorStack extends cdk.Stack {
     const notificationFn = new lambda.Function(this, 'NotifyAdminFn', {
       runtime: lambda.Runtime.PYTHON_3_12,
       handler: 'handler.lambda_handler',
-      code: lambda.Code.fromDockerBuild('lambda/email'), 
+      code: lambda.Code.fromDockerBuild('lambda/email'),
       architecture: lambdaArchitecture,
       environment: {
         VERIFIED_SOURCE_EMAIL: adminEmail,
         ADMIN_EMAIL: adminEmail,
+        ESCALATED_QUERIES_TABLE: escalatedQueriesTable.tableName,
       },
       timeout: cdk.Duration.seconds(60),
     });
+
+    // Grant permissions to write to escalated queries table
+    escalatedQueriesTable.grantWriteData(notificationFn);
     
     // 2) Create the Action Group
     const notifyActionGroup = new bedrock.AgentActionGroup({
@@ -636,6 +655,60 @@ export class LearningNavigatorStack extends cdk.Stack {
 
     const singleSession = sessionLogs.addResource('{sessionId}');
     singleSession.addMethod('GET', statsIntegration, {
+      authorizer:        userPoolAuthorizer,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+    });
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // Escalated Queries API (Admin email notifications management)
+    // ──────────────────────────────────────────────────────────────────────────────
+    const escalatedQueriesFn = new lambda.Function(this, 'EscalatedQueriesFn', {
+      runtime: lambda.Runtime.PYTHON_3_12,
+      handler: 'handler.lambda_handler',
+      code:    lambda.Code.fromAsset('lambda/escalatedQueries'),
+      timeout: cdk.Duration.seconds(10),
+      environment: {
+        ESCALATED_QUERIES_TABLE: escalatedQueriesTable.tableName,
+      },
+    });
+
+    // Allow it to read from the escalated queries table
+    escalatedQueriesTable.grantReadData(escalatedQueriesFn);
+
+    // Update status function
+    const updateQueryStatusFn = new lambda.Function(this, 'UpdateQueryStatusFn', {
+      runtime: lambda.Runtime.PYTHON_3_12,
+      handler: 'handler.update_query_status',
+      code:    lambda.Code.fromAsset('lambda/escalatedQueries'),
+      timeout: cdk.Duration.seconds(10),
+      environment: {
+        ESCALATED_QUERIES_TABLE: escalatedQueriesTable.tableName,
+      },
+    });
+
+    // Allow it to write to the escalated queries table
+    escalatedQueriesTable.grantReadWriteData(updateQueryStatusFn);
+
+    // Hook into API Gateway
+    const escalatedQueries = AdminApi.root.addResource('escalated-queries');
+    const escalatedQueriesIntegration = new apigateway.LambdaIntegration(escalatedQueriesFn, { proxy: true });
+    const updateStatusIntegration = new apigateway.LambdaIntegration(updateQueryStatusFn, { proxy: true });
+
+    // GET /escalated-queries - List all queries with optional status filter
+    escalatedQueries.addMethod('GET', escalatedQueriesIntegration, {
+      authorizer:        userPoolAuthorizer,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+    });
+
+    // PUT /escalated-queries - Update query status
+    escalatedQueries.addMethod('PUT', updateStatusIntegration, {
+      authorizer:        userPoolAuthorizer,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+    });
+
+    // GET /escalated-queries/{queryId} - Get single query
+    const singleQuery = escalatedQueries.addResource('{queryId}');
+    singleQuery.addMethod('GET', escalatedQueriesIntegration, {
       authorizer:        userPoolAuthorizer,
       authorizationType: apigateway.AuthorizationType.COGNITO,
     });
