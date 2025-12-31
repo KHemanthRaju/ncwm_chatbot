@@ -90,9 +90,9 @@ export class BlueberryStackLatest extends cdk.Stack {
     
 
     const kb = new bedrock.VectorKnowledgeBase(this, 'BlueberryKnowledgeBase', {
-      description: 'Knowledge base for National Council for Mental Wellbeing - Mental Health First Aid resources',
+      description: 'National Council for Mental Wellbeing - Mental Health First Aid knowledge base',
       embeddingsModel: bedrock.BedrockFoundationModel.TITAN_EMBED_TEXT_V2_1024,
-      instruction: "Use this knowledge base to provide accurate information about Mental Health First Aid (MHFA), mental health resources, training materials, and support services provided by the National Council for Mental Wellbeing.",
+      instruction: "Provide information about Mental Health First Aid, mental health resources, and training from the National Council for Mental Wellbeing.",
       supplementalDataStorageLocations: [supplementalS3Storage],
 
     });
