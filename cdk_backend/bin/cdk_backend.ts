@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { BlueberryStackLatest } from '../lib/cdk_backend-stack';
+import { LearningNavigatorStack } from '../lib/cdk_backend-stack';
 
 const app = new cdk.App();
-new BlueberryStackLatest(app, 'BlueberryStackLatest', {
+new LearningNavigatorStack(app, 'BlueberryStackLatest', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */

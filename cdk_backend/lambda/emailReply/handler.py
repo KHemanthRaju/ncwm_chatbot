@@ -12,7 +12,7 @@ bedrock_agent   = boto3.client('bedrock-agent')
 
 # Environment variables
 SOURCE_BUCKET   = os.environ['SOURCE_BUCKET_NAME']       # your SES email bucket
-DEST_BUCKET     = os.environ['DESTINATION_BUCKET_NAME']  # your BlueberryData bucket
+DEST_BUCKET     = os.environ['DESTINATION_BUCKET_NAME']  # Knowledge base data bucket
 KB_ID           = os.environ['KNOWLEDGE_BASE_ID']
 DS_ID           = os.environ['DATA_SOURCE_ID']
 ADMIN_EMAIL     = os.environ['ADMIN_EMAIL']

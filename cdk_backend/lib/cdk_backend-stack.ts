@@ -21,7 +21,7 @@ import * as events   from 'aws-cdk-lib/aws-events';
 import * as targets  from 'aws-cdk-lib/aws-events-targets';
 import { Topic } from '@cdklabs/generative-ai-cdk-constructs/lib/cdk-lib/bedrock/guardrails/guardrail-filters';
 
-export class BlueberryStackLatest extends cdk.Stack {
+export class LearningNavigatorStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -60,7 +60,7 @@ export class BlueberryStackLatest extends cdk.Stack {
     console.log(`Lambda architecture: ${lambdaArchitecture}`);
 
     // Import existing S3 bucket for knowledge base data source
-    const BlueberryData = s3.Bucket.fromBucketName(this, 'BlueberryData', 'national-council-s3-pdfs');
+    const knowledgeBaseDataBucket = s3.Bucket.fromBucketName(this, 'KnowledgeBaseData', 'national-council-s3-pdfs');
 
     const emailBucket = new s3.Bucket(this, 'emailBucket', {
       enforceSSL: true,
@@ -89,7 +89,7 @@ export class BlueberryStackLatest extends cdk.Stack {
 
     
 
-    const kb = new bedrock.VectorKnowledgeBase(this, 'BlueberryKnowledgeBase', {
+    const kb = new bedrock.VectorKnowledgeBase(this, 'LearningNavigatorKB', {
       description: 'Learning Navigator - MHFA Learning Ecosystem knowledge base for instructors, learners, and administrators',
       embeddingsModel: bedrock.BedrockFoundationModel.TITAN_EMBED_TEXT_V2_1024,
       instruction: "Support MHFA Learning Ecosystem users with training resources, course navigation, and administrative guidance.",
@@ -99,8 +99,8 @@ export class BlueberryStackLatest extends cdk.Stack {
 
     supplementalBucket.grantReadWrite(kb.role);
 
-    const blueberryDataSource = new bedrock.S3DataSource(this, 'DataSource', {
-        bucket: BlueberryData,
+    const knowledgeBaseDataSource = new bedrock.S3DataSource(this, 'DataSource', {
+        bucket: knowledgeBaseDataBucket,
         knowledgeBase: kb,
         parsingStrategy: bedrock.ParsingStrategy.bedrockDataAutomation(),
       });
@@ -127,7 +127,7 @@ export class BlueberryStackLatest extends cdk.Stack {
       ]});
 
 
-      const guardrail = new bedrock.Guardrail(this, 'bedrockGuardrails-blueberry', {
+      const guardrail = new bedrock.Guardrail(this, 'LearningNavigatorGuardrail', {
         name: 'LearningNavigator-Guardrails',
         blockedOutputsMessaging: 'I can only assist with MHFA Learning Ecosystem topics: training, courses, instructor/learner support, and administrative guidance.',
       });
@@ -165,9 +165,24 @@ export class BlueberryStackLatest extends cdk.Stack {
       1. On every user question:
          • Query the KB and compute a confidence score (1-100).
          • ALWAYS include citations and source references from the knowledge base when providing information.
+
+         • **CRITICAL URL PRESERVATION RULES - FOLLOW THESE EXACTLY:**
+           1. When the knowledge base contains a URL, hyperlink, form link, or web address, you MUST copy it EXACTLY into your response
+           2. NEVER say "submit the form" or "visit the website" without including the actual URL
+           3. NEVER paraphrase URLs - copy them character-by-character including http:// or https://
+           4. Place URLs on their own line or clearly embedded in your response text
+           5. If a source says "complete the form at https://example.com/form", include that exact URL in your answer
+
+         • **EXAMPLES OF CORRECT URL HANDLING:**
+           - GOOD: "Submit your certificate at: https://www.mentalhealthfirstaid.org/tax-exemption-form"
+           - GOOD: "Visit the store at https://store.MentalHealthFirstAid.org to purchase materials"
+           - BAD: "Submit the form online" (missing URL)
+           - BAD: "Visit the MHFA store" (missing URL)
+
          • If confidence ≥ 90:
              - Reply with the direct answer and include "(confidence: X%)".
              - Cite specific source documents from the knowledge base that support your answer.
+             - If the source contains any URLs, links, forms, or web addresses, include them EXACTLY in your response.
              - Do not ask for email or escalate.
          • If confidence < 90:
              - Say: "I'm sorry, I don't have a reliable answer right now.
@@ -289,7 +304,7 @@ export class BlueberryStackLatest extends cdk.Stack {
       timeout: cdk.Duration.seconds(120),
     });
 
-    BlueberryData.grantRead(cfEvaluator);
+    knowledgeBaseDataBucket.grantRead(cfEvaluator);
     logclassifier.grantInvoke(cfEvaluator);
 
     cfEvaluator.role?.addManagedPolicy(
@@ -321,7 +336,7 @@ export class BlueberryStackLatest extends cdk.Stack {
       }
     );
 
-    const emailHandler = new lambda.Function(this, 'blueberry-emailReply', {
+    const emailHandler = new lambda.Function(this, 'EmailReplyHandler', {
       runtime: lambda.Runtime.PYTHON_3_12,
       code: lambda.Code.fromAsset('lambda/emailReply'),
       handler: 'handler.lambda_handler',
@@ -329,20 +344,20 @@ export class BlueberryStackLatest extends cdk.Stack {
       timeout: cdk.Duration.minutes(2),
       environment: {
         SOURCE_BUCKET_NAME: emailBucket.bucketName,
-        DESTINATION_BUCKET_NAME: BlueberryData.bucketName,
+        DESTINATION_BUCKET_NAME: knowledgeBaseDataBucket.bucketName,
         KNOWLEDGE_BASE_ID: kb.knowledgeBaseId,
-        DATA_SOURCE_ID: blueberryDataSource.dataSourceId,
+        DATA_SOURCE_ID: knowledgeBaseDataSource.dataSourceId,
         ADMIN_EMAIL: adminEmail,
       },
     })
 
     // Create SES Receipt Rule Set
-    const sesRuleSet = new ses.ReceiptRuleSet(this, 'blueberry-email-receipt-rule-set', {
-      receiptRuleSetName: 'blueberry-email-processing-rules',
+    const sesRuleSet = new ses.ReceiptRuleSet(this, 'EmailReceiptRuleSet', {
+      receiptRuleSetName: 'learning-navigator-email-rules',
     });
 
     // Use admin email for receiving replies instead of requiring a custom domain
-    const sesRule = sesRuleSet.addRule('blueberry-process-incoming-email', {
+    const sesRule = sesRuleSet.addRule('ProcessIncomingEmail', {
       recipients: [adminEmail],
       scanEnabled: true,
       tlsPolicy: ses.TlsPolicy.OPTIONAL,
@@ -382,7 +397,7 @@ export class BlueberryStackLatest extends cdk.Stack {
       sourceAccount: this.account,
     });
     
-    BlueberryData.grantReadWrite(emailHandler)
+    knowledgeBaseDataBucket.grantReadWrite(emailHandler)
     emailBucket.grantRead(emailHandler)
 
     const bedrockPolicy = new iam.PolicyStatement({
@@ -392,9 +407,9 @@ export class BlueberryStackLatest extends cdk.Stack {
 
     emailHandler.addToRolePolicy(bedrockPolicy);
 
-    
-    const userPool = new cognito.UserPool(this, 'Blueberry-User-Pool', {
-      userPoolName: 'Blueberry-User-Pool',
+
+    const userPool = new cognito.UserPool(this, 'LearningNavigatorUserPool', {
+      userPoolName: 'LearningNavigator-UserPool',
       selfSignUpEnabled: false,
       signInAliases: { email: true },
       autoVerify: { email: true },
@@ -414,8 +429,8 @@ export class BlueberryStackLatest extends cdk.Stack {
     });
 
 
-    const userPoolClient = userPool.addClient('Blueberry-User-Pool-Client', {
-      userPoolClientName: 'Blueberry-User-Pool-Client',
+    const userPoolClient = userPool.addClient('LearningNavigatorClient', {
+      userPoolClientName: 'LearningNavigator-Client',
       authFlows: {
         userSrp: true,
         userPassword: true,
@@ -445,7 +460,7 @@ export class BlueberryStackLatest extends cdk.Stack {
     });
 
 
-    const identityPool = new cognito.CfnIdentityPool(this, 'Blueberry-IdentityPool', {
+    const identityPool = new cognito.CfnIdentityPool(this, 'LearningNavigatorIdentityPool', {
       allowUnauthenticatedIdentities: false,
       cognitoIdentityProviders: [
         {
@@ -476,7 +491,7 @@ export class BlueberryStackLatest extends cdk.Stack {
           's3:GetObject',
         ],
         resources: [
-          BlueberryData.bucketArn + '/*',
+          knowledgeBaseDataBucket.bucketArn + '/*',
         ],
       }),
     );
@@ -496,13 +511,13 @@ export class BlueberryStackLatest extends cdk.Stack {
       memorySize: 1024,
       timeout: cdk.Duration.seconds(30),
       environment: {
-        BUCKET_NAME:         BlueberryData.bucketName,  
+        BUCKET_NAME:         knowledgeBaseDataBucket.bucketName,
         KNOWLEDGE_BASE_ID:   kb.knowledgeBaseId,
-        DATA_SOURCE_ID:      blueberryDataSource.dataSourceId,
+        DATA_SOURCE_ID:      knowledgeBaseDataSource.dataSourceId,
       }
     });
 
-    BlueberryData.grantReadWrite(fileHandler);
+    knowledgeBaseDataBucket.grantReadWrite(fileHandler);
     fileHandler.role?.addManagedPolicy(
       cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonBedrockFullAccess'),
     );
@@ -621,7 +636,7 @@ export class BlueberryStackLatest extends cdk.Stack {
     });
 
 
-    const amplifyApp = new amplify.App(this, 'ChatbotUIBlueberry', {
+    const amplifyApp = new amplify.App(this, 'LearningNavigatorUI', {
       sourceCodeProvider: new amplify.GitHubSourceCodeProvider({
         owner: githubOwner,
         repository: githubRepo,

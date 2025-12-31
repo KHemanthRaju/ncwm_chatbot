@@ -21,12 +21,12 @@ def classify_question(question: str) -> str:
     Use Bedrock Converse to classify into one category.
     """
     prompt = (
-        "Classify this blueberry farming question into exactly one category:\n\n"
-        "[Chemical Registrations, Disease, Economics, Field Establishment, Harvest, Insects, "
-        "Irrigation, Nutrition, Pest Management Guide, Pollination, Post Harvest Handling, "
-        "Cold Chain, Production, Pruning, Sanitation, Varietal Information, Weeds]\n\n"
+        "Classify this MHFA Learning Ecosystem question into exactly one category:\n\n"
+        "[Training & Courses, Instructor Certification, Learner Support, Administrative Procedures, "
+        "Course Materials, MHFA Connect Platform, Recertification, Mental Health Resources, "
+        "Scheduling & Registration, Policies & Guidelines, Technical Support]\n\n"
         f"Question: {question}\n\n"
-        "- Respond ONLY with the category name in quotes (e.g., \"Harvest\").\n"
+        "- Respond ONLY with the category name in quotes (e.g., \"Training & Courses\").\n"
         "- No explanations or additional text.\n"
         "- If it doesn't fit, return \"Unknown\"."
     )
@@ -42,9 +42,9 @@ def classify_question(question: str) -> str:
         out = "Unknown"
 
     valid = {
-        "Chemical Registrations","Disease","Economics","Field Establishment","Harvest","Insects",
-        "Irrigation","Nutrition","Pest Management Guide","Pollination","Post Harvest Handling",
-        "Cold Chain","Production","Pruning","Sanitation","Varietal Information","Weeds","Unknown"
+        "Training & Courses","Instructor Certification","Learner Support","Administrative Procedures",
+        "Course Materials","MHFA Connect Platform","Recertification","Mental Health Resources",
+        "Scheduling & Registration","Policies & Guidelines","Technical Support","Unknown"
     }
     return out if out in valid else "Unknown"
 

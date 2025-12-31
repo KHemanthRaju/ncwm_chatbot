@@ -57,9 +57,9 @@ def lambda_handler(event, context):
             f"A user needs assistance with this question:\n\n"
             f"  • User Email: {email}\n"
             f"  • Original Question: {querytext}\n"
-            f"  • Agent’s Response: {agent_response}\n\n"
+            f"  • Agent's Response: {agent_response}\n\n"
             f"Timestamp: {datetime.utcnow().isoformat()}Z\n\n"
-            "Thanks,\nBlueberry BOT"
+            "Thanks,\nLearning Navigator bot"
         )
 
         print("Sending SES …")

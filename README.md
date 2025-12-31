@@ -1,8 +1,8 @@
-# AI-Powered Blueberry Farming Assistant with Admin Dashboard
+# Learning Navigator - MHFA Learning Ecosystem AI Assistant
 
-A comprehensive chatbot application that provides real-time guidance on blueberry farming practices, powered by AWS Bedrock and featuring an administrative dashboard for content management and analytics.
+A comprehensive chatbot application that provides real-time guidance for the Mental Health First Aid (MHFA) Learning Ecosystem, powered by AWS Bedrock and featuring an administrative dashboard for content management and analytics.
 
-This application combines natural language processing capabilities with a knowledge base of blueberry farming expertise to deliver accurate, context-aware responses to farmers' queries. The system includes a user-friendly chat interface, multilingual support, and an administrative portal for managing content and monitoring user interactions.
+This application combines natural language processing capabilities with a knowledge base of MHFA training resources to deliver accurate, context-aware responses to instructors, learners, and administrators. The system includes a user-friendly chat interface, multilingual support, and an administrative portal for managing content and monitoring user interactions.
 
 The application features a serverless architecture built on AWS services, with real-time communication through WebSockets, secure file management, and detailed analytics. Key features include:
 - AI-powered responses using AWS Bedrock with Claude 3.5 Sonnet
@@ -38,11 +38,11 @@ The application features a serverless architecture built on AWS services, with r
 ## Common Prerequisites
 
 - Fork this repository to your own GitHub account (required for deployment and CI/CD):
-  1. Navigate to https://github.com/ASUCICREPO/osu-blueberry
+  1. Navigate to your forked repository URL
   2. Click the "Fork" button in the top right corner
   3. Select your GitHub account as the destination
   4. Wait for the forking process to complete
-  5. You'll now have your own copy at https://github.com/YOUR-USERNAME/osu-blueberry
+  5. You'll now have your own copy at https://github.com/YOUR-USERNAME/ncwm_chatbot_2
 
 - Obtain a GitHub personal access token with repo permissions (needed for CDK deployment):
   1. Go to GitHub Settings > Developer Settings > Personal Access Tokens > Tokens (classic)
@@ -65,7 +65,7 @@ The application features a serverless architecture built on AWS services, with r
   - `ANTHROPIC_CLAUDE_HAIKU_V1_0`
   - `ANTHROPIC_CLAUDE_3_5_SONNET_V2_0`
   - `NOVA_LITE`
-  
+
   To request access to these models:
   1. Navigate to the AWS Bedrock console
   2. Click "Model access" in the left navigation pane
@@ -75,10 +75,10 @@ The application features a serverless architecture built on AWS services, with r
   6. Wait for model access to be granted (usually within minutes)
   7. Verify access by checking the "Status" column shows "Access granted"
 
-  Note: If you don't see the option to enable a model, ensure your AWS account 
+  Note: If you don't see the option to enable a model, ensure your AWS account
   and region support Bedrock model access. Contact AWS Support if needed.
-- AWS Account Permissions 
-   - Ensure permissions to create and manage AWS resources like S3, Lambda, Knowledge Bases, AI Agents, Neptune, Amplify, Websocket, etc.  
+- AWS Account Permissions
+   - Ensure permissions to create and manage AWS resources like S3, Lambda, Knowledge Bases, AI Agents, Neptune, Amplify, Websocket, etc.
    - [AWS IAM Policies and Permissions](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html)
 
 
@@ -95,8 +95,8 @@ The application features a serverless architecture built on AWS services, with r
 
 2. Clone the repository (Make sure to have your own forked copy of the repo and replace the link with the forked repository link):
 ```bash
-git clone https://github.com/<YOUR-USERNAME>/osu-blueberry
-cd osu-blueberry/
+git clone https://github.com/<YOUR-USERNAME>/ncwm_chatbot_2
+cd ncwm_chatbot_2/
 ```
 
 3. Deploy using the deployment script (recommended):
@@ -112,23 +112,23 @@ chmod +x deploy.sh
 1. **AWS CLI**: To interact with AWS services and set up credentials.
 
    - [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
-     
-2. **npm**  
-   - npm is required to install AWS CDK. Install npm by installing Node.js:  
-     - [Download Node.js](https://nodejs.org/) (includes npm).  
-   - Verify npm installation:  
+
+2. **npm**
+   - npm is required to install AWS CDK. Install npm by installing Node.js:
+     - [Download Node.js](https://nodejs.org/) (includes npm).
+   - Verify npm installation:
      ```bash
      npm --version
      ```
 3. **AWS CDK**: For defining cloud infrastructure in code.
-   - [Install AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html)  
+   - [Install AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html)
      ```bash
      npm install -g aws-cdk
      ```
 
-4. **Docker**: Required to build and run Docker images for the ECS tasks.  
-   - [Install Docker](https://docs.docker.com/get-docker/)  
-   - Verify installation:  
+4. **Docker**: Required to build and run Docker images for the ECS tasks.
+   - [Install Docker](https://docs.docker.com/get-docker/)
+   - Verify installation:
      ```bash
      docker --version
      ```
@@ -137,8 +137,8 @@ chmod +x deploy.sh
 
 1. Clone the repository (Make sure to fork the repository first):
 ```bash
-git clone https://github.com/<YOUR-USERNAME>/osu-blueberry
-cd osu-blueberry/
+git clone https://github.com/<YOUR-USERNAME>/ncwm_chatbot_2
+cd ncwm_chatbot_2/
 ```
 
 2. **Set Up Your Environment**:
@@ -159,7 +159,7 @@ cdk bootstrap --all \
   -c githubToken=YOUR_GITHUB_TOKEN \
   -c githubOwner=YOUR_GITHUB_USERNAME \
   -c adminEmail=YOUR_ADMIN_EMAIL \
-  -c githubRepo=osu-blueberry
+  -c githubRepo=ncwm_chatbot_2
 ```
 
 5. Deploy the stack:
@@ -168,14 +168,14 @@ cdk deploy --all \
   -c githubToken=YOUR_GITHUB_TOKEN \
   -c githubOwner=YOUR_GITHUB_USERNAME \
   -c adminEmail=YOUR_ADMIN_EMAIL \
-  -c githubRepo=osu-blueberry
+  -c githubRepo=ncwm_chatbot_2
 ```
 
 ## Usage
 
 Once the infrastructure is deployed using either of the two approaches:
 
-1. Upload any CSV / PDF files to the S3 Bucket
+1. Upload any PDF files to the S3 Bucket (national-council-s3-pdfs)
 
 2. Sync the Knowledge Base:
    - Go to AWS Console > Bedrock > Knowledge bases
@@ -189,19 +189,19 @@ Once the infrastructure is deployed using either of the two approaches:
 
 5. Add User in Cognito (Post-Deployment)
 
-    - AWS Console → Cognito → **User Pools** → `YOUR_USER_POOL_ID`  
-    - Select **Users and groups** → **Create user**  
-    - Fill in **Username**, **Temporary password**, and required attributes (e.g., email)  
-    - Click **Create user** (the user will reset their password on first login)  
+    - AWS Console → Cognito → **User Pools** → `YOUR_USER_POOL_ID`
+    - Select **Users and groups** → **Create user**
+    - Fill in **Username**, **Temporary password**, and required attributes (e.g., email)
+    - Click **Create user** (the user will reset their password on first login)
 
 6. Deploy the Frontend:
    - Go to AWS Console > AWS Amplify
    - Select the app created by the stack
-   - Access the application URL provided by Amplify 
+   - Access the application URL provided by Amplify
 
 7. Using the Application:
    - Once frontend deployment is complete, navigate to the Amplify URL
-   - The chat interface will load with example queries
+   - The chat interface will load with example queries about MHFA training and resources
 
 
 ### Troubleshooting
@@ -220,7 +220,7 @@ Once the infrastructure is deployed using either of the two approaches:
 3. AI Response Issues
 - Error: "Knowledge base not responding"
   - Verify the Bedrock knowledge base is properly configured
-  - Check if the S3 bucket contains the required data files
+  - Check if the S3 bucket contains the required MHFA data files
   - Ensure the Lambda function has proper IAM permissions
 
 ## Data Flow
@@ -236,7 +236,7 @@ Component interactions:
 1. User submits query through WebSocket connection
 2. Lambda function processes request and invokes Bedrock Agent
 3. Agent queries knowledge base and evaluates confidence
-4. High confidence responses (>90%) are returned directly
+4. High confidence responses (>90%) are returned directly with citations
 5. Low confidence queries trigger admin notification workflow
 6. Session logs are stored in DynamoDB for analytics
 7. File uploads are processed and ingested into knowledge base
@@ -247,40 +247,40 @@ Component interactions:
 
 ### Architecture Diagram Explanation
 
-- **User → Amplify Front-End**  
-  - **1.1** User submits location & question (later their email).  
-  - **1.9** Amplify returns the Bedrock agent’s answer or asks for the email when escalation is needed.
+- **User → Amplify Front-End**
+  - **1.1** User submits question and later their email if needed.
+  - **1.9** Amplify returns the Bedrock agent's answer or asks for the email when escalation is needed.
 
-- **Amplify → Amazon API Gateway**  
+- **Amplify → Amazon API Gateway**
   - **1.2** API Gateway receives the request from Amplify and acts as the single entry point for back-end services.
 
-- **API Gateway → Amazon Bedrock Agent**  
-  - **1.3** Gateway forwards the query to the Bedrock Agent.  
+- **API Gateway → Amazon Bedrock Agent**
+  - **1.3** Gateway forwards the query to the Bedrock Agent.
   - **1.4** Agent inspects the query and decides whether it can answer directly from its **Bedrock Knowledge Base**.
 
-- **Bedrock Agent ↔ Knowledge Base (S3 Data Source)**  
-  - A **sync-up workflow** keeps reference docs in an **S3 bucket** synchronized with the Knowledge Base.  
+- **Bedrock Agent ↔ Knowledge Base (S3 Data Source)**
+  - A **sync-up workflow** keeps reference docs in an **S3 bucket** synchronized with the Knowledge Base.
   - **1.6** Agent retrieves the answer and returns it to API Gateway (**1.7**), which then responds to Amplify (**1.8**).
 
-- **Human-in-the-Loop Escalation via Amazon SES**  
-  - **3.2** If the Agent cannot answer, API Gateway uses **Amazon SES** to email the question (and the user’s email) to an **Admin**.  
-  - **3.3** Admin receives the email.  
-  - **4.1 / 4.2** Admin replies to the user *and* the bot.  
-  - **5** Admin’s answer is indexed—written to S3 and ingested into the Knowledge Base, improving future responses.
+- **Human-in-the-Loop Escalation via Amazon SES**
+  - **3.2** If the Agent cannot answer, API Gateway uses **Amazon SES** to email the question (and the user's email) to an **Admin**.
+  - **3.3** Admin receives the email.
+  - **4.1 / 4.2** Admin replies to the user *and* the bot.
+  - **5** Admin's answer is indexed—written to S3 and ingested into the Knowledge Base, improving future responses.
 
-- **Admin Authentication & Document Management**  
-  - **6.1 / 7.1** Admin authenticates through **Amazon Cognito** and accesses an Amplify-hosted portal.  
+- **Admin Authentication & Document Management**
+  - **6.1 / 7.1** Admin authenticates through **Amazon Cognito** and accesses an Amplify-hosted portal.
   - **6.3** Within the portal, the Admin uploads or edits docs in the S3 data source feeding the Knowledge Base.
 
-- **Observability & Analytics Pipeline**  
-  - **DynamoDB** stores structured logs/metrics from the Bedrock Agent; raw logs are archived in **S3**.  
-  - A lightweight **LLM process** mines those S3 logs for insights.  
-  - **Dashboard (7.3)** pulls aggregated data from DynamoDB to provide real-time analytics.  
+- **Observability & Analytics Pipeline**
+  - **DynamoDB** stores structured logs/metrics from the Bedrock Agent; raw logs are archived in **S3**.
+  - A lightweight **LLM process** mines those S3 logs for insights.
+  - **Dashboard (7.3)** pulls aggregated data from DynamoDB to provide real-time analytics.
   - **CloudWatch** captures infrastructure-level logs across the entire stack.
 
-- **Data-Flow Summary**  
-  1. **Primary path:** *User → Amplify → API Gateway → Bedrock Agent → Knowledge Base/S3 → User*  
-  2. **Escalation path:** *API Gateway → SES → Admin → SES → Knowledge Base/S3*  
+- **Data-Flow Summary**
+  1. **Primary path:** *User → Amplify → API Gateway → Bedrock Agent → Knowledge Base/S3 → User*
+  2. **Escalation path:** *API Gateway → SES → Admin → SES → Knowledge Base/S3*
   3. **Admin management:** *Cognito-authenticated Amplify app → S3 (documents) + DynamoDB/S3 (logs) → Dashboard*
 
 > This architecture combines a serverless web front-end, a Bedrock-powered retrieval agent, human-in-the-loop escalation, and a full observability layer—yielding immediate answers for users while letting admins curate content and monitor system health in one cohesive workflow.
