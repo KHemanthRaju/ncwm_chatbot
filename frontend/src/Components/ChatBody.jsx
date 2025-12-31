@@ -134,17 +134,20 @@ function ChatBody() {
         item
         sx={{
           backgroundColor: (theme) => theme.palette.background.userMessage,
-          px: 1.5,
-          py: 1,
-          borderRadius: 2,
+          px: 2,
+          py: 1.5,
+          borderRadius: 2.5,
           maxWidth: "75%",
           wordBreak: "break-word",
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
         }}
       >
-        <Typography variant="body2">{text}</Typography>
+        <Typography variant="body2" sx={{ fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif' }}>
+          {text}
+        </Typography>
       </Grid>
       <Grid item>
-        <Avatar src={UserAvatar} sx={{ ml: 1 }} />
+        <Avatar src={UserAvatar} sx={{ ml: 1, bgcolor: (theme) => theme.palette.secondary.main }} />
       </Grid>
     </Grid>
   );

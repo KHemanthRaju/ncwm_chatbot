@@ -22,11 +22,11 @@ export const ALLOW_MARKDOWN_BOT = true;
 export const ALLOW_MULTLINGUAL_TOGGLE = true;
 export const ALLOW_LANDING_PAGE = true;
 
-// UI Color constants
-export const HEADER_TEXT_GRADIENT = 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)';
-export const BOTMESSAGE_BACKGROUND = '#f5f5f5';
-export const ABOUT_US_HEADER_BACKGROUND = '#e3f2fd';
-export const FAQ_HEADER_BACKGROUND = '#fff3e0';
+// UI Color constants - National Council Brand
+export const HEADER_TEXT_GRADIENT = 'linear-gradient(135deg, #064F80 0%, #7FD3EE 100%)'; // Dark Blue to Light Blue
+export const BOTMESSAGE_BACKGROUND = '#F4EFE8'; // Neutral 50%
+export const ABOUT_US_HEADER_BACKGROUND = '#EAF2F4'; // Neutral Blue 25%
+export const FAQ_HEADER_BACKGROUND = '#FAD7C9'; // Primary Orange 25%
 
 // Landing page text for multilingual support
 export const LANDING_PAGE_TEXT = {

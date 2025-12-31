@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Avatar, Typography, CircularProgress, Box, Chip } from "@mui/material";
 import { Article as ArticleIcon } from "@mui/icons-material";
+import { useTheme } from "@mui/material/styles";
 import BotAvatar from "../Assets/BotAvatar.svg";
 import PdfIcon from "../Assets/pdf_logo.svg";
-import {BOTMESSAGE_BACKGROUND} from "../utilities/constants";
+
 function BotFileCheckReply({ message, fileName, fileStatus, citations }) {
+  const theme = useTheme();
   const messageAlignment = "flex-start";
   
 
@@ -26,9 +28,9 @@ function BotFileCheckReply({ message, fileName, fileStatus, citations }) {
   return (
     <Grid container direction="row" justifyContent={messageAlignment} alignItems="center">
       <Grid item>
-        <Avatar alt="Bot Avatar" src={BotAvatar} />
+        <Avatar alt="Bot Avatar" src={BotAvatar} sx={{ bgcolor: theme.palette.primary.main }} />
       </Grid>
-      <Grid item style={{ background: BOTMESSAGE_BACKGROUND, borderRadius: 20, padding: 10, marginLeft: 5 }}>
+      <Grid item style={{ background: theme.palette.background.botMessage, borderRadius: 20, padding: 12, marginLeft: 8, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
         {fileStatus ? (
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -46,8 +48,8 @@ function BotFileCheckReply({ message, fileName, fileStatus, citations }) {
           <Box>
             <Typography>{message}</Typography>
             {citations && citations.length > 0 && (
-              <Box mt={2} sx={{ borderTop: '1px solid #e0e0e0', pt: 1 }}>
-                <Typography variant="caption" sx={{ fontWeight: 'bold', color: '#666', display: 'block', mb: 0.5 }}>
+              <Box mt={2} sx={{ borderTop: `1px solid ${theme.palette.divider}`, pt: 1 }}>
+                <Typography variant="caption" sx={{ fontWeight: 600, color: theme.palette.primary.main, display: 'block', mb: 0.5 }}>
                   Sources:
                 </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -55,11 +57,19 @@ function BotFileCheckReply({ message, fileName, fileStatus, citations }) {
                     citation.references && citation.references.map((ref, refIdx) => (
                       <Chip
                         key={`${idx}-${refIdx}`}
-                        icon={<ArticleIcon fontSize="small" />}
+                        icon={<ArticleIcon fontSize="small" sx={{ color: theme.palette.primary.main }} />}
                         label={ref.title || `Document ${idx + 1}`}
                         size="small"
                         variant="outlined"
-                        sx={{ fontSize: '0.7rem' }}
+                        sx={{
+                          fontSize: '0.7rem',
+                          borderColor: theme.palette.primary.light,
+                          color: theme.palette.primary.main,
+                          fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
+                          '&:hover': {
+                            backgroundColor: theme.palette.primary.light + '20',
+                          }
+                        }}
                       />
                     ))
                   ))}

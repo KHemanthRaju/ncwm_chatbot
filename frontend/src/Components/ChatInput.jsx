@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Grid, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import { useTheme } from "@mui/material/styles";
 import { useLanguage } from "../utilities/LanguageContext";
 import { TEXT } from "../utilities/constants";
 
@@ -8,6 +9,7 @@ function ChatInput({ onSendMessage, processing }) {
   const [message, setMessage] = useState("");
   const [helperText, setHelperText] = useState("");
   const { language } = useLanguage();
+  const theme = useTheme();
 
   const handleTyping = (event) => {
     if (helperText) {
@@ -52,13 +54,18 @@ function ChatInput({ onSendMessage, processing }) {
           disabled={processing}
           onClick={handleSendMessage}
           sx={{
-            backgroundColor: "#D63F09",
+            backgroundColor: theme.palette.primary.main,
             color: "white",
-            width: "45px",
-            height: "45px",
+            width: "48px",
+            height: "48px",
             borderRadius: "50%",
+            boxShadow: '0 2px 8px rgba(234, 94, 41, 0.3)',
             "&:hover": {
-              backgroundColor: "#B53207",
+              backgroundColor: '#CB5223',
+              boxShadow: '0 4px 12px rgba(234, 94, 41, 0.4)',
+            },
+            "&:disabled": {
+              backgroundColor: theme.palette.grey[300],
             },
           }}
         >
