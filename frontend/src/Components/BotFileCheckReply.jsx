@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Avatar, Typography, CircularProgress } from "@mui/material";
+import { Grid, Avatar, Typography, CircularProgress, Box, Chip } from "@mui/material";
+import { Article as ArticleIcon } from "@mui/icons-material";
 import BotAvatar from "../Assets/BotAvatar.svg";
 import PdfIcon from "../Assets/pdf_logo.svg";
 import {BOTMESSAGE_BACKGROUND} from "../utilities/constants";
-function BotFileCheckReply({ message, fileName, fileStatus }) {
+function BotFileCheckReply({ message, fileName, fileStatus, citations }) {
   const messageAlignment = "flex-start";
   
 
@@ -42,7 +43,30 @@ function BotFileCheckReply({ message, fileName, fileStatus }) {
             {animationState === "fail" && <Typography style={{ marginTop: "4px", color: "red" }}>{fileStatus}</Typography>}
           </div>
         ) : (
-          <Typography>{message}</Typography>
+          <Box>
+            <Typography>{message}</Typography>
+            {citations && citations.length > 0 && (
+              <Box mt={2} sx={{ borderTop: '1px solid #e0e0e0', pt: 1 }}>
+                <Typography variant="caption" sx={{ fontWeight: 'bold', color: '#666', display: 'block', mb: 0.5 }}>
+                  Sources:
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {citations.map((citation, idx) => (
+                    citation.references && citation.references.map((ref, refIdx) => (
+                      <Chip
+                        key={`${idx}-${refIdx}`}
+                        icon={<ArticleIcon fontSize="small" />}
+                        label={ref.title || `Document ${idx + 1}`}
+                        size="small"
+                        variant="outlined"
+                        sx={{ fontSize: '0.7rem' }}
+                      />
+                    ))
+                  ))}
+                </Box>
+              </Box>
+            )}
+          </Box>
         )}
       </Grid>
     </Grid>

@@ -47,11 +47,36 @@ def lambda_handler(event, context):
                     inputText=query
                 )
 
-                full_response = "".join(
-                    event['chunk']['bytes'].decode('utf-8')
-                    for event in response['completion']
-                    if 'chunk' in event
-                )
+                full_response = ""
+                citations = []
+
+                for event in response['completion']:
+                    if 'chunk' in event:
+                        chunk = event['chunk']
+                        if 'bytes' in chunk:
+                            full_response += chunk['bytes'].decode('utf-8')
+
+                        # Extract citations if present
+                        if 'attribution' in chunk and 'citations' in chunk['attribution']:
+                            for citation in chunk['attribution']['citations']:
+                                citation_info = {
+                                    'text': citation.get('generatedResponsePart', {}).get('textResponsePart', {}).get('text', ''),
+                                    'references': []
+                                }
+
+                                # Extract reference sources
+                                for ref in citation.get('retrievedReferences', []):
+                                    location = ref.get('location', {})
+                                    if location.get('type') == 'S3':
+                                        s3_location = location.get('s3Location', {})
+                                        citation_info['references'].append({
+                                            'source': s3_location.get('uri', ''),
+                                            'title': ref.get('metadata', {}).get('x-amz-bedrock-kb-source-uri', '').split('/')[-1]
+                                        })
+
+                                if citation_info['references']:
+                                    citations.append(citation_info)
+
                 break
             except Exception as e:
                 print(f"Attempt {attempt + 1} failed: {str(e)}")
@@ -73,6 +98,7 @@ def lambda_handler(event, context):
 
         result = {
                 'responsetext': full_response,
+                'citations': citations if citations else []
                  }
 
         if connection_id:

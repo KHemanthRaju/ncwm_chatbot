@@ -90,9 +90,9 @@ export class BlueberryStackLatest extends cdk.Stack {
     
 
     const kb = new bedrock.VectorKnowledgeBase(this, 'BlueberryKnowledgeBase', {
-      description: 'National Council for Mental Wellbeing - Mental Health First Aid knowledge base',
+      description: 'Learning Navigator - MHFA Learning Ecosystem knowledge base for instructors, learners, and administrators',
       embeddingsModel: bedrock.BedrockFoundationModel.TITAN_EMBED_TEXT_V2_1024,
-      instruction: "Provide information about Mental Health First Aid, mental health resources, and training from the National Council for Mental Wellbeing.",
+      instruction: "Support MHFA Learning Ecosystem users with training resources, course navigation, and administrative guidance.",
       supplementalDataStorageLocations: [supplementalS3Storage],
 
     });
@@ -128,8 +128,8 @@ export class BlueberryStackLatest extends cdk.Stack {
 
 
       const guardrail = new bedrock.Guardrail(this, 'bedrockGuardrails-blueberry', {
-        name: 'ChatbotGuardrails-NCMW',
-        blockedOutputsMessaging: 'This topic is irrelevant and not related to Mental Health First Aid or mental wellbeing resources.',
+        name: 'LearningNavigator-Guardrails',
+        blockedOutputsMessaging: 'I can only assist with MHFA Learning Ecosystem topics: training, courses, instructor/learner support, and administrative guidance.',
       });
       
       const DEFAULT_INPUT  = bedrock.ContentFilterStrength.HIGH;
@@ -160,12 +160,14 @@ export class BlueberryStackLatest extends cdk.Stack {
 
 
       const prompt_for_agent =
-      `You are a helpful AI assistant for the National Council for Mental Wellbeing, backed by a knowledge base containing Mental Health First Aid (MHFA) resources and materials.
+      `You are Learning Navigator, an AI-powered assistant integrated into the MHFA Learning Ecosystem. You support instructors, learners, and administrators by helping them navigate training resources, answer FAQs, and provide real-time guidance.
 
       1. On every user question:
          • Query the KB and compute a confidence score (1-100).
+         • ALWAYS include citations and source references from the knowledge base when providing information.
          • If confidence ≥ 90:
              - Reply with the direct answer and include "(confidence: X%)".
+             - Cite specific source documents from the knowledge base that support your answer.
              - Do not ask for email or escalate.
          • If confidence < 90:
              - Say: "I'm sorry, I don't have a reliable answer right now.
@@ -181,17 +183,17 @@ export class BlueberryStackLatest extends cdk.Stack {
          • After invoking, reply to the user:
              - "Thanks! An administrator has been notified and will follow up at [email]. Would you like to ask any other questions?"
 
-      3. If any question is not about 'mental health', 'MHFA', 'Mental Health First Aid', 'wellbeing',
-        'mental wellness', 'crisis', 'training', 'certification', 'MHFA Connect', 'instructor', 'learner',
-        'support', 'resources', 'National Council', 'behavioral health', 'chatBOT', 'chatbot', 'chat BOT' or something related, the guardrail should work.
-        Say: "I'm sorry, I can only answer questions about Mental Health First Aid and mental wellbeing resources. Please ask another question."
+      3. Your scope includes: 'MHFA training', 'certification', 'MHFA Connect platform', 'instructor policies',
+        'learner courses', 'administrative procedures', 'National Council programs', 'mental wellness',
+        'crisis support', 'Learning Ecosystem navigation', 'data insights', 'chatBOT', 'chatbot'.
+        For out-of-scope questions, say: "I'm Learning Navigator for the MHFA Learning Ecosystem. I help with training resources, courses, instructor/learner support, and administrative guidance."
 
-      Always keep your tone professional, compassionate, and clear.`
+      Always maintain a helpful, professional, and supportive tone that empowers users in their learning journey.`
       
 
     const agent = new bedrock.Agent(this, 'Agent', {
-      name: 'NCMW-MHFA-Assistant',
-      description: 'National Council for Mental Wellbeing agent providing Mental Health First Aid information and support resources.',
+      name: 'Learning-Navigator',
+      description: 'AI-powered Learning Navigator for MHFA ecosystem - supports instructors, learners, and administrators.',
       foundationModel: cris_sonnet_3_5_v2,
       shouldPrepareAgent: true,
       userInputEnabled:true,

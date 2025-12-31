@@ -15,7 +15,7 @@ function ChatBody() {
 
   const [messages, setMessages] = useState([
     createMessageBlock(
-      "Welcome user! In order to provide the most accurate responses, can you please tell me where you are growing blueberries in the format state, country?",
+      "Welcome to Learning Navigator! I'm here to help you navigate the MHFA Learning Ecosystem. To provide you with the most relevant information, could you please share your location (e.g., California, USA)?",
       "BOT",
       "TEXT",
       "RECEIVED"
@@ -94,8 +94,19 @@ function ChatBody() {
 
       try {
         console.log("📨 Raw:", event.data);
-        const { responsetext } = JSON.parse(event.data);
-        replaceProcessing(responsetext);
+        const { responsetext, citations } = JSON.parse(event.data);
+
+        // Replace processing message with response including citations
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.state === "PROCESSING"
+              ? {
+                  ...createMessageBlock(responsetext, "BOT", "TEXT", "RECEIVED"),
+                  citations: citations || []
+                }
+              : m
+          )
+        );
       } catch (err) {
         console.error("❌ JSON parse error:", err);
         replaceProcessing("Error parsing response. Please try again.");
@@ -165,6 +176,7 @@ function ChatBody() {
                 fileName={msg.fileName}
                 fileStatus={msg.fileStatus}
                 messageType={msg.sentBy === "USER" ? "user_doc_upload" : "bot_response"}
+                citations={msg.citations}
               />
             )}
           </Box>

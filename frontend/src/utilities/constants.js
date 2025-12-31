@@ -47,19 +47,19 @@ export const LANDING_PAGE_TEXT = {
 // UI Text constants
 export const TEXT = {
   EN: {
-    CHAT_TITLE: 'National Council for Mental Wellbeing',
-    PLACEHOLDER: 'Type your message...',
+    CHAT_TITLE: 'Learning Navigator',
+    PLACEHOLDER: 'Ask about training, courses, or resources...',
     SEND_BUTTON: 'Send',
-    ABOUT_US_TITLE: 'About Us',
-    ABOUT_US_TEXT: 'We provide mental health resources and support for communities.',
+    ABOUT_US_TITLE: 'About Learning Navigator',
+    ABOUT_US_TEXT: 'Your AI-powered assistant for the MHFA Learning Ecosystem - helping instructors, learners, and administrators navigate training resources and reduce administrative burden.',
     FAQ_TITLE: 'Frequently Asked Questions'
   },
   ES: {
-    CHAT_TITLE: 'Consejo Nacional para el Bienestar Mental',
-    PLACEHOLDER: 'Escribe tu mensaje...',
+    CHAT_TITLE: 'Navegador de Aprendizaje',
+    PLACEHOLDER: 'Pregunte sobre capacitación, cursos o recursos...',
     SEND_BUTTON: 'Enviar',
-    ABOUT_US_TITLE: 'Sobre Nosotros',
-    ABOUT_US_TEXT: 'Proporcionamos recursos de salud mental y apoyo para las comunidades.',
+    ABOUT_US_TITLE: 'Acerca del Navegador de Aprendizaje',
+    ABOUT_US_TEXT: 'Su asistente impulsado por IA para el Ecosistema de Aprendizaje MHFA: ayudando a instructores, estudiantes y administradores a navegar recursos de capacitación.',
     FAQ_TITLE: 'Preguntas Frecuentes'
   }
 };
@@ -67,12 +67,14 @@ export const TEXT = {
 export const ABOUT_US_TEXT = TEXT;
 export const FAQ_TEXT = {
   EN: [
-    { question: 'What is Mental Health First Aid?', answer: 'Mental Health First Aid is training to help someone developing a mental health problem or experiencing a crisis.' },
-    { question: 'How do I access MHFA Connect?', answer: 'Visit MHFA Connect platform with your credentials to access training materials and resources.' }
+    { question: 'What can Learning Navigator help me with?', answer: 'I can assist with MHFA training resources, course navigation, instructor policies, learner materials, and administrative procedures.' },
+    { question: 'How do I access MHFA Connect?', answer: 'Visit the MHFA Connect platform with your credentials to access training materials, resources, and track your certification progress.' },
+    { question: 'Who can use Learning Navigator?', answer: 'Learning Navigator supports instructors, learners, and administrators in the MHFA Learning Ecosystem.' }
   ],
   ES: [
-    { question: '¿Qué es Primeros Auxilios en Salud Mental?', answer: 'Primeros Auxilios en Salud Mental es capacitación para ayudar a alguien que desarrolla un problema de salud mental.' },
-    { question: '¿Cómo accedo a MHFA Connect?', answer: 'Visite la plataforma MHFA Connect con sus credenciales para acceder a materiales de capacitación.' }
+    { question: '¿Con qué puede ayudarme el Navegador de Aprendizaje?', answer: 'Puedo ayudar con recursos de capacitación MHFA, navegación de cursos, políticas de instructores, materiales para estudiantes y procedimientos administrativos.' },
+    { question: '¿Cómo accedo a MHFA Connect?', answer: 'Visite la plataforma MHFA Connect con sus credenciales para acceder a materiales de capacitación, recursos y seguir su progreso de certificación.' },
+    { question: '¿Quién puede usar el Navegador de Aprendizaje?', answer: 'El Navegador de Aprendizaje apoya a instructores, estudiantes y administradores en el Ecosistema de Aprendizaje MHFA.' }
   ]
 };
 
