@@ -47,19 +47,19 @@ export const LANDING_PAGE_TEXT = {
 // UI Text constants
 export const TEXT = {
   EN: {
-    CHAT_TITLE: 'Blueberry Farming Assistant',
+    CHAT_TITLE: 'National Council for Mental Wellbeing',
     PLACEHOLDER: 'Type your message...',
     SEND_BUTTON: 'Send',
     ABOUT_US_TITLE: 'About Us',
-    ABOUT_US_TEXT: 'We provide AI-powered assistance for blueberry farmers.',
+    ABOUT_US_TEXT: 'We provide mental health resources and support for communities.',
     FAQ_TITLE: 'Frequently Asked Questions'
   },
   ES: {
-    CHAT_TITLE: 'Asistente de Cultivo de Arándanos',
+    CHAT_TITLE: 'Consejo Nacional para el Bienestar Mental',
     PLACEHOLDER: 'Escribe tu mensaje...',
     SEND_BUTTON: 'Enviar',
     ABOUT_US_TITLE: 'Sobre Nosotros',
-    ABOUT_US_TEXT: 'Proporcionamos asistencia impulsada por IA para cultivadores de arándanos.',
+    ABOUT_US_TEXT: 'Proporcionamos recursos de salud mental y apoyo para las comunidades.',
     FAQ_TITLE: 'Preguntas Frecuentes'
   }
 };
@@ -67,12 +67,12 @@ export const TEXT = {
 export const ABOUT_US_TEXT = TEXT;
 export const FAQ_TEXT = {
   EN: [
-    { question: 'How do I plant blueberries?', answer: 'Plant blueberries in acidic soil with good drainage...' },
-    { question: 'What is the best fertilizer?', answer: 'Use an acidic fertilizer designed for blueberries...' }
+    { question: 'What is Mental Health First Aid?', answer: 'Mental Health First Aid is training to help someone developing a mental health problem or experiencing a crisis.' },
+    { question: 'How do I access MHFA Connect?', answer: 'Visit MHFA Connect platform with your credentials to access training materials and resources.' }
   ],
   ES: [
-    { question: '¿Cómo planto arándanos?', answer: 'Plante arándanos en suelo ácido con buen drenaje...' },
-    { question: '¿Cuál es el mejor fertilizante?', answer: 'Use un fertilizante ácido diseñado para arándanos...' }
+    { question: '¿Qué es Primeros Auxilios en Salud Mental?', answer: 'Primeros Auxilios en Salud Mental es capacitación para ayudar a alguien que desarrolla un problema de salud mental.' },
+    { question: '¿Cómo accedo a MHFA Connect?', answer: 'Visite la plataforma MHFA Connect con sus credenciales para acceder a materiales de capacitación.' }
   ]
 };
 

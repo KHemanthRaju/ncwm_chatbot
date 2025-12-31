@@ -90,11 +90,11 @@ export class BlueberryStackLatest extends cdk.Stack {
     
 
     const kb = new bedrock.VectorKnowledgeBase(this, 'BlueberryKnowledgeBase', {
-      description: 'Knowledge base for Blueberry cultivation and health benefits',
+      description: 'Knowledge base for National Council for Mental Wellbeing - Mental Health First Aid resources',
       embeddingsModel: bedrock.BedrockFoundationModel.TITAN_EMBED_TEXT_V2_1024,
-      instruction: "Use this knowledge base to provide accurate information about blueberries, their cultivation, health benefits, and related agricultural practices.",
+      instruction: "Use this knowledge base to provide accurate information about Mental Health First Aid (MHFA), mental health resources, training materials, and support services provided by the National Council for Mental Wellbeing.",
       supplementalDataStorageLocations: [supplementalS3Storage],
-      
+
     });
 
     supplementalBucket.grantReadWrite(kb.role);
@@ -111,7 +111,7 @@ export class BlueberryStackLatest extends cdk.Stack {
       });
 
       const sessionLogsTable = new dynamodb.Table(this, 'SessionLogsTable', {
-        tableName: 'BlueberriesDashboardSessionlogs',
+        tableName: 'NCMWDashboardSessionlogs',
         partitionKey: { name: 'session_id', type: dynamodb.AttributeType.STRING },
         sortKey:      { name: 'timestamp',  type: dynamodb.AttributeType.STRING },
         removalPolicy: cdk.RemovalPolicy.DESTROY,  //for production have retain
@@ -128,8 +128,8 @@ export class BlueberryStackLatest extends cdk.Stack {
 
 
       const guardrail = new bedrock.Guardrail(this, 'bedrockGuardrails-blueberry', {
-        name: 'ChatbotGuardrails-Blueberry',
-        blockedOutputsMessaging: 'This topic is irrelevant, not related to blueberries or agriculture.',
+        name: 'ChatbotGuardrails-NCMW',
+        blockedOutputsMessaging: 'This topic is irrelevant and not related to Mental Health First Aid or mental wellbeing resources.',
       });
       
       const DEFAULT_INPUT  = bedrock.ContentFilterStrength.HIGH;
@@ -159,40 +159,39 @@ export class BlueberryStackLatest extends cdk.Stack {
       
 
 
-      const prompt_for_agent = 
-      `You are a helpful AI assistant backed by a knowledge base.
+      const prompt_for_agent =
+      `You are a helpful AI assistant for the National Council for Mental Wellbeing, backed by a knowledge base containing Mental Health First Aid (MHFA) resources and materials.
+
       1. On every user question:
          • Query the KB and compute a confidence score (1-100).
          • If confidence ≥ 90:
-             - Reply with the direct answer and include “(confidence: X%)”.
+             - Reply with the direct answer and include "(confidence: X%)".
              - Do not ask for email or escalate.
          • If confidence < 90:
-             - Say: “I'm sorry, I don't have a reliable answer right now.  
-                      Could you please share your email so I can escalate this to an administrator for further help?”
+             - Say: "I'm sorry, I don't have a reliable answer right now.
+                      Could you please share your email so I can escalate this to an administrator for further help?"
              - Wait for the user to supply an email address.
-             
-      
+
+
       2. Once you receive a valid email address:
          • Call the action group function notify-admin with these parameters:
              - **email**: the user's email
              - **querytext**: the original question they asked
              - **agentResponse**: the best partial answer or summary you produced (even if low confidence)
          • After invoking, reply to the user:
-             - “Thanks! An administrator has been notified and will follow up at [email]. Would you like to ask any other questions?”
+             - "Thanks! An administrator has been notified and will follow up at [email]. Would you like to ask any other questions?"
 
-      3. If any question is not about 'blueberry', 'blueberries', 'cultivation', 'farming', 'agriculture',
-        'weather', 'climate', 'soil', 'ph', 'irrigation', 'fertilizer',
-        'pests', 'insects', 'aphids', 'pollination', 'bees', 'birds',
-        'diseases', 'fungus', 'harvest', 'yield', 'pruning', 'varieties',
-        'virus', 'shock', 'chatBOT', 'chatbot', 'chat BOT', 'pollen' or something related, the guardrail should work.
-        Say: “I'm sorry, I can only answer questions about blueberries or agriculture. Please ask another question.”
-      
-      Always keep your tone professional, concise, and clear.`
+      3. If any question is not about 'mental health', 'MHFA', 'Mental Health First Aid', 'wellbeing',
+        'mental wellness', 'crisis', 'training', 'certification', 'MHFA Connect', 'instructor', 'learner',
+        'support', 'resources', 'National Council', 'behavioral health', 'chatBOT', 'chatbot', 'chat BOT' or something related, the guardrail should work.
+        Say: "I'm sorry, I can only answer questions about Mental Health First Aid and mental wellbeing resources. Please ask another question."
+
+      Always keep your tone professional, compassionate, and clear.`
       
 
     const agent = new bedrock.Agent(this, 'Agent', {
-      name: 'Agent-with-knowledge-base',
-      description: 'This agent is responsible for processing non-quantitative queries using PDF files and knowledge base.',
+      name: 'NCMW-MHFA-Assistant',
+      description: 'National Council for Mental Wellbeing agent providing Mental Health First Aid information and support resources.',
       foundationModel: cris_sonnet_3_5_v2,
       shouldPrepareAgent: true,
       userInputEnabled:true,
