@@ -1,167 +1,81 @@
 # MHFA Learning Navigator - URL Reference Guide
 
-This document contains important URLs and hyperlinks for the MHFA Learning Ecosystem. Use this as a reference when answering questions about where to access forms, resources, or online platforms.
+This document contains all hyperlinks and URLs extracted from MHFA knowledge base documents.
 
 ---
 
-## Official MHFA Platforms
+## 25.04.11_MHFA_Learners-ConnectUserGuide_RW.pdf
 
-### Main Websites
+- [https://connect.MentalHealthFirstAid.org/](https://connect.MentalHealthFirstAid.org/) (Page 9)
+- [https://connect](https://connect) (Page 9)
+- [https://connect.mentalhealthfirstaid.org/](https://connect.mentalhealthfirstaid.org/) (Page 12)
+- [https://connect.MentalHealthFirstAid.org](https://connect.MentalHealthFirstAid.org) (Page 14)
+
+## 25.04.14_MHFA Connect User Guide_RW.pdf
+
+- [https://vimeo.com/manage/videos/862115345](https://vimeo.com/manage/videos/862115345) (Page 5)
+- [https://store.mentalhealthfirstaid.org/](https://store.mentalhealthfirstaid.org/) (Page 5)
+- [https://store.MentalHealthFirstAid.org](https://store.MentalHealthFirstAid.org) (Page 5)
+- [https://vimeo.com/862115234?share=copy](https://vimeo.com/862115234?share=copy) (Page 9)
+- [https://connect.mentalhealthfirstaid.org/r/23s0ny35wqaklcqysynhnxtkijs1l89](https://connect.mentalhealthfirstaid.org/r/23s0ny35wqaklcqysynhnxtkijs1l89) (Page 9)
+- [https://thenationalcouncilhelp.zendesk.com/hc/en-us/requests/new](https://thenationalcouncilhelp.zendesk.com/hc/en-us/requests/new) (Page 9)
+- [https://vimeo.com/862115011?share=copy](https://vimeo.com/862115011?share=copy) (Page 10)
+- [https://store.mentalhealthfirstaid.org/pages/tax-exemption-submission](https://store.mentalhealthfirstaid.org/pages/tax-exemption-submission) (Page 10)
+- [https://thenationalcouncil-my.sharepoint.com/personal/admin_thenationalcouncil_org/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fadmin%5Fthenationalcouncil%5Forg%2FDocuments%2FMHFA%2DPublic%20Content%2FState%20Tax%20Exemption%20Forms&ga=1](https://thenationalcouncil-my.sharepoint.com/personal/admin_thenationalcouncil_org/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fadmin%5Fthenationalcouncil%5Forg%2FDocuments%2FMHFA%2DPublic%20Content%2FState%20Tax%20Exemption%20Forms&ga=1) (Page 10)
+- [https://store.mentalhealthfirstaid.org/pages/organizational-invoicing-interest-form](https://store.mentalhealthfirstaid.org/pages/organizational-invoicing-interest-form) (Page 11)
+- [https://vimeo.com/862115139?share=copy](https://vimeo.com/862115139?share=copy) (Page 11)
+- [https://store.mentalhealthfirstaid.org/pages/shipping](https://store.mentalhealthfirstaid.org/pages/shipping) (Page 14)
+- [https://connect.mentalhealthfirstaid.org/](https://connect.mentalhealthfirstaid.org/) (Page 16)
+- [https://connect](https://connect) (Page 16)
+- [https://store.mentalhealthfirstaid.org/apps/gkt/checkBalance](https://store.mentalhealthfirstaid.org/apps/gkt/checkBalance) (Page 17)
+- [https://vimeo.com/862114817?share=copy](https://vimeo.com/862114817?share=copy) (Page 17)
+- [https://thenationalcouncilhelp.zendesk.com/hc/en-us](https://thenationalcouncilhelp.zendesk.com/hc/en-us) (Page 20)
+- [https://connect.mentalhealthfirstaid.org/Courses/1234567](https://connect.mentalhealthfirstaid.org/Courses/1234567) (Page 21)
+- [https://connect.mentalhealthfirstaid.orgt/](https://connect.mentalhealthfirstaid.orgt/) (Page 23)
+- [https://vimeo.com/604940984?share=copy](https://vimeo.com/604940984?share=copy) (Page 27)
+- [https://vimeo.com/604930690?share=copy](https://vimeo.com/604930690?share=copy) (Page 27)
+- [https://connect.mentalhealthfirstaid.org/r/0ns42j68vvto1cvwsonh0nuyi5s9xzr](https://connect.mentalhealthfirstaid.org/r/0ns42j68vvto1cvwsonh0nuyi5s9xzr) (Page 27)
+- [https://www.mentalhealthfirstaid.org/take-a-course/find-a-course/](https://www.mentalhealthfirstaid.org/take-a-course/find-a-course/) (Page 29)
+- [https://connect.mentalhealthfirstaid.org/forums/posts/69736?bc=topics](https://connect.mentalhealthfirstaid.org/forums/posts/69736?bc=topics) (Page 35)
+- [https://connect.mentalhealthfirstaid.org/r/6ksw378j1ea2vhv1sovh08u5ijs02m0](https://connect.mentalhealthfirstaid.org/r/6ksw378j1ea2vhv1sovh08u5ijs02m0) (Page 37)
+- [https://vimeo.com/604960751?share=copy](https://vimeo.com/604960751?share=copy) (Page 38)
+- [https://vimeo.com/604959001?share=copy](https://vimeo.com/604959001?share=copy) (Page 38)
+- [https://connect.MentalHealthFirstAid.org](https://connect.MentalHealthFirstAid.org) (Page 38)
+- [https://vimeo.com/604954968?share=copy](https://vimeo.com/604954968?share=copy) (Page 41)
+- [https://vimeo.com/604969046?share=copy](https://vimeo.com/604969046?share=copy) (Page 43)
+- [https://vimeo.com/manage/videos/654170287](https://vimeo.com/manage/videos/654170287) (Page 45)
+- [https://vimeo.com/604974167?share=copy](https://vimeo.com/604974167?share=copy) (Page 47)
+- [https://vimeo.com/604965056?share=copy](https://vimeo.com/604965056?share=copy) (Page 50)
+- [https://connect.mentalhealthfirstaid.org/r/3ks82m341wsm9cj7sqnhwmt8ijs495v](https://connect.mentalhealthfirstaid.org/r/3ks82m341wsm9cj7sqnhwmt8ijs495v) (Page 53)
+- [https://vimeo.com/604955863?share=copy](https://vimeo.com/604955863?share=copy) (Page 54)
+- [https://connect.mentalhealthfirstaid.org/r/rqsyxkk393t7xsyzs2rhxntzi1s5x2r](https://connect.mentalhealthfirstaid.org/r/rqsyxkk393t7xsyzs2rhxntzi1s5x2r) (Page 54)
+- [https://store.mentalhealthfirstaid.org/account/login](https://store.mentalhealthfirstaid.org/account/login) (Page 79)
+- [https://vimeo.com/837013093/c11a688adf?share=copy](https://vimeo.com/837013093/c11a688adf?share=copy) (Page 80)
+- [https://connect.mentalhealthfirstaid.org/learner_resource_list](https://connect.mentalhealthfirstaid.org/learner_resource_list) (Page 80)
+- [https://portal.mentalhealthfirstaid.org](https://portal.mentalhealthfirstaid.org) (Page 81)
+- [https://portal.mentalhealthfirstaid.org/](https://portal.mentalhealthfirstaid.org/) (Page 84)
+
+## MHFA_InstructorPolicyHandbook_8.6.25.pdf
+
+- [mailto:Provisional@TheNationalCouncil.org](mailto:Provisional@TheNationalCouncil.org) (Page 8)
+- [https://www.mentalhealthfirstaid.org/become-an-instructor/applying-to-teen-mental-health-first-aid-information-and-resources/](https://www.mentalhealthfirstaid.org/become-an-instructor/applying-to-teen-mental-health-first-aid-information-and-resources/) (Page 10)
+- [https://connect.mentalhealthfirstaid.org/learner_resource_list](https://connect.mentalhealthfirstaid.org/learner_resource_list) (Page 16)
+- [https://store.mentalhealthfirstaid.org/](https://store.mentalhealthfirstaid.org/) (Page 17)
+- [https://thenationalcouncilhelp.zendesk.com/hc/en-us/requests/new](https://thenationalcouncilhelp.zendesk.com/hc/en-us/requests/new) (Page 17)
+- [https://www.ada.gov/ada_title_III.htm](https://www.ada.gov/ada_title_III.htm) (Page 21)
+
+## Common MHFA Resources
+
+### Official Websites
 - **MHFA Connect Platform**: https://www.mhfaconnect.org/
-  - The primary platform for instructors and learners to access courses, materials, and track certifications
-  - Login page: https://www.mhfaconnect.org/login
-
 - **Mental Health First Aid Main Site**: https://www.mentalhealthfirstaid.org/
-  - Official website with general information about MHFA programs
-
 - **National Council for Mental Wellbeing**: https://www.thenationalcouncil.org/
-  - Parent organization website
 
-### Online Store
-- **MHFA Store**: https://store.mentalhealthfirstaid.org/
-  - Purchase training materials, manuals, and resources
-  - Voucher purchases and course materials
-
----
-
-## Support and Assistance
-
-### Request Forms
+### Support Forms
 - **Request Assistance Form**: https://www.mentalhealthfirstaid.org/request-assistance/
-  - Use this form for:
-    - Custom voucher orders
-    - Changes to blended-seat invoices
-    - Technical support issues
-    - Account problems
-    - General assistance requests
-
 - **Contact Support**: https://www.mentalhealthfirstaid.org/contact/
-  - General contact page for inquiries
 
-### Billing and Invoices
-- **Organizational Billing Enrollment**: Contact via Request Assistance Form (see above)
-- **Invoice Questions**: Submit through Request Assistance Form
-
----
-
-## Training and Certification
-
-### For Learners
+### Training Resources
 - **Find a Course**: https://www.mentalhealthfirstaid.org/take-a-course/
-  - Search for MHFA courses by location
-  - View available training sessions
-
-- **Course Registration**: Via MHFA Connect (https://www.mhfaconnect.org/)
-
-- **Certification Lookup**: Available through MHFA Connect after completing courses
-
-### For Instructors
 - **Become an Instructor**: https://www.mentalhealthfirstaid.org/become-an-instructor/
-  - Information about instructor training and certification
 
-- **Instructor Resources**: Available through MHFA Connect (https://www.mhfaconnect.org/)
-  - Lesson plans
-  - Presentation materials
-  - Course management tools
-
-- **Instructor Community**: https://www.mentalhealthfirstaid.org/instructor-community/
-  - Connect with other MHFA instructors
-
----
-
-## Course Types and Materials
-
-### Adult MHFA
-- **Course Information**: https://www.mentalhealthfirstaid.org/population-focused-modules/adult-mhfa/
-- Materials available through MHFA Store
-
-### Youth MHFA
-- **Course Information**: https://www.mentalhealthfirstaid.org/population-focused-modules/youth-mhfa/
-- Materials available through MHFA Store
-
-### Specialized Courses
-- **Teen Mental Health First Aid**: https://www.mentalhealthfirstaid.org/population-focused-modules/teen-mhfa/
-- **Higher Education MHFA**: https://www.mentalhealthfirstaid.org/population-focused-modules/higher-education/
-- **Veterans MHFA**: https://www.mentalhealthfirstaid.org/population-focused-modules/veterans/
-- **Older Adults MHFA**: https://www.mentalhealthfirstaid.org/population-focused-modules/older-adults/
-
----
-
-## Blended Course Information
-
-### Payment and Billing
-When answering questions about blended course payments:
-- Invoices are sent 48 hours after the Instructor-led training session
-- Instructor 1 receives the invoice (unless organizational billing is set up)
-- Each blended seat costs $23.95
-- Invoice changes must be submitted through: https://www.mentalhealthfirstaid.org/request-assistance/
-
-### Pre-purchase Options
-- Vouchers can be purchased through: https://store.mentalhealthfirstaid.org/
-- Custom voucher orders: https://www.mentalhealthfirstaid.org/request-assistance/
-
----
-
-## Technical Support
-
-### MHFA Connect Technical Issues
-- **Submit Technical Issues**: https://www.mentalhealthfirstaid.org/request-assistance/
-- Include details about:
-  - What you were trying to do
-  - Error messages received
-  - Browser and device information
-
-### Account Access
-- **Password Reset**: https://www.mhfaconnect.org/forgot-password
-- **Account Issues**: https://www.mentalhealthfirstaid.org/request-assistance/
-
----
-
-## Policies and Guidelines
-
-### Instructor Policies
-- **Code of Conduct**: Available in MHFA Connect
-- **Teaching Guidelines**: Available in MHFA Connect
-- **Recertification Requirements**: https://www.mentalhealthfirstaid.org/become-an-instructor/
-
-### Privacy and Data
-- **Privacy Policy**: https://www.mentalhealthfirstaid.org/privacy-policy/
-- **Terms of Use**: https://www.mentalhealthfirstaid.org/terms-of-use/
-
----
-
-## Additional Resources
-
-### Mental Health Resources
-- **Crisis Resources**: https://www.mentalhealthfirstaid.org/mental-health-resources/
-- **988 Suicide & Crisis Lifeline**: Call or text 988
-  - Website: https://988lifeline.org/
-
-### Research and Impact
-- **MHFA Research**: https://www.mentalhealthfirstaid.org/about/research/
-- **Impact Studies**: Available on main website
-
----
-
-## Quick Reference: Common Questions
-
-### "Where is the Request Assistance Form?"
-Answer: https://www.mentalhealthfirstaid.org/request-assistance/
-
-### "How do I access MHFA Connect?"
-Answer: Visit https://www.mhfaconnect.org/ and log in with your credentials
-
-### "Where can I buy course materials?"
-Answer: https://store.mentalhealthfirstaid.org/
-
-### "How do I find a course?"
-Answer: https://www.mentalhealthfirstaid.org/take-a-course/
-
-### "How do I become an instructor?"
-Answer: https://www.mentalhealthfirstaid.org/become-an-instructor/
-
----
-
-**Note**: This reference document should be uploaded to the knowledge base S3 bucket so the agent can retrieve URLs when answering user questions.
-
-**Last Updated**: 2025-12-31

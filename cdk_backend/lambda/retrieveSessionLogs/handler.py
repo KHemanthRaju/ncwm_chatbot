@@ -72,8 +72,8 @@ def lambda_handler(event, context):
     # 2) Build filter & projection
     start_iso, end_iso = start.isoformat(), end.isoformat()
     filter_exp = Attr("original_ts").between(start_iso, end_iso)
-    projection = "session_id, #loc, category"
-    expr_names = { "#loc": "location" }
+    projection = "session_id, #loc, category, sentiment, satisfaction_score, #q, #r, original_ts"
+    expr_names = { "#loc": "location", "#q": "query", "#r": "response" }
 
     # 3) Scan in pages
     items = []
@@ -98,15 +98,42 @@ def lambda_handler(event, context):
     log("TOTAL items scanned       :", len(items))
 
     # 4) Aggregate
-    sessions, loc_counts, cat_counts = set(), defaultdict(int), defaultdict(int)
+    sessions = set()
+    loc_counts = defaultdict(int)
+    cat_counts = defaultdict(int)
+    sentiment_counts = defaultdict(int)
+    satisfaction_scores = []
+    conversations = []
 
     for it in items:
         if sid := it.get("session_id"):
             sessions.add(sid)
         if loc := it.get("location"):
-            loc_counts[loc] += 1
+            if isinstance(loc, str) and loc:  # Only count valid location strings
+                loc_counts[loc] += 1
         if cat := it.get("category"):
             cat_counts[cat] += 1
+        if sent := it.get("sentiment"):
+            sentiment_counts[sent] += 1
+        if score := it.get("satisfaction_score"):
+            satisfaction_scores.append(float(score))
+
+        # Build conversation log entry
+        conversations.append({
+            "session_id": it.get("session_id"),
+            "timestamp": it.get("original_ts"),
+            "query": it.get("query", ""),
+            "response": it.get("response", ""),
+            "category": it.get("category", "Unknown"),
+            "sentiment": it.get("sentiment", "neutral"),
+            "satisfaction_score": float(it.get("satisfaction_score", 50))
+        })
+
+    # Calculate average satisfaction
+    avg_satisfaction = sum(satisfaction_scores) / len(satisfaction_scores) if satisfaction_scores else 0
+
+    # Sort conversations by timestamp (most recent first)
+    conversations.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
 
     result = {
         "timeframe":  tf,
@@ -115,6 +142,9 @@ def lambda_handler(event, context):
         "user_count": len(sessions),
         "locations":  list(loc_counts.keys()),
         "categories": dict(cat_counts),
+        "sentiment": dict(sentiment_counts),
+        "avg_satisfaction": round(avg_satisfaction, 1),
+        "conversations": conversations[:50]  # Return latest 50 conversations
     }
 
     log("Distinct sessions         :", len(sessions))

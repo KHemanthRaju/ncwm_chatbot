@@ -13,6 +13,7 @@ import AdminDashboard from './Components/AdminDashboard';
 import ManageDocuments from './Components/ManageDocuments';
 import AdminAnalytics from './Components/AdminAnalytics';
 import EscalatedQueries from './Components/EscalatedQueries';
+import ConversationLogs from './Components/ConversationLogs';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/admin-documents" element={<ManageDocuments />} />
                 <Route path="/admin-analytics" element={<AdminAnalytics />} />
                 <Route path="/admin-queries" element={<EscalatedQueries />} />
+                <Route path="/admin-conversations" element={<ConversationLogs />} />
               </Routes>
             </Router>
           </TranscriptProvider>

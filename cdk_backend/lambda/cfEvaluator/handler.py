@@ -31,9 +31,8 @@ def lambda_handler(event, context):
         query = event.get("querytext", "").strip()
         connection_id = event.get("connectionId")
         session_id = event.get("session_id", context.aws_request_id)
-        location = event.get("location")  # Must come from frontend first time
-        
-        print(f"Received Query - Session: {session_id}, Location: {location}, Query: {query}")
+
+        print(f"Received Query - Session: {session_id}, Query: {query}")
 
         max_retries = 2
         full_response = ""
@@ -90,8 +89,7 @@ def lambda_handler(event, context):
             "session_id": session_id,
             "timestamp": datetime.utcnow().isoformat(),
             "query": query,
-            "response": full_response,
-            "location": location
+            "response": full_response
         }
 
         print(payload)
