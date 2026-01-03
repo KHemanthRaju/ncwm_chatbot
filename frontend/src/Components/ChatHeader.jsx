@@ -4,14 +4,19 @@ import {
   Info as InfoIcon,
   Psychology as PsychologyIcon,
   Menu as MenuIcon,
+  Person as PersonIcon,
 } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../utilities/LanguageContext";
 import { TEXT } from "../utilities/constants";
+import { RECOMMENDATIONS_TEXT } from "../utilities/recommendationsTranslations";
 import { useTheme } from "@mui/material/styles";
 
 function ChatHeader({ selectedLanguage, onMenuClick }) {
+  const navigate = useNavigate();
   const { language: contextLanguage } = useLanguage();
   const language = selectedLanguage || contextLanguage || 'EN';
+  const PROFILE_TEXT = RECOMMENDATIONS_TEXT[language] || RECOMMENDATIONS_TEXT.EN;
   const theme = useTheme();
 
   return (
@@ -121,20 +126,36 @@ function ChatHeader({ selectedLanguage, onMenuClick }) {
           </Box>
         </Box>
 
-        {/* Right side - Info button */}
-        <Tooltip title="About Learning Navigator" arrow>
-          <IconButton
-            sx={{
-              color: 'white',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.2)',
-              },
-            }}
-          >
-            <InfoIcon />
-          </IconButton>
-        </Tooltip>
+        {/* Right side - Profile and Info buttons */}
+        <Box display="flex" gap={1}>
+          <Tooltip title={PROFILE_TEXT.TOOLTIP_PROFILE || "My Profile"} arrow>
+            <IconButton
+              onClick={() => navigate('/profile')}
+              sx={{
+                color: 'white',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                },
+              }}
+            >
+              <PersonIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={PROFILE_TEXT.TOOLTIP_INFO || "About Learning Navigator"} arrow>
+            <IconButton
+              sx={{
+                color: 'white',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                },
+              }}
+            >
+              <InfoIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </Box>
     </Box>
   );

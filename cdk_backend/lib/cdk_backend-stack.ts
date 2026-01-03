@@ -713,6 +713,68 @@ export class LearningNavigatorStack extends cdk.Stack {
       authorizationType: apigateway.AuthorizationType.COGNITO,
     });
 
+    // ──────────────────────────────────────────────────────────────────────────────
+    // User Profile & Personalized Recommendations
+    // ──────────────────────────────────────────────────────────────────────────────
+
+    // DynamoDB table for user profiles
+    const userProfileTable = new dynamodb.Table(this, 'UserProfileTable', {
+      tableName: 'NCMWUserProfiles',
+      partitionKey: { name: 'userId', type: dynamodb.AttributeType.STRING },
+      removalPolicy: cdk.RemovalPolicy.DESTROY,  // For production, use RETAIN
+    });
+
+    // Lambda function for user profile management
+    const userProfileFn = new lambda.Function(this, 'UserProfileFn', {
+      runtime: lambda.Runtime.PYTHON_3_12,
+      handler: 'handler.lambda_handler',
+      code: lambda.Code.fromAsset('lambda/userProfile'),
+      timeout: cdk.Duration.seconds(30),
+      environment: {
+        USER_PROFILE_TABLE: userProfileTable.tableName,
+        USER_POOL_ID: userPool.userPoolId,
+      },
+    });
+
+    // Grant permissions
+    userProfileTable.grantReadWriteData(userProfileFn);
+    userProfileFn.addToRolePolicy(new iam.PolicyStatement({
+      actions: [
+        'cognito-idp:AdminUpdateUserAttributes',
+        'cognito-idp:AdminGetUser',
+      ],
+      resources: [userPool.userPoolArn],
+    }));
+
+    // API Gateway resources
+    const userProfileResource = AdminApi.root.addResource('user-profile');
+    const recommendationsResource = AdminApi.root.addResource('recommendations');
+    const userProfileIntegration = new apigateway.LambdaIntegration(userProfileFn, { proxy: true });
+
+    // GET /user-profile - Get user profile
+    userProfileResource.addMethod('GET', userProfileIntegration, {
+      authorizer: userPoolAuthorizer,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+    });
+
+    // POST /user-profile - Create/update user profile
+    userProfileResource.addMethod('POST', userProfileIntegration, {
+      authorizer: userPoolAuthorizer,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+    });
+
+    // PUT /user-profile - Update user profile
+    userProfileResource.addMethod('PUT', userProfileIntegration, {
+      authorizer: userPoolAuthorizer,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+    });
+
+    // GET /recommendations - Get personalized recommendations
+    recommendationsResource.addMethod('GET', userProfileIntegration, {
+      authorizer: userPoolAuthorizer,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+    });
+
 
     // Configure Amplify source code provider based on repo visibility
     const sourceCodeProviderConfig: any = {
