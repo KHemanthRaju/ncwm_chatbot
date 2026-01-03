@@ -19,9 +19,10 @@ Individuals taking MHFA courses to become certified in Mental Health First Aid.
 
 ## How It Works
 
-### **Step 1: User Authentication**
-- Users must be logged in with a Cognito account
+### **Step 1: Access the Chatbot**
+- **No login required** - Works for all users (guest access)
 - Available at: https://main.d1disyogbqgwn4.amplifyapp.com
+- Role preferences stored in browser localStorage
 
 ### **Step 2: Select Your Role**
 1. Click the **Profile icon** (person icon) in the chat header
@@ -434,18 +435,20 @@ Potential additions (not currently implemented):
 ## Security & Privacy
 
 ### Authentication:
-- ✅ Requires Cognito login
-- ✅ API endpoints protected by Cognito authorizer
-- ✅ JWT tokens validated on every request
+- ✅ **Guest Mode**: No login required for main chatbot users
+- ✅ **Admin Mode**: Cognito authentication for admin portal users
+- ✅ API endpoints protected by Cognito authorizer (for admin users)
 
 ### Data Storage:
-- ✅ User profiles stored in DynamoDB with encryption at rest
+- ✅ **Guest Users**: Role stored in browser localStorage (client-side only)
+- ✅ **Admin Users**: Profiles stored in DynamoDB with encryption at rest
 - ✅ Only stores role and preferences (no sensitive data)
 - ✅ User can change role at any time
 
 ### Access Control:
-- ✅ Users can only access their own profile
-- ✅ Backend validates userId from JWT token
+- ✅ Guest users: Data isolated per browser/device
+- ✅ Admin users: Can only access their own profile
+- ✅ Backend validates userId from JWT token (admin only)
 - ✅ No cross-user data access
 
 ---
