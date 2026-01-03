@@ -1,10 +1,11 @@
 import React from "react";
-import { Typography, Box, IconButton, Tooltip } from "@mui/material";
+import { Typography, Box, IconButton, Tooltip, Button } from "@mui/material";
 import {
   Info as InfoIcon,
   Psychology as PsychologyIcon,
   Menu as MenuIcon,
   Person as PersonIcon,
+  Language as LanguageIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../utilities/LanguageContext";
@@ -14,10 +15,16 @@ import { useTheme } from "@mui/material/styles";
 
 function ChatHeader({ selectedLanguage, onMenuClick }) {
   const navigate = useNavigate();
-  const { language: contextLanguage } = useLanguage();
+  const { language: contextLanguage, setLanguage } = useLanguage();
   const language = selectedLanguage || contextLanguage || 'EN';
   const PROFILE_TEXT = RECOMMENDATIONS_TEXT[language] || RECOMMENDATIONS_TEXT.EN;
   const theme = useTheme();
+
+  const handleLanguageToggle = () => {
+    const newLanguage = language === 'EN' ? 'ES' : 'EN';
+    setLanguage(newLanguage);
+    localStorage.setItem('preferredLanguage', newLanguage);
+  };
 
   return (
     <Box
@@ -126,8 +133,33 @@ function ChatHeader({ selectedLanguage, onMenuClick }) {
           </Box>
         </Box>
 
-        {/* Right side - Profile and Info buttons */}
-        <Box display="flex" gap={1}>
+        {/* Right side - Language, Profile and Info buttons */}
+        <Box display="flex" gap={1} alignItems="center">
+          {/* Language Toggle Button */}
+          <Tooltip title={language === 'EN' ? "Cambiar a Español" : "Switch to English"} arrow>
+            <Button
+              onClick={handleLanguageToggle}
+              startIcon={<LanguageIcon />}
+              sx={{
+                color: 'white',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                borderRadius: '20px',
+                padding: '6px 16px',
+                textTransform: 'none',
+                fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
+                fontWeight: 600,
+                fontSize: '0.875rem',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  border: '1px solid rgba(255, 255, 255, 0.5)',
+                },
+              }}
+            >
+              {language === 'EN' ? 'ES' : 'EN'}
+            </Button>
+          </Tooltip>
+
           <Tooltip title={PROFILE_TEXT.TOOLTIP_PROFILE || "My Profile"} arrow>
             <IconButton
               onClick={() => navigate('/profile')}
