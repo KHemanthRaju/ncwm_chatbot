@@ -14,7 +14,6 @@ import ManageDocuments from './Components/ManageDocuments';
 import AdminAnalytics from './Components/AdminAnalytics';
 import EscalatedQueries from './Components/EscalatedQueries';
 import ConversationLogs from './Components/ConversationLogs';
-import UserProfilePage from './Components/UserProfilePage';
 
 function App() {
   return (
@@ -33,7 +32,6 @@ function App() {
                 <Route path="/admin-analytics" element={<AdminAnalytics />} />
                 <Route path="/admin-queries" element={<EscalatedQueries />} />
                 <Route path="/admin-conversations" element={<ConversationLogs />} />
-                <Route path="/profile" element={<UserProfilePage />} />
               </Routes>
             </Router>
           </TranscriptProvider>
