@@ -1,5 +1,7 @@
 # Learning Navigator - MHFA Learning Ecosystem AI Assistant
 
+**Live Application:** https://main.d1disyogbqgwn4.amplifyapp.com
+
 A comprehensive chatbot application that provides real-time guidance for the Mental Health First Aid (MHFA) Learning Ecosystem, powered by AWS Bedrock and featuring an administrative dashboard for content management and analytics.
 
 This application combines natural language processing capabilities with a knowledge base of MHFA training resources to deliver accurate, context-aware responses to instructors, learners, and administrators. The system includes a user-friendly chat interface, multilingual support, and an administrative portal for managing content and monitoring user interactions.
