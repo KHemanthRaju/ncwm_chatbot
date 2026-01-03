@@ -6,12 +6,16 @@ This application combines natural language processing capabilities with a knowle
 
 The application features a serverless architecture built on AWS services, with real-time communication through WebSockets, secure file management, and detailed analytics. Key features include:
 - AI-powered responses using AWS Bedrock with Claude 3.5 Sonnet
+- **Personalized Recommendations** - Role-based content for Instructors, Staff, and Learners
+- **Guest Access** - No login required for main chatbot (guest/anonymous mode)
+- **Language Toggle** - Switch between English and Spanish with one click
 - Automated email notifications for queries requiring expert attention
 - Secure document management system for knowledge base updates
 - Real-time chat with streaming responses
 - Administrative dashboard with analytics and content management
-- Multi-language support (English/Spanish)
-- Session logging and analysis capabilities
+- Multi-language support (English/Spanish) with Amazon Translate integration
+- Session logging and sentiment analysis capabilities
+- User profile management with role-specific quick actions
 
 ## Repository Structure
 ```
@@ -218,7 +222,63 @@ Once the infrastructure is deployed using either of the two approaches:
 7. Using the Application:
    - Once frontend deployment is complete, navigate to the Amplify URL
    - The chat interface will load with example queries about MHFA training and resources
+   - **No login required** - Chat works immediately in guest mode
+   - Click the **Profile icon** to select your role and view personalized recommendations
+   - Use the **Language toggle** button to switch between English and Spanish
 
+## Features
+
+### Personalized Recommendations
+The chatbot provides role-based personalized recommendations to enhance user experience:
+
+**Target User Roles:**
+- 🎓 **MHFA Instructors** - Certified instructors who deliver training courses
+- 💼 **Internal Staff** - Administrative and support staff managing training operations
+- 👤 **Learners** - Individuals taking MHFA courses for certification
+
+**How It Works:**
+1. Click the **Profile icon** (person icon) in the chat header
+2. Select your role from three beautifully designed cards
+3. View personalized quick actions with sample queries
+4. Click any query chip to use it in the chat instantly
+5. Access suggested topics and recent updates relevant to your role
+
+**Key Benefits:**
+- ✅ **No login required** - Works with guest access using browser localStorage
+- ✅ **12 quick actions** - 4 per role with 3 sample queries each
+- ✅ **36+ curated queries** - Pre-written questions tailored to each role
+- ✅ **Suggested topics** - 5 relevant topics per role to explore
+- ✅ **Recent updates** - Latest news and announcements per role
+- ✅ **Bilingual support** - Full English and Spanish translations
+
+For detailed information, see [PERSONALIZED_RECOMMENDATIONS_GUIDE.md](PERSONALIZED_RECOMMENDATIONS_GUIDE.md)
+
+### Multilingual Support
+Switch between English and Spanish seamlessly:
+- **Language Toggle Button** in chat header with globe icon
+- One-click switch with instant UI updates
+- Preferences saved to localStorage and cookies
+- All UI elements, recommendations, and responses update automatically
+- Tooltips: "Cambiar a Español" / "Switch to English"
+
+### Sentiment Analysis
+AI-powered sentiment analysis evaluates chat interactions:
+- **4 evaluation factors**: Relevance (30%), Completeness (30%), Clarity (20%), Actionability (20%)
+- **Score ranges**: 0-100 with categorical ratings (Excellent, Good, Acceptable, etc.)
+- **Admin dashboard** displays sentiment trends and low-score conversations
+- Powered by Amazon Bedrock (Nova Lite model)
+
+For detailed information, see [SENTIMENT_ANALYSIS_EXPLAINED.md](SENTIMENT_ANALYSIS_EXPLAINED.md)
+
+### Admin Portal Features
+Secure administrative dashboard (requires Cognito authentication):
+- **Document Management** - Upload and manage knowledge base PDFs
+- **Analytics Dashboard** - View chat metrics and sentiment analysis
+- **Escalated Queries** - Manage questions requiring human expert attention
+- **Conversation Logs** - Review detailed chat transcripts with sentiment scores
+- **Email Notifications** - Automated alerts via Amazon SES
+
+For detailed information, see [ADMIN_FEATURES.md](ADMIN_FEATURES.md)
 
 ### Troubleshooting
 1. WebSocket Connection Issues
@@ -305,9 +365,11 @@ Component interactions:
 Lambda Functions:
 - `adminFile`: Manages document uploads and knowledge base updates
 - `cfEvaluator`: Evaluates chat flow and confidence scores
-- `email`: Handles admin notifications
-- `logclassifier`: Categorizes and analyzes session logs
-- `websocketHandler`: Manages real-time communication
+- `email`: Handles admin notifications and escalated queries
+- `logclassifier`: Categorizes and analyzes session logs with AI sentiment analysis
+- `websocketHandler`: Manages real-time WebSocket communication
+- `userProfile`: Manages user profiles and personalized recommendations
+- `escalatedQueries`: Handles escalated query workflow and tracking
 
 AWS Services:
 - Bedrock: AI model and knowledge base
