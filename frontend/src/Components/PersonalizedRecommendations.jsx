@@ -29,6 +29,182 @@ import { translateRecommendations } from '../utilities/translationService';
 const RECOMMENDATIONS_API = `${DOCUMENTS_API}recommendations`;
 const USE_TRANSLATE_API = process.env.REACT_APP_USE_TRANSLATE === 'true';
 
+// Local recommendations data (mirrors backend for guest users)
+const getLocalRecommendations = (role) => {
+  const RECOMMENDATIONS = {
+    instructor: {
+      quick_actions: [
+        {
+          title: 'Course Planning',
+          description: 'Access course materials and lesson plans',
+          icon: 'School',
+          queries: [
+            'Show me the latest MHFA course curriculum',
+            'What are best practices for teaching mental health first aid?',
+            'How do I prepare for an upcoming MHFA course?'
+          ]
+        },
+        {
+          title: 'Student Management',
+          description: 'Track student progress and engagement',
+          icon: 'People',
+          queries: [
+            'How do I track student attendance?',
+            'What are the assessment criteria for MHFA certification?',
+            'How can I support struggling learners?'
+          ]
+        },
+        {
+          title: 'Training Resources',
+          description: 'Access instructor guides and materials',
+          icon: 'LibraryBooks',
+          queries: [
+            'Show me instructor training resources',
+            'What materials do I need for blended courses?',
+            'Where can I find updated training videos?'
+          ]
+        },
+        {
+          title: 'Certification & Credits',
+          description: 'Manage certifications and continuing education',
+          icon: 'Verified',
+          queries: [
+            'How do I maintain my instructor certification?',
+            'What are the requirements for recertification?',
+            'How do I earn CEUs for teaching MHFA?'
+          ]
+        }
+      ],
+      suggested_topics: [
+        'Blended Course Delivery',
+        'Virtual Training Best Practices',
+        'Student Assessment Methods',
+        'Crisis Intervention Techniques',
+        'Cultural Competency in Training'
+      ],
+      recent_updates: [
+        'New curriculum updates for Mental Health First Aid USA',
+        'Updated assessment rubrics available',
+        'Virtual training platform enhancements'
+      ]
+    },
+    staff: {
+      quick_actions: [
+        {
+          title: 'Operations Dashboard',
+          description: 'View training operations and metrics',
+          icon: 'Dashboard',
+          queries: [
+            'Show me current course enrollment numbers',
+            'What are the training completion rates?',
+            'How many instructors are active this month?'
+          ]
+        },
+        {
+          title: 'Instructor Support',
+          description: 'Manage instructor requests and issues',
+          icon: 'SupportAgent',
+          queries: [
+            'How do I onboard new instructors?',
+            'What support resources are available for instructors?',
+            'How do I handle instructor certification renewals?'
+          ]
+        },
+        {
+          title: 'Course Management',
+          description: 'Schedule and coordinate training courses',
+          icon: 'Event',
+          queries: [
+            'How do I schedule a new MHFA course?',
+            'What are the requirements for blended courses?',
+            'How do I update course information?'
+          ]
+        },
+        {
+          title: 'Reporting & Analytics',
+          description: 'Access program metrics and insights',
+          icon: 'Analytics',
+          queries: [
+            'Show me monthly training statistics',
+            'What are the most popular MHFA courses?',
+            'Generate a report on instructor performance'
+          ]
+        }
+      ],
+      suggested_topics: [
+        'Learning Management System',
+        'Course Scheduling Procedures',
+        'Instructor Credentialing',
+        'Program Quality Assurance',
+        'Stakeholder Communication'
+      ],
+      recent_updates: [
+        'New LMS features released',
+        'Updated staff training protocols',
+        'Improved reporting dashboard'
+      ]
+    },
+    learner: {
+      quick_actions: [
+        {
+          title: 'My Courses',
+          description: 'View enrolled courses and progress',
+          icon: 'School',
+          queries: [
+            'Show me my enrolled MHFA courses',
+            'What is my course completion status?',
+            'How do I access my course materials?'
+          ]
+        },
+        {
+          title: 'Find Training',
+          description: 'Search for available MHFA courses',
+          icon: 'Search',
+          queries: [
+            'What MHFA courses are available near me?',
+            'How do I enroll in a Mental Health First Aid course?',
+            'What are the different types of MHFA training?'
+          ]
+        },
+        {
+          title: 'Certification',
+          description: 'Track certification and renewal',
+          icon: 'Verified',
+          queries: [
+            'How do I get my MHFA certification?',
+            'When does my certification expire?',
+            'How do I renew my Mental Health First Aid certification?'
+          ]
+        },
+        {
+          title: 'Resources & Support',
+          description: 'Access learning materials and help',
+          icon: 'Help',
+          queries: [
+            'Where can I find additional MHFA resources?',
+            'How do I contact my instructor?',
+            'What support is available for learners?'
+          ]
+        }
+      ],
+      suggested_topics: [
+        'Course Enrollment Process',
+        'Blended Learning Format',
+        'Certification Requirements',
+        'Mental Health Resources',
+        'Community Support Groups'
+      ],
+      recent_updates: [
+        'New online course modules available',
+        'Updated certification process',
+        'Mobile app for course access launched'
+      ]
+    }
+  };
+
+  return RECOMMENDATIONS[role] || {};
+};
+
 export default function PersonalizedRecommendations({ onQuerySelect }) {
   const { language } = useLanguage();
   const TEXT = RECOMMENDATIONS_TEXT[language] || RECOMMENDATIONS_TEXT.EN;
@@ -47,6 +223,26 @@ export default function PersonalizedRecommendations({ onQuerySelect }) {
       setLoading(true);
       setError('');
 
+      // For guest users, get role from localStorage and generate recommendations locally
+      const guestMode = localStorage.getItem("guestMode");
+      if (guestMode === "true" || !localStorage.getItem("idToken")) {
+        const storedRole = localStorage.getItem('userRole');
+
+        if (!storedRole) {
+          setError(TEXT.NO_ROLE_MESSAGE || 'Please select your role first');
+          setLoading(false);
+          return;
+        }
+
+        // Local recommendations data (mirrors backend RECOMMENDATIONS)
+        const localRecommendations = getLocalRecommendations(storedRole);
+        setRole(storedRole);
+        setRecommendations(localRecommendations);
+        setLoading(false);
+        return;
+      }
+
+      // For authenticated admin users, fetch from backend
       const token = await getIdToken();
       const response = await axios.get(RECOMMENDATIONS_API, {
         headers: { Authorization: `Bearer ${token}` },

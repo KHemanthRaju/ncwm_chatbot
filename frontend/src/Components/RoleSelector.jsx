@@ -63,6 +63,23 @@ export default function RoleSelector({ onRoleSelected }) {
     try {
       setLoading(true);
 
+      // For guest users, check localStorage
+      const guestMode = localStorage.getItem("guestMode");
+      if (guestMode === "true" || !localStorage.getItem("idToken")) {
+        const storedRole = localStorage.getItem('userRole');
+        if (storedRole) {
+          setExistingRole(storedRole);
+          setSelectedRole(storedRole);
+          // Auto-advance if role is already set
+          if (onRoleSelected) {
+            onRoleSelected(storedRole);
+          }
+        }
+        setLoading(false);
+        return;
+      }
+
+      // For authenticated admin users, fetch from backend
       const token = await getIdToken();
       const response = await axios.get(PROFILE_API, {
         headers: { Authorization: `Bearer ${token}` },
@@ -94,8 +111,21 @@ export default function RoleSelector({ onRoleSelected }) {
       setLoading(true);
       setError('');
 
-      const token = await getIdToken();
+      // For guest users (main chatbot), store role in localStorage
+      const guestMode = localStorage.getItem("guestMode");
+      if (guestMode === "true" || !localStorage.getItem("idToken")) {
+        localStorage.setItem('userRole', selectedRole);
+        localStorage.setItem('userRoleTimestamp', new Date().toISOString());
 
+        if (onRoleSelected) {
+          onRoleSelected(selectedRole);
+        }
+        setLoading(false);
+        return;
+      }
+
+      // For authenticated admin users, save to backend
+      const token = await getIdToken();
       await axios.post(
         PROFILE_API,
         {
