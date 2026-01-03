@@ -15,6 +15,7 @@ import {
   ListItemButton
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
+import { useLocation } from "react-router-dom";
 import {
   Psychology as PsychologyIcon,
   LocationOn as LocationIcon,
@@ -32,10 +33,16 @@ import ChatHeader from "./ChatHeader";
 import BotFileCheckReply from "./BotFileCheckReply";
 import createMessageBlock from "../utilities/createMessageBlock";
 import { ALLOW_FILE_UPLOAD, WEBSOCKET_API } from "../utilities/constants";
+import { useLanguage } from "../utilities/LanguageContext";
+import { RECOMMENDATIONS_TEXT } from "../utilities/recommendationsTranslations";
 
 function ChatBody() {
   /* ───────────────────────────────── state ───────────────────────────── */
   const sessionId = useRef(uuidv4()).current;                     // stable per component mount
+  const location = useLocation();
+  const { language } = useLanguage();
+  const TEXT = RECOMMENDATIONS_TEXT[language] || RECOMMENDATIONS_TEXT.EN;
+  const initialQueryProcessedRef = useRef(false);
 
   const [messages, setMessages] = useState([]);
   const [processing, setProcessing] = useState(false);
@@ -48,6 +55,21 @@ function ChatBody() {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  /* ──────────────────── Handle initial query from recommendations ────── */
+  useEffect(() => {
+    if (location.state?.initialQuery && !initialQueryProcessedRef.current) {
+      const query = location.state.initialQuery;
+      initialQueryProcessedRef.current = true;
+      // Clear the location state to prevent re-sending on refresh
+      window.history.replaceState({}, document.title);
+      // Send the initial query after a brief delay to ensure UI is ready
+      setTimeout(() => {
+        handleSend(query);
+      }, 300);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
 
   /* ─────────────────────────── helpers / UI ──────────────────────────── */
   const addMsg = (block) => setMessages((prev) => [...prev, block]);
@@ -130,9 +152,9 @@ function ChatBody() {
 
   /* ────────────────────── suggested prompts ─────────────────────────── */
   const suggestedPrompts = [
-    { icon: <PsychologyIcon />, text: "What is Mental Health First Aid?", label: "About MHFA" },
-    { icon: <LocationIcon />, text: "How do I become a certified MHFA instructor?", label: "Instructor Certification" },
-    { icon: <AutoAwesomeIcon />, text: "Tell me about MHFA training courses", label: "Training Courses" }
+    { icon: <PsychologyIcon />, text: TEXT.CHAT_PROMPT_ABOUT_MHFA_DESC, label: TEXT.CHAT_PROMPT_ABOUT_MHFA },
+    { icon: <LocationIcon />, text: TEXT.CHAT_PROMPT_INSTRUCTOR_CERT_DESC, label: TEXT.CHAT_PROMPT_INSTRUCTOR_CERT },
+    { icon: <AutoAwesomeIcon />, text: TEXT.CHAT_PROMPT_TRAINING_COURSES_DESC, label: TEXT.CHAT_PROMPT_TRAINING_COURSES }
   ];
 
   const handleSuggestedPrompt = (promptText) => {
@@ -245,7 +267,7 @@ function ChatBody() {
               mb: 2,
             }}
           >
-            Welcome to Learning Navigator
+            {TEXT.CHAT_WELCOME_TITLE}
           </Typography>
           <Typography
             variant="body1"
@@ -256,8 +278,7 @@ function ChatBody() {
               lineHeight: 1.6,
             }}
           >
-            Your AI-powered guide for the MHFA Learning Ecosystem.
-            I'm here to help instructors, learners, and administrators navigate training resources and answer your questions.
+            {TEXT.CHAT_WELCOME_SUBTITLE}
           </Typography>
         </Box>
 
@@ -273,7 +294,7 @@ function ChatBody() {
                 textAlign: 'center',
               }}
             >
-              Try asking me about:
+              {TEXT.CHAT_TRY_ASKING}
             </Typography>
             <Grid container spacing={2}>
               {suggestedPrompts.map((prompt, idx) => (
