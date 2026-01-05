@@ -13,7 +13,7 @@ import { TEXT } from "../utilities/constants";
 import { RECOMMENDATIONS_TEXT } from "../utilities/recommendationsTranslations";
 import { useTheme } from "@mui/material/styles";
 
-function ChatHeader({ selectedLanguage, onMenuClick }) {
+function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
   const navigate = useNavigate();
   const { language: contextLanguage, setLanguage } = useLanguage();
   const language = selectedLanguage || contextLanguage || 'EN';
@@ -24,6 +24,11 @@ function ChatHeader({ selectedLanguage, onMenuClick }) {
     const newLanguage = language === 'EN' ? 'ES' : 'EN';
     setLanguage(newLanguage);
     localStorage.setItem('preferredLanguage', newLanguage);
+
+    // Reset the chat conversation when switching languages
+    if (onLanguageChange) {
+      onLanguageChange();
+    }
   };
 
   return (
@@ -136,7 +141,31 @@ function ChatHeader({ selectedLanguage, onMenuClick }) {
         {/* Right side - Language, Profile and Info buttons */}
         <Box display="flex" gap={1} alignItems="center">
           {/* Language Toggle Button */}
-          <Tooltip title={language === 'EN' ? "Cambiar a Español" : "Switch to English"} arrow>
+          <Tooltip
+            title={
+              <Box sx={{ textAlign: 'center', p: 0.5 }}>
+                <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                  {language === 'EN' ? 'Cambiar a Español' : 'Switch to English'}
+                </Typography>
+                <Typography variant="caption" sx={{ color: '#ffeb3b' }}>
+                  {language === 'EN'
+                    ? '⚠️ La conversación actual se perderá'
+                    : '⚠️ Current conversation will be lost'}
+                </Typography>
+              </Box>
+            }
+            arrow
+            componentsProps={{
+              tooltip: {
+                sx: {
+                  bgcolor: 'rgba(0, 0, 0, 0.9)',
+                  '& .MuiTooltip-arrow': {
+                    color: 'rgba(0, 0, 0, 0.9)',
+                  },
+                },
+              },
+            }}
+          >
             <Button
               onClick={handleLanguageToggle}
               startIcon={<LanguageIcon />}

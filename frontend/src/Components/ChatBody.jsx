@@ -83,6 +83,14 @@ function ChatBody() {
       )
     );
 
+  // Reset chat conversation (used when switching languages)
+  const resetChat = () => {
+    setMessages([]);
+    setInputValue("");
+    setProcessing(false);
+    initialQueryProcessedRef.current = false;
+  };
+
   const handleSend = (msgText) => {
     if (!msgText.trim()) return;
 
@@ -546,7 +554,7 @@ function ChatBody() {
       </Drawer>
 
       {/* Header */}
-      <ChatHeader onMenuClick={() => setDrawerOpen(true)} />
+      <ChatHeader onMenuClick={() => setDrawerOpen(true)} onLanguageChange={resetChat} />
 
       {/* Main Chat Container */}
       <Box
