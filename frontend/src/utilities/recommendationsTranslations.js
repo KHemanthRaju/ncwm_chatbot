@@ -60,6 +60,17 @@ export const RECOMMENDATIONS_TEXT = {
     // Tooltips
     TOOLTIP_PROFILE: 'My Profile & Recommendations',
     TOOLTIP_INFO: 'About Learning Navigator',
+
+    // Left Navigator
+    NAV_MENU: 'Menu',
+    NAV_ABOUT_TITLE: 'About Learning Navigator',
+    NAV_ABOUT_DESC: 'Learning Navigator is your AI-powered guide for the Mental Health First Aid (MHFA) Learning Ecosystem. I help instructors, learners, and administrators navigate training resources, answer questions, and provide real-time guidance for all MHFA-related queries.',
+    NAV_POWERED_BY: 'Powered by Amazon Bedrock & Claude AI',
+    NAV_SAMPLE_QUERIES: 'Sample Queries',
+    NAV_CATEGORY_GETTING_STARTED: 'Getting Started',
+    NAV_CATEGORY_FOR_INSTRUCTORS: 'For Instructors',
+    NAV_CATEGORY_TRAINING_COURSES: 'Training & Courses',
+    NAV_CATEGORY_SUPPORT_RESOURCES: 'Support & Resources',
   },
 
   ES: {
@@ -119,6 +130,17 @@ export const RECOMMENDATIONS_TEXT = {
     // Tooltips
     TOOLTIP_PROFILE: 'Mi Perfil y Recomendaciones',
     TOOLTIP_INFO: 'Acerca del Navegador de Aprendizaje',
+
+    // Left Navigator
+    NAV_MENU: 'Menú',
+    NAV_ABOUT_TITLE: 'Acerca del Navegador de Aprendizaje',
+    NAV_ABOUT_DESC: 'El Navegador de Aprendizaje es tu guía impulsada por IA para el Ecosistema de Aprendizaje de Primeros Auxilios en Salud Mental (MHFA). Ayudo a instructores, estudiantes y administradores a navegar recursos de capacitación, responder preguntas y proporcionar orientación en tiempo real para todas las consultas relacionadas con MHFA.',
+    NAV_POWERED_BY: 'Desarrollado por Amazon Bedrock y Claude AI',
+    NAV_SAMPLE_QUERIES: 'Consultas de Ejemplo',
+    NAV_CATEGORY_GETTING_STARTED: 'Primeros Pasos',
+    NAV_CATEGORY_FOR_INSTRUCTORS: 'Para Instructores',
+    NAV_CATEGORY_TRAINING_COURSES: 'Capacitación y Cursos',
+    NAV_CATEGORY_SUPPORT_RESOURCES: 'Soporte y Recursos',
   }
 };
 

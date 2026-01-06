@@ -31,7 +31,7 @@ function ChatInput({ onSendMessage, processing, message, setMessage }) {
       sx={{
         display: 'flex',
         alignItems: 'flex-end',
-        gap: 1.5,
+        gap: { xs: 1, sm: 1.5 },
         position: 'relative',
       }}
     >
@@ -40,7 +40,7 @@ function ChatInput({ onSendMessage, processing, message, setMessage }) {
           flex: 1,
           position: 'relative',
           backgroundColor: theme.palette.background.paper,
-          borderRadius: '24px',
+          borderRadius: { xs: '20px', sm: '24px' },
           border: `2px solid ${isFocused ? theme.palette.primary.main : theme.palette.divider}`,
           transition: 'all 0.3s ease',
           boxShadow: isFocused ? '0 4px 12px rgba(234, 94, 41, 0.15)' : '0 2px 6px rgba(0,0,0,0.08)',
@@ -70,9 +70,9 @@ function ChatInput({ onSendMessage, processing, message, setMessage }) {
           onChange={handleTyping}
           sx={{
             "& .MuiOutlinedInput-root": {
-              padding: "14px 20px",
+              padding: { xs: "10px 14px", sm: "12px 18px", md: "14px 20px" },
               fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
-              fontSize: '0.95rem',
+              fontSize: { xs: '0.875rem', sm: '0.9rem', md: '0.95rem' },
               "& fieldset": {
                 border: "none",
               },
@@ -82,6 +82,7 @@ function ChatInput({ onSendMessage, processing, message, setMessage }) {
                 color: theme.palette.text.secondary,
                 opacity: 0.7,
                 fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
+                fontSize: { xs: '0.8rem', sm: '0.875rem', md: '0.95rem' },
               },
             },
             "& .MuiInputBase-input.Mui-disabled": {
@@ -98,8 +99,8 @@ function ChatInput({ onSendMessage, processing, message, setMessage }) {
         sx={{
           backgroundColor: theme.palette.primary.main,
           color: "white",
-          width: "52px",
-          height: "52px",
+          width: { xs: "44px", sm: "48px", md: "52px" },
+          height: { xs: "44px", sm: "48px", md: "52px" },
           borderRadius: "50%",
           boxShadow: '0 4px 12px rgba(234, 94, 41, 0.3)',
           transition: 'all 0.3s ease',
@@ -119,9 +120,9 @@ function ChatInput({ onSendMessage, processing, message, setMessage }) {
         }}
       >
         {processing ? (
-          <CircularProgress size={24} sx={{ color: 'white' }} />
+          <CircularProgress size={{ xs: 20, sm: 22, md: 24 }} sx={{ color: 'white' }} />
         ) : (
-          <SendIcon sx={{ fontSize: 24 }} />
+          <SendIcon sx={{ fontSize: { xs: 20, sm: 22, md: 24 } }} />
         )}
       </IconButton>
     </Box>

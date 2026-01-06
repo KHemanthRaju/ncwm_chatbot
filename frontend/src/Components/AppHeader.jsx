@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, AppBar, Button } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom"; // Added useLocation
-import Logo from "../Assets/logo.svg";
+import MHFALogo from "../Assets/mhfa_logo.png";
 import Switch from "./Switch.jsx";
 import { ALLOW_MULTLINGUAL_TOGGLE } from "../utilities/constants.js";
 
@@ -30,7 +30,7 @@ function AppHeader({ showSwitch }) {
         className="appHeight100"
       >
         <Grid item>
-          <img src={Logo} alt="App main Logo" height={80} />
+          <img src={MHFALogo} alt="Mental Health First Aid Logo" height={80} style={{ objectFit: 'contain' }} />
         </Grid>
 
         <Grid item>

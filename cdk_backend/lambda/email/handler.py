@@ -52,37 +52,16 @@ def lambda_handler(event, context):
     print(f"Parsed → email:{email}  querytext:{querytext}  agentResponse:{agent_response}")
 
     # ---------------------------------------------------------------------
-    # 2.  BUSINESS LOGIC: Notify admin via SES and store in DynamoDB
+    # 2.  BUSINESS LOGIC: Store in DynamoDB first, then notify admin via SES
     # ---------------------------------------------------------------------
+    src   = os.environ["VERIFIED_SOURCE_EMAIL"]
+    admin = os.environ["ADMIN_EMAIL"]
+
+    timestamp = datetime.utcnow().isoformat() + "Z"
+    query_id = str(uuid4())
+
+    # Always store in DynamoDB first (most critical)
     try:
-        src   = os.environ["VERIFIED_SOURCE_EMAIL"]
-        admin = os.environ["ADMIN_EMAIL"]
-
-        timestamp = datetime.utcnow().isoformat() + "Z"
-        query_id = str(uuid4())
-
-        body = (
-            f"Hello Admin,\n\n"
-            f"A user needs assistance with this question:\n\n"
-            f"  • User Email: {email}\n"
-            f"  • Original Question: {querytext}\n"
-            f"  • Agent's Response: {agent_response}\n\n"
-            f"Query ID: {query_id}\n"
-            f"Timestamp: {timestamp}\n\n"
-            "Thanks,\nLearning Navigator bot"
-        )
-
-        print("Sending SES …")
-        ses.send_email(
-            Source=src,
-            Destination={"ToAddresses": [admin]},
-            Message={
-                "Subject": {"Data": "Agent Assistance Requested"},
-                "Body":    {"Text": {"Data": body}}
-            }
-        )
-
-        # Store in DynamoDB
         print(f"Storing escalated query in DynamoDB table: {ESCALATED_TABLE}")
         escalated_table.put_item(
             Item={
@@ -96,14 +75,40 @@ def lambda_handler(event, context):
                 'created_at': timestamp
             }
         )
+        print(f"Successfully stored query {query_id} in DynamoDB")
+    except Exception as ddb_exc:
+        print(f"DynamoDB Error: {ddb_exc}", flush=True)
 
-        ses_fail = False
+    # Then try to send email (less critical if it fails)
+    ses_fail = False
+    try:
+        body = (
+            f"Hello Admin,\n\n"
+            f"A user needs assistance with this question:\n\n"
+            f"  • User Email: {email}\n"
+            f"  • Original Question: {querytext}\n"
+            f"  • Agent's Response: {agent_response}\n\n"
+            f"Query ID: {query_id}\n"
+            f"Timestamp: {timestamp}\n\n"
+            "Thanks,\nLearning Navigator bot"
+        )
+
+        print("Sending SES email notification…")
+        ses.send_email(
+            Source=src,
+            Destination={"ToAddresses": [admin]},
+            Message={
+                "Subject": {"Data": "Agent Assistance Requested"},
+                "Body":    {"Text": {"Data": body}}
+            }
+        )
+        print("Email sent successfully")
         result_msg = "Admin has been notified successfully."
 
-    except Exception as exc:
-        print("Error:", exc, flush=True)
+    except Exception as ses_exc:
+        print(f"SES Error: {ses_exc}", flush=True)
         ses_fail   = True
-        result_msg = f"Failed to notify admin: {exc}"
+        result_msg = f"Query stored but email failed: {ses_exc}"
 
     # ---------------------------------------------------------------------
     # 3.  FORMAT THE RESPONSE *exactly* per docs

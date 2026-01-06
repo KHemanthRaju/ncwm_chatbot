@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 
 # Initialize AWS clients
-bedrock_agent = boto3.client('bedrock-agent-runtime')
+bedrock_agent = boto3.client('bedrock-agent-runtime', region_name='us-west-2')
 api_gateway = boto3.client('apigatewaymanagementapi', endpoint_url=os.environ['WS_API_ENDPOINT'])
 lambda_client = boto3.client('lambda')
 

@@ -2,7 +2,6 @@ import React from "react";
 import { Typography, Box, IconButton, Tooltip, Button } from "@mui/material";
 import {
   Info as InfoIcon,
-  Psychology as PsychologyIcon,
   Menu as MenuIcon,
   Person as PersonIcon,
   Language as LanguageIcon,
@@ -12,6 +11,7 @@ import { useLanguage } from "../utilities/LanguageContext";
 import { TEXT } from "../utilities/constants";
 import { RECOMMENDATIONS_TEXT } from "../utilities/recommendationsTranslations";
 import { useTheme } from "@mui/material/styles";
+import MHFALogo from "../Assets/mhfa_logo.png";
 
 function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
   const navigate = useNavigate();
@@ -35,8 +35,8 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
     <Box
       sx={{
         background: 'linear-gradient(135deg, #064F80 0%, #053E66 100%)',
-        py: 2.5,
-        px: 3,
+        py: { xs: 1.5, sm: 2, md: 2.5 },
+        px: { xs: 1.5, sm: 2, md: 3 },
         boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
         position: 'relative',
         overflow: 'hidden',
@@ -81,37 +81,42 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
         }}
       >
         {/* Left side - Menu Button, Logo and Title */}
-        <Box display="flex" alignItems="center" gap={2}>
-          {/* Menu Button */}
-          <Tooltip title="Open Menu" arrow>
+        <Box display="flex" alignItems="center" gap={{ xs: 0.5, sm: 1, md: 2 }}>
+          {/* Menu Button - Hidden on desktop when sidebar is visible */}
+          <Tooltip title="Open Menu" arrow sx={{ display: { xs: 'inline-flex', lg: 'none' } }}>
             <IconButton
               onClick={onMenuClick}
               sx={{
                 color: 'white',
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                padding: { xs: '6px', sm: '8px' },
                 '&:hover': {
                   backgroundColor: 'rgba(255, 255, 255, 0.2)',
                 },
               }}
             >
-              <MenuIcon />
+              <MenuIcon sx={{ fontSize: { xs: 20, sm: 24 } }} />
             </IconButton>
           </Tooltip>
           <Box
             sx={{
-              width: 48,
-              height: 48,
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #EA5E29 0%, #CB5223 100%)',
+              height: { xs: 28, sm: 34, md: 40 },
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 4px 12px rgba(234, 94, 41, 0.4)',
             }}
           >
-            <PsychologyIcon sx={{ color: 'white', fontSize: 28 }} />
+            <img
+              src={MHFALogo}
+              alt="Mental Health First Aid Logo"
+              style={{
+                height: '100%',
+                width: 'auto',
+                objectFit: 'contain',
+              }}
+            />
           </Box>
-          <Box>
+          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             <Typography
               variant="h5"
               sx={{
@@ -120,6 +125,7 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
                 color: '#ffffff',
                 letterSpacing: '0.3px',
                 lineHeight: 1.2,
+                fontSize: { sm: '1.1rem', md: '1.5rem' },
               }}
             >
               {TEXT[language]?.CHAT_TITLE || "Learning Navigator"}
@@ -129,8 +135,9 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
               sx={{
                 fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
                 color: 'rgba(255, 255, 255, 0.8)',
-                fontSize: '0.75rem',
+                fontSize: { sm: '0.65rem', md: '0.75rem' },
                 letterSpacing: '0.5px',
+                display: { xs: 'none', md: 'block' },
               }}
             >
               MHFA Learning Ecosystem
@@ -139,15 +146,15 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
         </Box>
 
         {/* Right side - Language, Profile and Info buttons */}
-        <Box display="flex" gap={1} alignItems="center">
+        <Box display="flex" gap={{ xs: 0.5, sm: 0.75, md: 1 }} alignItems="center">
           {/* Language Toggle Button */}
           <Tooltip
             title={
               <Box sx={{ textAlign: 'center', p: 0.5 }}>
-                <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                   {language === 'EN' ? 'Cambiar a Español' : 'Switch to English'}
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#ffeb3b' }}>
+                <Typography variant="caption" sx={{ color: '#ffeb3b', fontSize: { xs: '0.65rem', sm: '0.75rem' } }}>
                   {language === 'EN'
                     ? '⚠️ La conversación actual se perderá'
                     : '⚠️ Current conversation will be lost'}
@@ -168,17 +175,18 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
           >
             <Button
               onClick={handleLanguageToggle}
-              startIcon={<LanguageIcon />}
+              startIcon={<LanguageIcon sx={{ fontSize: { xs: 16, sm: 18, md: 20 } }} />}
               sx={{
                 color: 'white',
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
                 border: '1px solid rgba(255, 255, 255, 0.3)',
                 borderRadius: '20px',
-                padding: '6px 16px',
+                padding: { xs: '4px 10px', sm: '5px 14px', md: '6px 16px' },
                 textTransform: 'none',
                 fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
                 fontWeight: 600,
-                fontSize: '0.875rem',
+                fontSize: { xs: '0.75rem', sm: '0.8125rem', md: '0.875rem' },
+                minWidth: { xs: 'auto', sm: 'auto' },
                 '&:hover': {
                   backgroundColor: 'rgba(255, 255, 255, 0.2)',
                   border: '1px solid rgba(255, 255, 255, 0.5)',
@@ -195,25 +203,27 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
               sx={{
                 color: 'white',
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                padding: { xs: '6px', sm: '8px' },
                 '&:hover': {
                   backgroundColor: 'rgba(255, 255, 255, 0.2)',
                 },
               }}
             >
-              <PersonIcon />
+              <PersonIcon sx={{ fontSize: { xs: 20, sm: 22, md: 24 } }} />
             </IconButton>
           </Tooltip>
-          <Tooltip title={PROFILE_TEXT.TOOLTIP_INFO || "About Learning Navigator"} arrow>
+          <Tooltip title={PROFILE_TEXT.TOOLTIP_INFO || "About Learning Navigator"} arrow sx={{ display: { xs: 'none', sm: 'inline-flex' } }}>
             <IconButton
               sx={{
                 color: 'white',
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                padding: { xs: '6px', sm: '8px' },
                 '&:hover': {
                   backgroundColor: 'rgba(255, 255, 255, 0.2)',
                 },
               }}
             >
-              <InfoIcon />
+              <InfoIcon sx={{ fontSize: { xs: 20, sm: 22, md: 24 } }} />
             </IconButton>
           </Tooltip>
         </Box>

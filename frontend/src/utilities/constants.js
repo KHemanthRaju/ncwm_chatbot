@@ -7,6 +7,9 @@ export const WEBSOCKET_API = process.env.REACT_APP_WEBSOCKET_API || 'wss://t8lev
 // REST API endpoint for admin operations (file management, analytics)
 export const DOCUMENTS_API = process.env.REACT_APP_ANALYTICS_API || 'https://tuvw7wkl4l.execute-api.us-west-2.amazonaws.com/prod/';
 
+// Feedback API endpoint
+export const FEEDBACK_API = `${DOCUMENTS_API}feedback`.replace('//', '/').replace(':/', '://');
+
 // Cognito configuration for authentication
 export const COGNITO_CONFIG = {
   userPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID || 'us-west-2_F4rwE0BpC',
