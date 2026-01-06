@@ -30,14 +30,27 @@ The application features a serverless architecture built on AWS services, with r
 │   │   ├── cfEvaluator/      # Chat flow evaluation logic
 │   │   ├── email/           # Email notification service
 │   │   ├── logclassifier/   # Session log classification
+│   │   ├── escalatedQueries/ # Escalated query management
+│   │   ├── responseFeedback/ # User feedback collection
+│   │   ├── userProfile/      # User profile management
 │   │   └── websocketHandler/ # Real-time communication handler
 │   └── lib/                 # CDK stack definitions
-├── deploy.sh                # Deployment automation script
-└── frontend/               # React-based web application
-    ├── public/             # Static assets
+├── docs/                     # 📚 All project documentation
+│   ├── architecture/         # Architecture diagrams and designs
+│   ├── deployment/          # Deployment guides and configurations
+│   ├── features/            # Feature documentation and guides
+│   ├── guides/              # User and developer guides
+│   └── testing/             # Test reports and quality assurance
+├── scripts/                  # 🛠️ Utility scripts
+│   ├── deploy.sh            # Automated deployment script
+│   ├── extract_pdf_urls.py  # PDF URL extraction utility
+│   └── test_admin_apis.py   # API testing script
+└── frontend/                # React-based web application
+    ├── public/              # Static assets (favicon, logos, manifest)
     └── src/
-        ├── Components/     # React components for UI
-        └── utilities/      # Shared utilities and contexts
+        ├── Components/      # React components for UI
+        ├── Assets/          # Images, icons, and media files
+        └── utilities/       # Shared utilities and contexts
 ```
 
 # Deployment Instructions
@@ -253,7 +266,7 @@ The chatbot provides role-based personalized recommendations to enhance user exp
 - ✅ **Recent updates** - Latest news and announcements per role
 - ✅ **Bilingual support** - Full English and Spanish translations
 
-For detailed information, see [PERSONALIZED_RECOMMENDATIONS_GUIDE.md](PERSONALIZED_RECOMMENDATIONS_GUIDE.md)
+For detailed information, see [PERSONALIZED_RECOMMENDATIONS_GUIDE.md](docs/features/PERSONALIZED_RECOMMENDATIONS_GUIDE.md)
 
 ### Multilingual Support
 Switch between English and Spanish seamlessly:
@@ -270,7 +283,7 @@ AI-powered sentiment analysis evaluates chat interactions:
 - **Admin dashboard** displays sentiment trends and low-score conversations
 - Powered by Amazon Bedrock (Nova Lite model)
 
-For detailed information, see [SENTIMENT_ANALYSIS_EXPLAINED.md](SENTIMENT_ANALYSIS_EXPLAINED.md)
+For detailed information, see [SENTIMENT_ANALYSIS_EXPLAINED.md](docs/features/SENTIMENT_ANALYSIS_EXPLAINED.md)
 
 ### Admin Portal Features
 Secure administrative dashboard (requires Cognito authentication):
@@ -280,7 +293,7 @@ Secure administrative dashboard (requires Cognito authentication):
 - **Conversation Logs** - Review detailed chat transcripts with sentiment scores
 - **Email Notifications** - Automated alerts via Amazon SES
 
-For detailed information, see [ADMIN_FEATURES.md](ADMIN_FEATURES.md)
+For detailed information, see [ADMIN_FEATURES.md](docs/features/ADMIN_FEATURES.md)
 
 ### Troubleshooting
 1. WebSocket Connection Issues
