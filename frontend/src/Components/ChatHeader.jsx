@@ -11,7 +11,6 @@ import { useLanguage } from "../utilities/LanguageContext";
 import { TEXT } from "../utilities/constants";
 import { RECOMMENDATIONS_TEXT } from "../utilities/recommendationsTranslations";
 import { useTheme } from "@mui/material/styles";
-import MHFALogo from "../Assets/mhfa_logo.png";
 
 function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
   const navigate = useNavigate();
@@ -80,7 +79,7 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
           zIndex: 1,
         }}
       >
-        {/* Left side - Menu Button, Logo and Title */}
+        {/* Left side - Menu Button and Title */}
         <Box display="flex" alignItems="center" gap={{ xs: 0.5, sm: 1, md: 2 }}>
           {/* Menu Button - Hidden on desktop when sidebar is visible */}
           <Tooltip title="Open Menu" arrow sx={{ display: { xs: 'inline-flex', lg: 'none' } }}>
@@ -98,25 +97,7 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
               <MenuIcon sx={{ fontSize: { xs: 20, sm: 24 } }} />
             </IconButton>
           </Tooltip>
-          <Box
-            sx={{
-              height: { xs: 28, sm: 34, md: 40 },
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <img
-              src={MHFALogo}
-              alt="Mental Health First Aid Logo"
-              style={{
-                height: '100%',
-                width: 'auto',
-                objectFit: 'contain',
-              }}
-            />
-          </Box>
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+          <Box>
             <Typography
               variant="h5"
               sx={{
@@ -125,7 +106,7 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
                 color: '#ffffff',
                 letterSpacing: '0.3px',
                 lineHeight: 1.2,
-                fontSize: { sm: '1.1rem', md: '1.5rem' },
+                fontSize: { xs: '1rem', sm: '1.1rem', md: '1.5rem' },
               }}
             >
               {TEXT[language]?.CHAT_TITLE || "Learning Navigator"}
@@ -135,9 +116,9 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange }) {
               sx={{
                 fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
                 color: 'rgba(255, 255, 255, 0.8)',
-                fontSize: { sm: '0.65rem', md: '0.75rem' },
+                fontSize: { xs: '0.65rem', sm: '0.65rem', md: '0.75rem' },
                 letterSpacing: '0.5px',
-                display: { xs: 'none', md: 'block' },
+                display: { xs: 'none', sm: 'block' },
               }}
             >
               MHFA Learning Ecosystem
