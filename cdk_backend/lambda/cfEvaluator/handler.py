@@ -26,16 +26,60 @@ def send_ws_response(connection_id, response):
     except Exception as e:
         print(f"WebSocket error: {str(e)}")
 
+def get_role_specific_instructions(user_role):
+    """
+    Returns role-specific system instructions for the Bedrock Agent.
+    """
+    role_instructions = {
+        'instructor': """You are assisting a certified MHFA Instructor. Focus your responses on:
+- Teaching methodologies and best practices for conducting MHFA courses
+- Course preparation, lesson planning, and classroom management
+- Instructor certification requirements, renewals, and continuing education
+- Accessing instructor-specific resources, manuals, and training materials
+- Professional development and staying current with MHFA updates
+- Handling challenging classroom scenarios and participant questions
+
+Use professional, peer-to-peer language. Provide pedagogical insights and reference instructor resources.""",
+
+        'staff': """You are assisting organizational staff implementing MHFA programs. Focus your responses on:
+- Program implementation strategies and organizational rollout
+- Scheduling, coordinating, and managing MHFA training sessions
+- Tracking employee certifications and program metrics
+- Budget considerations and resource allocation
+- Measuring program effectiveness and ROI
+- Integration with existing workplace wellness initiatives
+- Case studies and organizational best practices
+
+Use administrative, coordination-focused language. Provide strategic guidance for program management.""",
+
+        'learner': """You are assisting a MHFA course participant or learner. Focus your responses on:
+- Basic MHFA concepts, principles, and the ALGEE action plan
+- Course registration, certification process, and requirements
+- Practical application of MHFA skills in daily life
+- Understanding mental health conditions and crisis situations
+- Where to find additional learning resources and support
+- Recertification process and maintaining skills
+- Self-care and personal wellness while helping others
+
+Use clear, educational, supportive language. Make concepts accessible and actionable."""
+    }
+
+    return role_instructions.get(user_role, role_instructions['learner'])
+
 def lambda_handler(event, context):
     try:
         query = event.get("querytext", "").strip()
         connection_id = event.get("connectionId")
         session_id = event.get("session_id", context.aws_request_id)
+        user_role = event.get("user_role", "guest")
 
-        print(f"Received Query - Session: {session_id}, Query: {query}")
+        print(f"Received Query - Session: {session_id}, Role: {user_role}, Query: {query}")
 
         max_retries = 2
         full_response = ""
+
+        # Get role-specific instructions
+        role_instructions = get_role_specific_instructions(user_role)
 
         for attempt in range(max_retries):
             try:
@@ -43,7 +87,16 @@ def lambda_handler(event, context):
                     agentId=agent_id,
                     agentAliasId=agent_alias_id,
                     sessionId=session_id,
-                    inputText=query
+                    inputText=query,
+                    sessionState={
+                        'sessionAttributes': {
+                            'user_role': user_role,
+                            'role_instructions': role_instructions
+                        },
+                        'promptSessionAttributes': {
+                            'role_context': role_instructions
+                        }
+                    }
                 )
 
                 full_response = ""

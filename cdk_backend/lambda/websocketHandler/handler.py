@@ -26,16 +26,22 @@ def lambda_handler(event, context):
         elif route_key == 'sendMessage':
             # 3. Parse message body
             body = json.loads(event.get('body', '{}'))
-            
+
             query = body.get('querytext', '').strip()
-            location = body.get('location')  
-            session_id = body.get('session_id') 
-            
+            location = body.get('location')
+            session_id = body.get('session_id')
+            user_role = body.get('user_role', 'guest')  # Extract user role for personalization
+
             if not query:
                 raise ValueError("Empty query received")
-            
-            payload_to_cf_evaluator = {'querytext': query,'connectionId': connection_id,"session_id":session_id}
-            
+
+            payload_to_cf_evaluator = {
+                'querytext': query,
+                'connectionId': connection_id,
+                'session_id': session_id,
+                'user_role': user_role  # Pass role to evaluator
+            }
+
             if location:
                 payload_to_cf_evaluator['location'] = location
 

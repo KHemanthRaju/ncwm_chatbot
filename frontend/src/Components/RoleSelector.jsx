@@ -26,7 +26,7 @@ import { RECOMMENDATIONS_TEXT } from '../utilities/recommendationsTranslations';
 
 const PROFILE_API = `${DOCUMENTS_API}user-profile`;
 
-export default function RoleSelector({ onRoleSelected }) {
+export default function RoleSelector({ onRoleSelected, skipLocalStorage = false }) {
   const { language } = useLanguage();
   const TEXT = RECOMMENDATIONS_TEXT[language] || RECOMMENDATIONS_TEXT.EN;
 
@@ -56,8 +56,10 @@ export default function RoleSelector({ onRoleSelected }) {
   const [existingRole, setExistingRole] = useState(null);
 
   useEffect(() => {
-    fetchExistingProfile();
-  }, []);
+    if (!skipLocalStorage) {
+      fetchExistingProfile();
+    }
+  }, [skipLocalStorage]);
 
   const fetchExistingProfile = async () => {
     try {
@@ -114,8 +116,11 @@ export default function RoleSelector({ onRoleSelected }) {
       // For guest users (main chatbot), store role in localStorage
       const guestMode = localStorage.getItem("guestMode");
       if (guestMode === "true" || !localStorage.getItem("idToken")) {
-        localStorage.setItem('userRole', selectedRole);
-        localStorage.setItem('userRoleTimestamp', new Date().toISOString());
+        // Only save to localStorage if not skipping it
+        if (!skipLocalStorage) {
+          localStorage.setItem('userRole', selectedRole);
+          localStorage.setItem('userRoleTimestamp', new Date().toISOString());
+        }
 
         if (onRoleSelected) {
           onRoleSelected(selectedRole);
