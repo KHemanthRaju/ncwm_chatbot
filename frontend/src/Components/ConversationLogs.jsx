@@ -35,6 +35,7 @@ import axios from "axios";
 import AdminAppHeader from "./AdminAppHeader";
 import { DOCUMENTS_API } from "../utilities/constants";
 import { getIdToken } from "../utilities/auth";
+import AccessibleColors from "../utilities/accessibleColors";
 
 const ANALYTICS_API = `${DOCUMENTS_API}session-logs`;
 
