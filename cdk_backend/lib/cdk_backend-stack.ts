@@ -638,11 +638,18 @@ export class LearningNavigatorStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(10),
       environment: {
         DYNAMODB_TABLE: sessionLogsTable.tableName,
+        FEEDBACK_TABLE: 'NCMWResponseFeedback',
       },
     });
 
-    // Allow it to read from the sessions table
+    // Allow it to read from the sessions table and feedback table
     sessionLogsTable.grantReadData(retrieveSessionLogsFn);
+
+    // Grant permission to read from feedback table
+    retrieveSessionLogsFn.addToRolePolicy(new iam.PolicyStatement({
+      actions: ['dynamodb:Scan', 'dynamodb:Query', 'dynamodb:GetItem'],
+      resources: [`arn:aws:dynamodb:${this.region}:${this.account}:table/NCMWResponseFeedback`],
+    }));
 
     // 2) Hook it into API Gateway
     const sessionLogs = AdminApi.root.addResource('session-logs');

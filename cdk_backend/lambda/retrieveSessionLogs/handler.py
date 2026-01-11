@@ -10,8 +10,10 @@ from boto3.dynamodb.conditions import Attr
 #  Env & AWS clients
 # ──────────────────────────────────────────────────────────────────────────────
 TABLE_NAME = os.environ["DYNAMODB_TABLE"]
+FEEDBACK_TABLE_NAME = os.environ.get("FEEDBACK_TABLE", "NCMWResponseFeedback")
 ddb   = boto3.resource("dynamodb")
 table = ddb.Table(TABLE_NAME)
+feedback_table = ddb.Table(FEEDBACK_TABLE_NAME)
 
 # ──────────────────────────────────────────────────────────────────────────────
 #  Helpers
@@ -97,11 +99,36 @@ def lambda_handler(event, context):
 
     log("TOTAL items scanned       :", len(items))
 
-    # 4) Aggregate
+    # 4) Fetch user feedback from feedback table
+    log("Fetching user feedback...")
+    feedback_resp = feedback_table.scan()
+    feedback_items = feedback_resp.get("Items", [])
+
+    # Continue scanning if there are more feedback items
+    while "LastEvaluatedKey" in feedback_resp:
+        feedback_resp = feedback_table.scan(
+            ExclusiveStartKey=feedback_resp["LastEvaluatedKey"]
+        )
+        feedback_items.extend(feedback_resp.get("Items", []))
+
+    log(f"Total feedback items      : {len(feedback_items)}")
+
+    # Build feedback map: message_id -> feedback (positive/negative)
+    feedback_map = {}
+    for fb in feedback_items:
+        msg_id = fb.get("message_id")
+        feedback_type = fb.get("feedback")
+        if msg_id and feedback_type:
+            feedback_map[msg_id] = feedback_type
+
+    log(f"Feedback map size         : {len(feedback_map)}")
+
+    # 5) Aggregate using user feedback instead of AI sentiment
     sessions = set()
     loc_counts = defaultdict(int)
     cat_counts = defaultdict(int)
-    sentiment_counts = defaultdict(int)
+    # Count based on user feedback (thumbs up/down)
+    feedback_sentiment_counts = {"positive": 0, "negative": 0}
     satisfaction_scores = []
     conversations = []
 
@@ -113,8 +140,6 @@ def lambda_handler(event, context):
                 loc_counts[loc] += 1
         if cat := it.get("category"):
             cat_counts[cat] += 1
-        if sent := it.get("sentiment"):
-            sentiment_counts[sent] += 1
         if score := it.get("satisfaction_score"):
             satisfaction_scores.append(float(score))
 
@@ -129,6 +154,15 @@ def lambda_handler(event, context):
             "satisfaction_score": float(it.get("satisfaction_score", 50))
         })
 
+    # Count feedback sentiments (thumbs up/down)
+    for msg_id, feedback_type in feedback_map.items():
+        if feedback_type == "positive":
+            feedback_sentiment_counts["positive"] += 1
+        elif feedback_type == "negative":
+            feedback_sentiment_counts["negative"] += 1
+
+    log(f"Feedback counts - Positive: {feedback_sentiment_counts['positive']}, Negative: {feedback_sentiment_counts['negative']}")
+
     # Calculate average satisfaction
     avg_satisfaction = sum(satisfaction_scores) / len(satisfaction_scores) if satisfaction_scores else 0
 
@@ -142,7 +176,7 @@ def lambda_handler(event, context):
         "user_count": len(sessions),
         "locations":  list(loc_counts.keys()),
         "categories": dict(cat_counts),
-        "sentiment": dict(sentiment_counts),
+        "sentiment": feedback_sentiment_counts,  # Use user feedback instead of AI sentiment
         "avg_satisfaction": round(avg_satisfaction, 1),
         "conversations": conversations[:50]  # Return latest 50 conversations
     }
