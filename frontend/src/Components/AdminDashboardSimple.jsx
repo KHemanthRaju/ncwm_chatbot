@@ -65,7 +65,6 @@ function AdminDashboardSimple() {
   const [loading, setLoading] = useState(true);
   const [analytics, setAnalytics] = useState({
     sentiment: { positive: 0, neutral: 0, negative: 0 },
-    avg_satisfaction: 0,
     user_count: 0,
     conversations: []
   });
@@ -89,7 +88,6 @@ function AdminDashboardSimple() {
 
       setAnalytics({
         sentiment: data.sentiment || { positive: 0, neutral: 0, negative: 0 },
-        avg_satisfaction: data.avg_satisfaction || 0,
         user_count: data.user_count || 0,
         conversations: data.conversations || []
       });
@@ -142,26 +140,6 @@ function AdminDashboardSimple() {
     value
   }));
 
-  // Satisfaction score distribution
-  const satisfactionRanges = {
-    'Excellent (80-100)': 0,
-    'Good (60-79)': 0,
-    'Fair (40-59)': 0,
-    'Poor (0-39)': 0
-  };
-
-  analytics.conversations.forEach(conv => {
-    const score = conv.satisfaction_score || 50;
-    if (score >= 80) satisfactionRanges['Excellent (80-100)']++;
-    else if (score >= 60) satisfactionRanges['Good (60-79)']++;
-    else if (score >= 40) satisfactionRanges['Fair (40-59)']++;
-    else satisfactionRanges['Poor (0-39)']++;
-  });
-
-  const satisfactionChartData = Object.entries(satisfactionRanges).map(([name, value]) => ({
-    name,
-    value
-  }));
 
   // Hourly activity
   const hourlyData = Array.from({ length: 12 }, (_, i) => {
@@ -307,20 +285,6 @@ function AdminDashboardSimple() {
           </Grid>
         </Grid>
 
-        {/* Average Satisfaction Score */}
-        <Card sx={{ p: 3, mb: 4, background: 'linear-gradient(135deg, #7FD3EE 0%, #4FB3D4 100%)', color: 'white' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <TrendingIcon sx={{ fontSize: 40, mr: 2 }} />
-            <Box>
-              <Typography variant="h6" sx={{ fontWeight: 500 }}>
-                Average Satisfaction Score
-              </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 700 }}>
-                {loading ? <CircularProgress size={30} sx={{ color: 'white' }} /> : `${analytics.avg_satisfaction}/100`}
-              </Typography>
-            </Box>
-          </Box>
-        </Card>
 
         {/* Analytics Charts Section */}
         <Typography
@@ -366,36 +330,6 @@ function AdminDashboardSimple() {
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
                   </PieChart>
-                </ResponsiveContainer>
-              )}
-            </Card>
-          </Grid>
-
-          {/* Satisfaction Score Distribution Bar Chart */}
-          <Grid item xs={12} md={6}>
-            <Card sx={{ p: 3, height: '400px' }}>
-              <Typography variant="h6" sx={{ fontWeight: 600, color: '#064F80', mb: 2 }}>
-                Satisfaction Score Distribution
-              </Typography>
-              {loading ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
-                  <CircularProgress />
-                </Box>
-              ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={satisfactionChartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                    <XAxis
-                      dataKey="name"
-                      angle={-15}
-                      textAnchor="end"
-                      height={80}
-                      style={{ fontSize: '12px' }}
-                    />
-                    <YAxis />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="value" fill="#064F80" radius={[8, 8, 0, 0]} />
-                  </BarChart>
                 </ResponsiveContainer>
               )}
             </Card>
@@ -741,7 +675,6 @@ function AdminDashboardSimple() {
                     <TableCell sx={{ fontWeight: 600, background: '#f5f5f5' }}>Timestamp</TableCell>
                     <TableCell sx={{ fontWeight: 600, background: '#f5f5f5' }}>Category</TableCell>
                     <TableCell sx={{ fontWeight: 600, background: '#f5f5f5' }}>Sentiment</TableCell>
-                    <TableCell sx={{ fontWeight: 600, background: '#f5f5f5' }}>Score</TableCell>
                     <TableCell sx={{ fontWeight: 600, background: '#f5f5f5' }}>Details</TableCell>
                   </TableRow>
                 </TableHead>
@@ -781,9 +714,6 @@ function AdminDashboardSimple() {
                             }}
                           />
                         </TableCell>
-                        <TableCell sx={{ fontWeight: 600 }}>
-                          {conv.satisfaction_score || 50}/100
-                        </TableCell>
                         <TableCell>
                           <IconButton
                             size="small"
@@ -794,7 +724,7 @@ function AdminDashboardSimple() {
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell colSpan={6} sx={{ py: 0, borderBottom: expandedRows[`${conv.session_id}-${index}`] ? undefined : 'none' }}>
+                        <TableCell colSpan={5} sx={{ py: 0, borderBottom: expandedRows[`${conv.session_id}-${index}`] ? undefined : 'none' }}>
                           <Collapse in={expandedRows[`${conv.session_id}-${index}`]} timeout="auto" unmountOnExit>
                             <Box sx={{ py: 2, px: 3, background: '#f9f9f9' }}>
                               <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#064F80', mb: 1 }}>
