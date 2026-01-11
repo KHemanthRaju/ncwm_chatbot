@@ -123,12 +123,12 @@ def lambda_handler(event, context):
 
     log(f"Feedback map size         : {len(feedback_map)}")
 
-    # 5) Aggregate using user feedback (thumbs up/down) only
+    # 5) Aggregate using user feedback (thumbs up/down) with neutral for no feedback
     sessions = set()
     loc_counts = defaultdict(int)
     cat_counts = defaultdict(int)
-    # Count based on user feedback (thumbs up/down)
-    feedback_sentiment_counts = {"positive": 0, "negative": 0}
+    # Count based on user feedback (thumbs up/down) + neutral for no feedback
+    feedback_sentiment_counts = {"positive": 0, "negative": 0, "neutral": 0}
     satisfaction_scores = []
     conversations = []
 
@@ -167,26 +167,32 @@ def lambda_handler(event, context):
                     user_feedback = feedback_type
                     break
 
-        # Only include conversations that have user feedback (thumbs up/down)
-        if user_feedback:
-            # Count the feedback
-            if user_feedback == "positive":
-                feedback_sentiment_counts["positive"] += 1
-            elif user_feedback == "negative":
-                feedback_sentiment_counts["negative"] += 1
+        # Determine sentiment based on user feedback:
+        # - positive: User clicked thumbs up
+        # - negative: User clicked thumbs down
+        # - neutral: User didn't click either (no feedback)
+        sentiment = user_feedback if user_feedback else "neutral"
 
-            # Build conversation log entry with user feedback as sentiment
-            conversations.append({
-                "session_id": session_id,
-                "timestamp": timestamp,
-                "query": it.get("query", ""),
-                "response": it.get("response", ""),
-                "category": it.get("category", "Unknown"),
-                "sentiment": user_feedback,  # Use user feedback (positive/negative)
-                "satisfaction_score": float(it.get("satisfaction_score", 50))
-            })
+        # Count the sentiment
+        if sentiment == "positive":
+            feedback_sentiment_counts["positive"] += 1
+        elif sentiment == "negative":
+            feedback_sentiment_counts["negative"] += 1
+        else:
+            feedback_sentiment_counts["neutral"] += 1
 
-    log(f"Feedback counts - Positive: {feedback_sentiment_counts['positive']}, Negative: {feedback_sentiment_counts['negative']}")
+        # Build conversation log entry - include ALL conversations
+        conversations.append({
+            "session_id": session_id,
+            "timestamp": timestamp,
+            "query": it.get("query", ""),
+            "response": it.get("response", ""),
+            "category": it.get("category", "Unknown"),
+            "sentiment": sentiment,  # positive (👍), negative (👎), or neutral (no feedback)
+            "satisfaction_score": float(it.get("satisfaction_score", 50))
+        })
+
+    log(f"Feedback counts - Positive: {feedback_sentiment_counts['positive']}, Negative: {feedback_sentiment_counts['negative']}, Neutral: {feedback_sentiment_counts['neutral']}")
 
     # Calculate average satisfaction
     avg_satisfaction = sum(satisfaction_scores) / len(satisfaction_scores) if satisfaction_scores else 0

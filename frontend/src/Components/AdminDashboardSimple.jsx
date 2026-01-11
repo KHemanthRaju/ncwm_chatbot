@@ -681,13 +681,19 @@ function AdminDashboardSimple() {
                 <MenuItem value="positive">
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <HappyIcon sx={{ color: '#4CAF50', fontSize: 20 }} />
-                    Positive
+                    Positive (Thumbs Up)
+                  </Box>
+                </MenuItem>
+                <MenuItem value="neutral">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <NeutralIcon sx={{ color: '#FFC107', fontSize: 20 }} />
+                    Neutral (No Feedback)
                   </Box>
                 </MenuItem>
                 <MenuItem value="negative">
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <SadIcon sx={{ color: '#F44336', fontSize: 20 }} />
-                    Negative
+                    Negative (Thumbs Down)
                   </Box>
                 </MenuItem>
               </Select>
