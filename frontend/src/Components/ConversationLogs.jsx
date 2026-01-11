@@ -185,12 +185,6 @@ function ConversationLogs() {
                   Positive
                 </Box>
               </MenuItem>
-              <MenuItem value="neutral">
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <NeutralIcon sx={{ color: AccessibleColors.status.warning, fontSize: 20 }} />
-                  Neutral
-                </Box>
-              </MenuItem>
               <MenuItem value="negative">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <SadIcon sx={{ color: AccessibleColors.status.error, fontSize: 20 }} />

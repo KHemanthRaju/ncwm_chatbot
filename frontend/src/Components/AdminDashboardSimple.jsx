@@ -684,12 +684,6 @@ function AdminDashboardSimple() {
                     Positive
                   </Box>
                 </MenuItem>
-                <MenuItem value="neutral">
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <NeutralIcon sx={{ color: '#FFC107', fontSize: 20 }} />
-                    Neutral
-                  </Box>
-                </MenuItem>
                 <MenuItem value="negative">
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <SadIcon sx={{ color: '#F44336', fontSize: 20 }} />
