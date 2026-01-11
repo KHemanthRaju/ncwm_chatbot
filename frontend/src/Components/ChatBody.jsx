@@ -103,9 +103,10 @@ function ChatBody() {
     // Get the user's role from navigation state (passed from landing page)
     const roleFromState = location.state?.userRole;
     console.log('🔍 User role from landing page:', roleFromState);
-    if (roleFromState) {
-      setUserRole(roleFromState);
-    }
+
+    // If role is provided from landing page, use it
+    // Otherwise, default to 'learner' to ensure role switcher is always visible
+    setUserRole(roleFromState || 'learner');
   }, [location.state]);
 
   /* ────────────────���───────────── auto-scroll ────────────────────────── */
