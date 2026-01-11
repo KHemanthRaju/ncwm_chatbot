@@ -5,6 +5,7 @@ import { Logout as LogoutIcon } from "@mui/icons-material";
 import { signOut } from 'aws-amplify/auth';
 import Switch from "./Switch.jsx";
 import { ALLOW_MULTLINGUAL_TOGGLE } from "../utilities/constants.js";
+import AccessibleColors from "../utilities/accessibleColors";
 
 function AdminAppHeader({ showSwitch }) {
   const navigate = useNavigate();
@@ -15,14 +16,14 @@ function AdminAppHeader({ showSwitch }) {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("idToken");
       localStorage.removeItem("guestMode");
-      navigate("/admin-login", { replace: true });
+      navigate("/admin", { replace: true });
     } catch (error) {
       console.error('Logout error:', error);
       // Force logout even if signOut fails
       localStorage.removeItem("accessToken");
       localStorage.removeItem("idToken");
       localStorage.removeItem("guestMode");
-      navigate("/admin-login", { replace: true });
+      navigate("/admin", { replace: true });
     }
   };
 
@@ -58,14 +59,15 @@ function AdminAppHeader({ showSwitch }) {
                   variant="contained"
                   onClick={() => navigate("/admin-dashboard")}
                   sx={{
-                    backgroundColor: "#D63F09",
-                    color: "white",
+                    backgroundColor: AccessibleColors.secondary.light,
+                    color: AccessibleColors.text.inverse,
                     borderRadius: "20px",
                     boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
                     padding: "8px 20px",
                     fontSize: "1rem",
+                    fontWeight: 600,
                     "&:hover": {
-                      backgroundColor: "#115293",
+                      backgroundColor: AccessibleColors.primary.light,
                     },
                   }}
                 >
@@ -80,15 +82,18 @@ function AdminAppHeader({ showSwitch }) {
                 startIcon={<LogoutIcon />}
                 onClick={handleLogout}
                 sx={{
-                  borderColor: "#D63F09",
-                  color: "#D63F09",
+                  borderColor: "#ffffff",
+                  color: "#ffffff",
                   borderRadius: "20px",
                   padding: "8px 20px",
                   fontSize: "1rem",
+                  fontWeight: 600,
+                  borderWidth: "2px",
                   "&:hover": {
-                    borderColor: "#115293",
-                    color: "#115293",
-                    backgroundColor: "rgba(17, 82, 147, 0.04)",
+                    borderColor: "#ffffff",
+                    color: "#ffffff",
+                    backgroundColor: "rgba(255, 255, 255, 0.15)",
+                    borderWidth: "2px",
                   },
                 }}
               >

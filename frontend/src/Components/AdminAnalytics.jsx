@@ -5,20 +5,25 @@ import {
   Box,
   Grid,
   Typography,
-  Divider,
   MenuItem,
   Select,
   FormControl,
-  InputLabel,
   Card,
+  CardContent,
+  Container,
+  Paper,
 } from "@mui/material";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
+import {
+  TrendingUp as TrendingUpIcon,
+  People as PeopleIcon,
+  QuestionAnswer as QuestionIcon,
+} from "@mui/icons-material";
 import axios from "axios";
 
 import AdminAppHeader from "./AdminAppHeader";
 import { DOCUMENTS_API } from "../utilities/constants";
 import { getIdToken } from "../utilities/auth";
+import AccessibleColors from "../utilities/accessibleColors";
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
@@ -40,14 +45,8 @@ const defaultCategories = [
   "Unknown",
 ];
 
-const redPin = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [0, -41],
-  shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
-  shadowSize: [41, 41],
-});
+// Color palette for category cards - Using centralized WCAG AA compliant colors
+const categoryColors = Object.values(AccessibleColors.categories);
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
@@ -55,12 +54,9 @@ const redPin = new L.Icon({
 export default function AdminAnalytics() {
   const [timeframe, setTimeframe] = useState("today");
   const [categoryCounts, setCounts] = useState({});
-  const [locations, setLocations] = useState([]);         // unique location strings
-  const [locationCounts, setLocationCounts] = useState({}); // { "Texas, US": 12, … }
-  const [coordsMap, setCoordsMap] = useState({});        // { "Texas, US": [lat, lng], … }
   const [userCount, setUserCount] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(0);
 
-  // 1) fetch analytics and build counts per-location
   useEffect(() => {
     async function fetchAnalytics() {
       try {
@@ -72,19 +68,14 @@ export default function AdminAnalytics() {
 
         // normalize categories
         const counts = {};
+        let total = 0;
         defaultCategories.forEach((c) => {
-          counts[c] = data.categories?.[c] || 0;
+          const count = data.categories?.[c] || 0;
+          counts[c] = count;
+          total += count;
         });
         setCounts(counts);
-
-        // aggregate raw locations
-        const raw = data.locations || [];
-        const locCounts = {};
-        raw.forEach((loc) => {
-          locCounts[loc] = (locCounts[loc] || 0) + 1;
-        });
-        setLocationCounts(locCounts);
-        setLocations(Object.keys(locCounts));
+        setTotalQuestions(total);
 
         setUserCount(data.user_count || 0);
       } catch (err) {
@@ -94,53 +85,38 @@ export default function AdminAnalytics() {
     fetchAnalytics();
   }, [timeframe]);
 
-  // 2) geocode each unique location if needed
-  useEffect(() => {
-    locations.forEach((loc) => {
-      if (coordsMap[loc]) return;
-
-      const cached = localStorage.getItem(`coords:${loc}`);
-      if (cached) {
-        setCoordsMap((m) => ({ ...m, [loc]: JSON.parse(cached) }));
-        return;
-      }
-
-      fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          loc
-        )}`
-      )
-        .then((r) => r.json())
-        .then((results) => {
-          if (results && results.length) {
-            const { lat, lon } = results[0];
-            const pair = [parseFloat(lat), parseFloat(lon)];
-            setCoordsMap((m) => ({ ...m, [loc]: pair }));
-            localStorage.setItem(`coords:${loc}`, JSON.stringify(pair));
-          }
-        })
-        .catch((e) => console.error("Geocode error for", loc, e));
-    });
-  }, [locations, coordsMap]);
+  // Get top 5 categories
+  const topCategories = Object.entries(categoryCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
 
   return (
-    <Box sx={{ minHeight: "100vh" }}>
-      {/* fixed header */}
+    <Box sx={{ minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
+      {/* Fixed header */}
       <Box sx={{ position: "fixed", width: "100%", zIndex: 1200 }}>
         <AdminAppHeader showSwitch={false} />
       </Box>
 
-      <Grid container sx={{ flex: 1, pt: "6rem", px: "2rem" }}>
-        {/* ─── Left column: categories ─── */}
-        <Grid item xs={6} sx={{ p: 2 }}>
-          <Typography variant="body2" sx={{ mb: 0.5 }}>
-            Choose Timeframe:
+      <Container maxWidth="xl" sx={{ pt: "7rem", pb: 4 }}>
+        {/* Timeframe Selector */}
+        <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Typography variant="h4" sx={{ fontWeight: 600, color: AccessibleColors.primary.light }}>
+            Analytics Dashboard
           </Typography>
-          <FormControl fullWidth sx={{ mb: 3 }}>
-            <InputLabel />
+          <FormControl sx={{ minWidth: 200 }}>
             <Select
               value={timeframe}
               onChange={(e) => setTimeframe(e.target.value)}
+              sx={{
+                backgroundColor: "white",
+                borderRadius: "8px",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: AccessibleColors.primary.light,
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: AccessibleColors.secondary.light,
+                },
+              }}
             >
               <MenuItem value="today">Daily</MenuItem>
               <MenuItem value="weekly">Weekly</MenuItem>
@@ -148,88 +124,192 @@ export default function AdminAnalytics() {
               <MenuItem value="yearly">Yearly</MenuItem>
             </Select>
           </FormControl>
-          <Grid container spacing={2}>
-            {defaultCategories.map((text) => (
-              <Grid item xs={6} key={text}>
-                <Card
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    p: 1,
-                    backgroundColor: "#D3D3D3",
-                    boxShadow: "none",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: "60%",
-                      height: "50px",
-                      backgroundColor: "#FFF",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Typography variant="body2" align="center">
-                      {text}
+        </Box>
+
+        {/* Summary Cards */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid item xs={12} sm={6}>
+            <Card
+              sx={{
+                background: "linear-gradient(135deg, #082745 0%, #0d3a63 100%)",
+                color: "white",
+                borderRadius: "16px",
+                boxShadow: "0 4px 20px rgba(8, 39, 69, 0.4)",
+              }}
+            >
+              <CardContent>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <Box>
+                    <Typography variant="h6" sx={{ color: "#ffffff", fontWeight: 600, mb: 1, textShadow: "0 1px 4px rgba(0,0,0,0.3)" }}>
+                      Total Users
+                    </Typography>
+                    <Typography variant="h3" sx={{ color: "#ffffff", fontWeight: 700, textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}>
+                      {userCount}
                     </Typography>
                   </Box>
-                  <Box sx={{ pl: 2 }}>
-                    <Typography variant="caption">Questions Asked</Typography>
-                    <Typography variant="h5">
-                      {categoryCounts[text] ?? 0}
+                  <PeopleIcon sx={{ fontSize: 60, color: "#ffffff", opacity: 0.5 }} />
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <Card
+              sx={{
+                background: "linear-gradient(135deg, #8B2805 0%, #C23808 100%)",
+                color: "white",
+                borderRadius: "16px",
+                boxShadow: "0 4px 20px rgba(139, 40, 5, 0.4)",
+              }}
+            >
+              <CardContent>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <Box>
+                    <Typography variant="h6" sx={{ color: "#ffffff", fontWeight: 600, mb: 1, textShadow: "0 1px 4px rgba(0,0,0,0.3)" }}>
+                      Total Questions
+                    </Typography>
+                    <Typography variant="h3" sx={{ color: "#ffffff", fontWeight: 700, textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}>
+                      {totalQuestions}
                     </Typography>
                   </Box>
-                </Card>
-              </Grid>
-            ))}
+                  <QuestionIcon sx={{ fontSize: 60, color: "#ffffff", opacity: 0.5 }} />
+                </Box>
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
 
-        {/* Divider */}
-        <Divider
-          orientation="vertical"
-          flexItem
-          sx={{ borderColor: "#D3D3D3", mx: 5 }}
-        />
+        <Grid container spacing={3}>
+          {/* Question Categories */}
+          <Grid item xs={12} md={9}>
+            <Paper
+              sx={{
+                p: 3,
+                borderRadius: "16px",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+              }}
+            >
+              <Typography variant="h5" sx={{ mb: 3, fontWeight: 600, color: AccessibleColors.primary.light }}>
+                Question Categories
+              </Typography>
+              <Grid container spacing={2}>
+                {defaultCategories.map((category, index) => {
+                  const count = categoryCounts[category] || 0;
+                  const color = categoryColors[index % categoryColors.length];
 
-        {/* ─── Right column: map & user count ─── */}
-        <Grid item xs={5} sx={{ p: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            User Locations:
-          </Typography>
-          <MapContainer
-            center={[39.8283, -98.5795]}
-            zoom={4}
-            style={{ height: "600px", width: "100%" }}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-            />
-            {locations.map((loc) => {
-              const pos = coordsMap[loc];
-              return (
-                pos && (
-                  <Marker position={pos} icon={redPin} key={loc}>
-                    <Popup>
-                      <div>{loc}</div>
-                      <div>
-                        {locationCounts[loc]}{" "}
-                        {locationCounts[loc] === 1 ? "user" : "users"}
-                      </div>
-                    </Popup>
-                  </Marker>
-                )
-              );
-            })}
-          </MapContainer>
-          <Box sx={{ textAlign: "center", mt: 3 }}>
-            <Typography variant="h6">User Count</Typography>
-            <Typography variant="h4">{userCount}</Typography>
-          </Box>
+                  return (
+                    <Grid item xs={12} sm={6} md={4} key={category}>
+                      <Card
+                        sx={{
+                          borderRadius: "12px",
+                          border: `2px solid ${color}20`,
+                          boxShadow: "none",
+                          transition: "all 0.3s ease",
+                          "&:hover": {
+                            transform: "translateY(-4px)",
+                            boxShadow: `0 8px 16px ${color}30`,
+                          },
+                        }}
+                      >
+                        <CardContent sx={{ p: 2 }}>
+                          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                            <Box sx={{ flex: 1 }}>
+                              <Typography
+                                variant="body1"
+                                sx={{ fontWeight: 600, color: AccessibleColors.text.primary, mb: 0.5 }}
+                              >
+                                {category}
+                              </Typography>
+                              <Typography variant="caption" sx={{ color: AccessibleColors.text.secondary, fontWeight: 500 }}>
+                                Questions Asked
+                              </Typography>
+                            </Box>
+                            <Box
+                              sx={{
+                                minWidth: 60,
+                                height: 60,
+                                borderRadius: "12px",
+                                backgroundColor: color,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography
+                                variant="h4"
+                                sx={{ fontWeight: 700, color: "#ffffff !important", textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}
+                                style={{ color: '#ffffff' }}
+                              >
+                                {count}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </Paper>
+          </Grid>
+
+          {/* Top Categories */}
+          <Grid item xs={12} md={3}>
+            <Paper
+              sx={{
+                p: 3,
+                borderRadius: "16px",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+                height: "100%",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+                <TrendingUpIcon sx={{ color: AccessibleColors.secondary.light, mr: 1 }} />
+                <Typography variant="h6" sx={{ fontWeight: 600, color: AccessibleColors.primary.light }}>
+                  Top Categories
+                </Typography>
+              </Box>
+              {topCategories.length > 0 ? (
+                topCategories.map(([category, count], index) => (
+                  <Box
+                    key={category}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      py: 2,
+                      borderBottom: index < topCategories.length - 1 ? "1px solid #e0e0e0" : "none",
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ color: AccessibleColors.text.primary, fontWeight: 500, flex: 1, pr: 2 }}>
+                      {category}
+                    </Typography>
+                    <Box
+                      sx={{
+                        backgroundColor: categoryColors[defaultCategories.indexOf(category) % categoryColors.length],
+                        color: "white",
+                        px: 2,
+                        py: 0.5,
+                        borderRadius: "20px",
+                        minWidth: 40,
+                        textAlign: "center",
+                      }}
+                    >
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                        {count}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ))
+              ) : (
+                <Typography variant="body2" sx={{ color: AccessibleColors.text.tertiary, fontWeight: 500, textAlign: "center", py: 2 }}>
+                  No category data available
+                </Typography>
+              )}
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
+      </Container>
     </Box>
   );
 }

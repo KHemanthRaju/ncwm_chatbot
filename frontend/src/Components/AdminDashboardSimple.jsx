@@ -207,15 +207,22 @@ function AdminDashboardSimple() {
                 p: 3,
                 textAlign: 'center',
                 background: 'linear-gradient(135deg, #064F80 0%, #053E66 100%)',
-                color: 'white',
                 boxShadow: '0 4px 12px rgba(6, 79, 128, 0.3)',
               }}
             >
-              <PeopleIcon sx={{ fontSize: 40, mb: 1 }} />
-              <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5 }}>
+              <PeopleIcon sx={{ fontSize: 40, mb: 1, color: '#ffffff !important' }} />
+              <Typography
+                variant="h3"
+                sx={{ fontWeight: 700, mb: 0.5, color: '#ffffff !important', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
+                style={{ color: '#ffffff' }}
+              >
                 {loading ? <CircularProgress size={30} sx={{ color: 'white' }} /> : analytics.user_count}
               </Typography>
-              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+              <Typography
+                variant="body1"
+                sx={{ fontWeight: 600, color: '#ffffff !important', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}
+                style={{ color: '#ffffff' }}
+              >
                 Total Users
               </Typography>
             </Card>
@@ -228,15 +235,22 @@ function AdminDashboardSimple() {
                 p: 3,
                 textAlign: 'center',
                 background: 'linear-gradient(135deg, #4CAF50 0%, #388E3C 100%)',
-                color: 'white',
                 boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)',
               }}
             >
-              <HappyIcon sx={{ fontSize: 40, mb: 1 }} />
-              <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5 }}>
+              <HappyIcon sx={{ fontSize: 40, mb: 1, color: '#ffffff !important' }} />
+              <Typography
+                variant="h3"
+                sx={{ fontWeight: 700, mb: 0.5, color: '#ffffff !important', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
+                style={{ color: '#ffffff' }}
+              >
                 {loading ? <CircularProgress size={30} sx={{ color: 'white' }} /> : analytics.sentiment.positive || 0}
               </Typography>
-              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+              <Typography
+                variant="body1"
+                sx={{ fontWeight: 600, color: '#ffffff !important', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}
+                style={{ color: '#ffffff' }}
+              >
                 Positive
               </Typography>
             </Card>
@@ -249,15 +263,22 @@ function AdminDashboardSimple() {
                 p: 3,
                 textAlign: 'center',
                 background: 'linear-gradient(135deg, #F44336 0%, #D32F2F 100%)',
-                color: 'white',
                 boxShadow: '0 4px 12px rgba(244, 67, 54, 0.3)',
               }}
             >
-              <SadIcon sx={{ fontSize: 40, mb: 1 }} />
-              <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5 }}>
+              <SadIcon sx={{ fontSize: 40, mb: 1, color: '#ffffff !important' }} />
+              <Typography
+                variant="h3"
+                sx={{ fontWeight: 700, mb: 0.5, color: '#ffffff !important', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
+                style={{ color: '#ffffff' }}
+              >
                 {loading ? <CircularProgress size={30} sx={{ color: 'white' }} /> : analytics.sentiment.negative || 0}
               </Typography>
-              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+              <Typography
+                variant="body1"
+                sx={{ fontWeight: 600, color: '#ffffff !important', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}
+                style={{ color: '#ffffff' }}
+              >
                 Negative
               </Typography>
             </Card>

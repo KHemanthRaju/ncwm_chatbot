@@ -96,11 +96,9 @@ const nationalCouncilTheme = createTheme({
     },
     h3: {
       fontWeight: 600,
-      color: nationalCouncilColors.secondary.gray,
     },
     h4: {
       fontWeight: 600,
-      color: nationalCouncilColors.secondary.gray,
     },
     h5: {
       fontWeight: 500,
@@ -111,7 +109,6 @@ const nationalCouncilTheme = createTheme({
       color: nationalCouncilColors.secondary.gray,
     },
     body1: {
-      color: nationalCouncilColors.secondary.gray,
     },
     body2: {
       color: nationalCouncilColors.secondary.gray75,
