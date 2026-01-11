@@ -7,7 +7,6 @@ import {
   NotificationsActive as NotificationIcon,
   Chat as ChatIcon,
   SentimentVerySatisfied as HappyIcon,
-  SentimentNeutral as NeutralIcon,
   SentimentVeryDissatisfied as SadIcon,
   TrendingUp as TrendingIcon
 } from "@mui/icons-material";
@@ -138,7 +137,7 @@ function AdminDashboard() {
             </Box>
           ) : (
             <Grid container spacing={{ xs: 2, sm: 3 }}>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6}>
                 <Card
                   sx={{
                     p: { xs: 2, sm: 2.5, md: 3 },
@@ -158,27 +157,7 @@ function AdminDashboard() {
                 </Card>
               </Grid>
 
-              <Grid item xs={12} sm={6} md={3}>
-                <Card
-                  sx={{
-                    p: { xs: 2, sm: 2.5, md: 3 },
-                    textAlign: 'center',
-                    background: 'linear-gradient(135deg, #FFC107 0%, #FFA000 100%)',
-                    color: 'white',
-                    boxShadow: '0 4px 12px rgba(255, 193, 7, 0.3)',
-                  }}
-                >
-                  <NeutralIcon sx={{ fontSize: { xs: 32, sm: 36, md: 40 }, mb: 1 }} />
-                  <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5, fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' } }}>
-                    {analytics.sentiment.neutral}
-                  </Typography>
-                  <Typography variant="body1" sx={{ fontWeight: 500, fontSize: { xs: '0.875rem', sm: '1rem' } }}>
-                    Neutral
-                  </Typography>
-                </Card>
-              </Grid>
-
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6}>
                 <Card
                   sx={{
                     p: { xs: 2, sm: 2.5, md: 3 },

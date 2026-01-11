@@ -145,7 +145,7 @@ function ConversationLogs() {
 
         {/* Summary Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <Card sx={{ p: 3, textAlign: "center", background: "linear-gradient(135deg, #4CAF50 0%, #388E3C 100%)", color: "white" }}>
               <HappyIcon sx={{ fontSize: 48, mb: 1 }} />
               <Typography variant="h3" sx={{ fontWeight: 700 }}>
@@ -154,16 +154,7 @@ function ConversationLogs() {
               <Typography variant="body1">Positive</Typography>
             </Card>
           </Grid>
-          <Grid item xs={12} md={4}>
-            <Card sx={{ p: 3, textAlign: "center", background: "linear-gradient(135deg, #FFC107 0%, #FFA000 100%)", color: "white" }}>
-              <NeutralIcon sx={{ fontSize: 48, mb: 1 }} />
-              <Typography variant="h3" sx={{ fontWeight: 700 }}>
-                {sentiment.neutral || 0}
-              </Typography>
-              <Typography variant="body1">Neutral</Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <Card sx={{ p: 3, textAlign: "center", background: "linear-gradient(135deg, #F44336 0%, #D32F2F 100%)", color: "white" }}>
               <SadIcon sx={{ fontSize: 48, mb: 1 }} />
               <Typography variant="h3" sx={{ fontWeight: 700 }}>

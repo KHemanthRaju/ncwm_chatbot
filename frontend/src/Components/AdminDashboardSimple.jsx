@@ -201,7 +201,7 @@ function AdminDashboardSimple() {
         {/* Basic Analytics Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
           {/* User Count */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4}>
             <Card
               sx={{
                 p: 3,
@@ -222,7 +222,7 @@ function AdminDashboardSimple() {
           </Grid>
 
           {/* Positive Sentiment */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4}>
             <Card
               sx={{
                 p: 3,
@@ -242,29 +242,8 @@ function AdminDashboardSimple() {
             </Card>
           </Grid>
 
-          {/* Neutral Sentiment */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Card
-              sx={{
-                p: 3,
-                textAlign: 'center',
-                background: 'linear-gradient(135deg, #FFC107 0%, #FFA000 100%)',
-                color: 'white',
-                boxShadow: '0 4px 12px rgba(255, 193, 7, 0.3)',
-              }}
-            >
-              <NeutralIcon sx={{ fontSize: 40, mb: 1 }} />
-              <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5 }}>
-                {loading ? <CircularProgress size={30} sx={{ color: 'white' }} /> : analytics.sentiment.neutral || 0}
-              </Typography>
-              <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                Neutral
-              </Typography>
-            </Card>
-          </Grid>
-
           {/* Negative Sentiment */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4}>
             <Card
               sx={{
                 p: 3,
