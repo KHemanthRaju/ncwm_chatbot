@@ -65,6 +65,10 @@ def handle_submit_feedback(event, headers):
         body = json.loads(event.get('body', '{}'))
 
         message_id = body.get('messageId')
+        # Convert messageId to string to avoid DynamoDB float type issues
+        if message_id is not None:
+            message_id = str(message_id)
+
         session_id = body.get('sessionId')
         feedback = body.get('feedback')  # 'positive', 'negative', or null
         message = body.get('message', '')
