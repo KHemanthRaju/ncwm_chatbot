@@ -310,7 +310,7 @@ function BotFileCheckReply({ message, fileName, fileStatus, citations, isLoading
                   fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
                   fontSize: { xs: '0.875rem', sm: '0.9rem', md: '0.95rem' },
                   lineHeight: 1.6,
-                  color: theme.palette.text.primary,
+                  color: '#000000', // Force black color for visibility
                   whiteSpace: 'pre-wrap',
                 }}
               >

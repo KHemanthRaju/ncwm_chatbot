@@ -170,6 +170,7 @@ function ChatBody() {
   const askBot = (question) => {
     const authToken = localStorage.getItem("authToken") || "";
     const socket = new WebSocket(`${WEBSOCKET_API}?token=${authToken}`);
+    let streamedText = ""; // Accumulate all chunks
 
     socket.onopen = () => {
       const payload = {
@@ -185,29 +186,77 @@ function ChatBody() {
     socket.onmessage = (event) => {
       /* Ignore empty ping / heartbeat frames */
       if (!event.data || event.data.trim() === "") {
-        console.log("📨 (ignored empty frame)");
         return;
       }
 
       try {
-        console.log("📨 Raw:", event.data);
-        const { responsetext, citations } = JSON.parse(event.data);
+        const data = JSON.parse(event.data);
 
-        // Replace processing message with response including citations
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.status === "PROCESSING"
-              ? {
-                  ...createMessageBlock(responsetext, "BOT", "TEXT", "RECEIVED"),
-                  citations: citations || []
-                }
-              : m
-          )
-        );
+        if (data.type === 'chunk') {
+          // Display chunks IMMEDIATELY as they arrive - TRUE STREAMING!
+          streamedText += data.chunk;
+
+          // Force immediate update using queueMicrotask to bypass React batching
+          queueMicrotask(() => {
+            setMessages((prev) =>
+              prev.map((m) =>
+                m.status === "PROCESSING" || m.status === "STREAMING"
+                  ? {
+                      ...m,
+                      content: streamedText,
+                      status: "STREAMING",
+                      citations: m.citations || []
+                    }
+                  : m
+              )
+            );
+
+            // Force scroll to bottom on each chunk for visible streaming
+            if (scrollRef.current) {
+              scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
+          });
+        } else if (data.type === 'complete') {
+          // Complete message with citations
+          const { responsetext, citations } = data;
+
+          // Update with final message and citations
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.status === "STREAMING" || m.status === "PROCESSING"
+                ? {
+                    ...m,
+                    content: responsetext,
+                    status: "RECEIVED",
+                    citations: citations || []
+                  }
+                : m
+            )
+          );
+          setProcessing(false);
+          socket.close();
+        } else {
+          // Fallback for old non-streaming format
+          const { responsetext, citations } = data;
+
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.status === "PROCESSING"
+                ? {
+                    ...m, // Preserve all original properties including ID
+                    content: responsetext,
+                    status: "RECEIVED",
+                    citations: citations || []
+                  }
+                : m
+            )
+          );
+          setProcessing(false);
+          socket.close();
+        }
       } catch (err) {
         console.error("❌ JSON parse error:", err);
         replaceProcessing("Error parsing response. Please try again.");
-      } finally {
         setProcessing(false);
         socket.close();
       }

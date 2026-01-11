@@ -1,25 +1,19 @@
 import React from "react";
 import { Typography, Box, IconButton, Tooltip, Button, Select, MenuItem, FormControl } from "@mui/material";
 import {
-  Info as InfoIcon,
   Menu as MenuIcon,
-  Person as PersonIcon,
   Language as LanguageIcon,
   School as InstructorIcon,
   Work as StaffIcon,
   Person as LearnerIcon,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../utilities/LanguageContext";
 import { TEXT } from "../utilities/constants";
-import { RECOMMENDATIONS_TEXT } from "../utilities/recommendationsTranslations";
 import { useTheme } from "@mui/material/styles";
 
 function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange, userRole, onRoleChange }) {
-  const navigate = useNavigate();
   const { language: contextLanguage, setLanguage } = useLanguage();
   const language = selectedLanguage || contextLanguage || 'EN';
-  const PROFILE_TEXT = RECOMMENDATIONS_TEXT[language] || RECOMMENDATIONS_TEXT.EN;
   const theme = useTheme();
 
   const handleLanguageToggle = () => {
@@ -235,36 +229,6 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange, userRole,
             >
               {language === 'EN' ? 'ES' : 'EN'}
             </Button>
-          </Tooltip>
-
-          <Tooltip title={PROFILE_TEXT.TOOLTIP_PROFILE || "My Profile"} arrow>
-            <IconButton
-              onClick={() => navigate('/profile')}
-              sx={{
-                color: 'white',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                padding: { xs: '6px', sm: '8px' },
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                },
-              }}
-            >
-              <PersonIcon sx={{ fontSize: { xs: 20, sm: 22, md: 24 } }} />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={PROFILE_TEXT.TOOLTIP_INFO || "About Learning Navigator"} arrow sx={{ display: { xs: 'none', sm: 'inline-flex' } }}>
-            <IconButton
-              sx={{
-                color: 'white',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                padding: { xs: '6px', sm: '8px' },
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                },
-              }}
-            >
-              <InfoIcon sx={{ fontSize: { xs: 20, sm: 22, md: 24 } }} />
-            </IconButton>
           </Tooltip>
         </Box>
       </Box>
