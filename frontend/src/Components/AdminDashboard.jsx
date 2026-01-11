@@ -14,6 +14,7 @@ import axios from "axios";
 import { DOCUMENTS_API } from "../utilities/constants";
 import { getIdToken } from "../utilities/auth";
 import MHFALogo from "../Assets/mhfa_logo.png";
+import AccessibleColors from "../utilities/accessibleColors";
 
 const ANALYTICS_API = `${DOCUMENTS_API}session-logs`;
 
@@ -56,7 +57,7 @@ function AdminDashboard() {
     <Box
       sx={{
         minHeight: "100vh",
-        background: 'linear-gradient(135deg, #064F80 0%, #053E66 100%)',
+        background: `linear-gradient(135deg, ${AccessibleColors.primary.dark} 0%, ${AccessibleColors.primary.main} 100%)`,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -94,9 +95,10 @@ function AdminDashboard() {
           sx={{
             fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
             fontWeight: 700,
-            color: '#ffffff',
+            color: AccessibleColors.text.inverse,
             mb: 1,
             fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' },
+            textShadow: '0 2px 4px rgba(0,0,0,0.2)',
           }}
         >
           Learning Navigator
@@ -105,9 +107,10 @@ function AdminDashboard() {
           variant="h6"
           sx={{
             fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
-            color: 'rgba(255, 255, 255, 0.8)',
+            color: AccessibleColors.text.inverse,
             fontWeight: 400,
             fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' },
+            textShadow: '0 1px 2px rgba(0,0,0,0.2)',
           }}
         >
           Admin Dashboard
@@ -122,10 +125,11 @@ function AdminDashboard() {
             sx={{
               fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
               fontWeight: 600,
-              color: '#ffffff',
+              color: AccessibleColors.text.inverse,
               mb: { xs: 1.5, sm: 2 },
               textAlign: 'center',
               fontSize: { xs: '1.25rem', sm: '1.375rem', md: '1.5rem' },
+              textShadow: '0 1px 2px rgba(0,0,0,0.2)',
             }}
           >
             Today's Activity
@@ -142,16 +146,16 @@ function AdminDashboard() {
                   sx={{
                     p: { xs: 2, sm: 2.5, md: 3 },
                     textAlign: 'center',
-                    background: 'linear-gradient(135deg, #4CAF50 0%, #388E3C 100%)',
-                    color: 'white',
-                    boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)',
+                    background: `linear-gradient(135deg, ${AccessibleColors.status.success} 0%, #2E7D32 100%)`,
+                    color: AccessibleColors.text.inverse,
+                    boxShadow: `0 4px 12px ${AccessibleColors.status.success}4D`,
                   }}
                 >
-                  <HappyIcon sx={{ fontSize: { xs: 32, sm: 36, md: 40 }, mb: 1 }} />
-                  <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5, fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' } }}>
+                  <HappyIcon sx={{ fontSize: { xs: 32, sm: 36, md: 40 }, mb: 1, color: '#ffffff' }} />
+                  <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5, fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' }, color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
                     {analytics.sentiment.positive}
                   </Typography>
-                  <Typography variant="body1" sx={{ fontWeight: 500, fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                  <Typography variant="body1" sx={{ fontWeight: 600, fontSize: { xs: '0.875rem', sm: '1rem' }, color: '#ffffff', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>
                     Positive
                   </Typography>
                 </Card>
@@ -162,16 +166,16 @@ function AdminDashboard() {
                   sx={{
                     p: { xs: 2, sm: 2.5, md: 3 },
                     textAlign: 'center',
-                    background: 'linear-gradient(135deg, #F44336 0%, #D32F2F 100%)',
-                    color: 'white',
-                    boxShadow: '0 4px 12px rgba(244, 67, 54, 0.3)',
+                    background: `linear-gradient(135deg, ${AccessibleColors.status.error} 0%, #C62828 100%)`,
+                    color: AccessibleColors.text.inverse,
+                    boxShadow: `0 4px 12px ${AccessibleColors.status.error}4D`,
                   }}
                 >
-                  <SadIcon sx={{ fontSize: { xs: 32, sm: 36, md: 40 }, mb: 1 }} />
-                  <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5, fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' } }}>
+                  <SadIcon sx={{ fontSize: { xs: 32, sm: 36, md: 40 }, mb: 1, color: '#ffffff' }} />
+                  <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5, fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' }, color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
                     {analytics.sentiment.negative}
                   </Typography>
-                  <Typography variant="body1" sx={{ fontWeight: 500, fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                  <Typography variant="body1" sx={{ fontWeight: 600, fontSize: { xs: '0.875rem', sm: '1rem' }, color: '#ffffff', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>
                     Negative
                   </Typography>
                 </Card>
@@ -194,8 +198,8 @@ function AdminDashboard() {
                 border: '3px solid transparent',
                 '&:hover': {
                   transform: 'translateY(-8px)',
-                  boxShadow: '0 12px 24px rgba(234, 94, 41, 0.3)',
-                  borderColor: '#EA5E29',
+                  boxShadow: `0 12px 24px ${AccessibleColors.secondary.main}4D`,
+                  borderColor: AccessibleColors.secondary.main,
                 },
               }}
             >
@@ -205,21 +209,21 @@ function AdminDashboard() {
                     width: { xs: 50, sm: 55, md: 60 },
                     height: { xs: 50, sm: 55, md: 60 },
                     borderRadius: '12px',
-                    background: 'linear-gradient(135deg, #EA5E29 0%, #CB5223 100%)',
+                    background: `linear-gradient(135deg, ${AccessibleColors.secondary.dark} 0%, ${AccessibleColors.secondary.main} 100%)`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: { xs: '0 auto 1rem', sm: '0 auto 1.25rem', md: '0 auto 1.5rem' },
                   }}
                 >
-                  <DocumentIcon sx={{ color: 'white', fontSize: { xs: 26, sm: 28, md: 32 } }} />
+                  <DocumentIcon sx={{ color: AccessibleColors.text.inverse, fontSize: { xs: 26, sm: 28, md: 32 } }} />
                 </Box>
                 <Typography
                   variant="h5"
                   sx={{
                     fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
                     fontWeight: 600,
-                    color: '#064F80',
+                    color: AccessibleColors.primary.light,
                     mb: 1,
                     fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' },
                   }}
@@ -230,7 +234,7 @@ function AdminDashboard() {
                   variant="body2"
                   sx={{
                     fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
-                    color: '#666',
+                    color: AccessibleColors.text.tertiary,
                     fontSize: { xs: '0.8125rem', sm: '0.875rem' },
                   }}
                 >
@@ -251,8 +255,8 @@ function AdminDashboard() {
                 border: '3px solid transparent',
                 '&:hover': {
                   transform: 'translateY(-8px)',
-                  boxShadow: '0 12px 24px rgba(127, 211, 238, 0.3)',
-                  borderColor: '#7FD3EE',
+                  boxShadow: `0 12px 24px ${AccessibleColors.status.info}4D`,
+                  borderColor: AccessibleColors.status.info,
                 },
               }}
             >
@@ -262,21 +266,21 @@ function AdminDashboard() {
                     width: { xs: 50, sm: 55, md: 60 },
                     height: { xs: 50, sm: 55, md: 60 },
                     borderRadius: '12px',
-                    background: 'linear-gradient(135deg, #7FD3EE 0%, #4FB3D4 100%)',
+                    background: `linear-gradient(135deg, ${AccessibleColors.status.info} 0%, #0277BD 100%)`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: { xs: '0 auto 1rem', sm: '0 auto 1.25rem', md: '0 auto 1.5rem' },
                   }}
                 >
-                  <AnalyticsIcon sx={{ color: 'white', fontSize: { xs: 26, sm: 28, md: 32 } }} />
+                  <AnalyticsIcon sx={{ color: AccessibleColors.text.inverse, fontSize: { xs: 26, sm: 28, md: 32 } }} />
                 </Box>
                 <Typography
                   variant="h5"
                   sx={{
                     fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
                     fontWeight: 600,
-                    color: '#064F80',
+                    color: AccessibleColors.primary.light,
                     mb: 1,
                     fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' },
                   }}
@@ -287,7 +291,7 @@ function AdminDashboard() {
                   variant="body2"
                   sx={{
                     fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
-                    color: '#666',
+                    color: AccessibleColors.text.tertiary,
                     fontSize: { xs: '0.8125rem', sm: '0.875rem' },
                   }}
                 >
@@ -308,8 +312,8 @@ function AdminDashboard() {
                 border: '3px solid transparent',
                 '&:hover': {
                   transform: 'translateY(-8px)',
-                  boxShadow: '0 12px 24px rgba(234, 94, 41, 0.3)',
-                  borderColor: '#EA5E29',
+                  boxShadow: `0 12px 24px ${AccessibleColors.secondary.main}4D`,
+                  borderColor: AccessibleColors.secondary.main,
                 },
               }}
             >
@@ -326,14 +330,14 @@ function AdminDashboard() {
                     margin: { xs: '0 auto 1rem', sm: '0 auto 1.25rem', md: '0 auto 1.5rem' },
                   }}
                 >
-                  <NotificationIcon sx={{ color: 'white', fontSize: { xs: 26, sm: 28, md: 32 } }} />
+                  <NotificationIcon sx={{ color: AccessibleColors.text.inverse, fontSize: { xs: 26, sm: 28, md: 32 } }} />
                 </Box>
                 <Typography
                   variant="h5"
                   sx={{
                     fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
                     fontWeight: 600,
-                    color: '#064F80',
+                    color: AccessibleColors.primary.light,
                     mb: 1,
                     fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' },
                   }}
@@ -344,7 +348,7 @@ function AdminDashboard() {
                   variant="body2"
                   sx={{
                     fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
-                    color: '#666',
+                    color: AccessibleColors.text.tertiary,
                     fontSize: { xs: '0.8125rem', sm: '0.875rem' },
                   }}
                 >
@@ -365,8 +369,8 @@ function AdminDashboard() {
                 border: '3px solid transparent',
                 '&:hover': {
                   transform: 'translateY(-8px)',
-                  boxShadow: '0 12px 24px rgba(127, 211, 238, 0.3)',
-                  borderColor: '#7FD3EE',
+                  boxShadow: `0 12px 24px ${AccessibleColors.status.info}4D`,
+                  borderColor: AccessibleColors.status.info,
                 },
               }}
             >
@@ -376,21 +380,21 @@ function AdminDashboard() {
                     width: { xs: 50, sm: 55, md: 60 },
                     height: { xs: 50, sm: 55, md: 60 },
                     borderRadius: '12px',
-                    background: 'linear-gradient(135deg, #7FD3EE 0%, #4FB3D4 100%)',
+                    background: `linear-gradient(135deg, ${AccessibleColors.status.info} 0%, #0277BD 100%)`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: { xs: '0 auto 1rem', sm: '0 auto 1.25rem', md: '0 auto 1.5rem' },
                   }}
                 >
-                  <ChatIcon sx={{ color: 'white', fontSize: { xs: 26, sm: 28, md: 32 } }} />
+                  <ChatIcon sx={{ color: AccessibleColors.text.inverse, fontSize: { xs: 26, sm: 28, md: 32 } }} />
                 </Box>
                 <Typography
                   variant="h5"
                   sx={{
                     fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
                     fontWeight: 600,
-                    color: '#064F80',
+                    color: AccessibleColors.primary.light,
                     mb: 1,
                     fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' },
                   }}
@@ -401,7 +405,7 @@ function AdminDashboard() {
                   variant="body2"
                   sx={{
                     fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
-                    color: '#666',
+                    color: AccessibleColors.text.tertiary,
                     fontSize: { xs: '0.8125rem', sm: '0.875rem' },
                   }}
                 >
@@ -418,11 +422,13 @@ function AdminDashboard() {
             variant="outlined"
             onClick={() => navigate("/chat")}
             sx={{
-              borderColor: 'white',
-              color: 'white',
+              borderColor: AccessibleColors.text.inverse,
+              color: AccessibleColors.text.inverse,
+              borderWidth: '2px',
               '&:hover': {
-                borderColor: '#EA5E29',
-                backgroundColor: 'rgba(234, 94, 41, 0.1)',
+                borderColor: AccessibleColors.secondary.light,
+                backgroundColor: `${AccessibleColors.secondary.light}1A`,
+                borderWidth: '2px',
               },
             }}
           >

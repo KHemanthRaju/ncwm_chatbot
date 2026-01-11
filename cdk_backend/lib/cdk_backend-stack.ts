@@ -20,6 +20,7 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as events   from 'aws-cdk-lib/aws-events';
 import * as targets  from 'aws-cdk-lib/aws-events-targets';
 import { Topic } from '@cdklabs/generative-ai-cdk-constructs/lib/cdk-lib/bedrock/guardrails/guardrail-filters';
+import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
 
 export class LearningNavigatorStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -552,6 +553,65 @@ export class LearningNavigatorStack extends cdk.Stack {
       cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonBedrockFullAccess'),
     );
 
+    // ──────────────────────────────────────────────────────────────────────────────
+    // Knowledge Base Auto-Sync Lambda
+    // Automatically syncs KB when documents are added/deleted from S3
+    // ──────────────────────────────────────────────────────────────────────────────
+    const kbSyncLambda = new lambda.Function(this, 'KBSyncFunction', {
+      runtime: lambda.Runtime.PYTHON_3_12,
+      handler: 'handler.lambda_handler',
+      code: lambda.Code.fromAsset('lambda/kb-sync'),
+      timeout: cdk.Duration.minutes(5),
+      environment: {
+        KNOWLEDGE_BASE_ID: kb.knowledgeBaseId,
+        DATA_SOURCE_ID: knowledgeBaseDataSource.dataSourceId,
+        // Optional: Add SNS topic ARN for admin notifications if needed
+        // ADMIN_NOTIFICATION_TOPIC_ARN: adminNotificationTopic.topicArn,
+      },
+    });
+
+    // Grant permissions to start Bedrock ingestion jobs
+    kbSyncLambda.addToRolePolicy(new iam.PolicyStatement({
+      actions: [
+        'bedrock:StartIngestionJob',
+        'bedrock:GetIngestionJob',
+        'bedrock:GetKnowledgeBase',
+        'bedrock:GetDataSource',
+      ],
+      resources: [
+        `arn:aws:bedrock:${this.region}:${this.account}:knowledge-base/${kb.knowledgeBaseId}`,
+        `arn:aws:bedrock:${this.region}:${this.account}:knowledge-base/${kb.knowledgeBaseId}/data-source/*`,
+      ],
+    }));
+
+    // Configure S3 bucket to trigger Lambda on PUT and DELETE events
+    // Note: Since we're using an imported bucket (fromBucketName), we need to cast it
+    // to allow adding event notifications
+    const kbBucketWithNotifications = s3.Bucket.fromBucketName(
+      this,
+      'KnowledgeBaseDataWithNotifications',
+      'national-council-s3-pdfs'
+    ) as s3.Bucket;
+
+    // Add S3 event notifications to trigger the Lambda function
+    kbBucketWithNotifications.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.LambdaDestination(kbSyncLambda)
+    );
+
+    kbBucketWithNotifications.addEventNotification(
+      s3.EventType.OBJECT_REMOVED,
+      new s3n.LambdaDestination(kbSyncLambda)
+    );
+
+    // Grant Lambda permission to be invoked by S3
+    kbSyncLambda.addPermission('AllowS3Invoke', {
+      principal: new iam.ServicePrincipal('s3.amazonaws.com'),
+      action: 'lambda:InvokeFunction',
+      sourceAccount: this.account,
+      sourceArn: `arn:aws:s3:::national-council-s3-pdfs`,
+    });
+
 
     const AdminApi = new apigateway.RestApi(this, 'admin_api', {
       restApiName: 'AdminApi',
@@ -890,6 +950,24 @@ export class LearningNavigatorStack extends cdk.Stack {
           `arn:aws:amplify:${this.region}:${this.account}:apps/${amplifyApp.appId}/branches/${mainBranch.branchName}/jobs/*`,
         ],
       }),
+    });
+
+    // ──────────────────────────────────────────────────────────────────────────────
+    // Stack Outputs
+    // ──────────────────────────────────────────────────────────────────────────────
+    new cdk.CfnOutput(this, 'KBSyncLambdaArn', {
+      value: kbSyncLambda.functionArn,
+      description: 'ARN of the Knowledge Base Auto-Sync Lambda function',
+    });
+
+    new cdk.CfnOutput(this, 'KBSyncLambdaName', {
+      value: kbSyncLambda.functionName,
+      description: 'Name of the Knowledge Base Auto-Sync Lambda function',
+    });
+
+    new cdk.CfnOutput(this, 'ApiEndpoint', {
+      value: AdminApi.url,
+      description: 'Admin API Gateway endpoint URL',
     });
   }
 }

@@ -20,10 +20,12 @@ import RefreshIcon   from "@mui/icons-material/Refresh";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import CloseIcon     from "@mui/icons-material/Close";
 import FolderIcon    from "@mui/icons-material/Folder";
+import DeleteIcon    from "@mui/icons-material/Delete";
 import { styled }    from "@mui/system";
 import AdminAppHeader from "./AdminAppHeader";
 import { DOCUMENTS_API } from "../utilities/constants";
 import { getIdToken } from "../utilities/auth";
+import AccessibleColors from "../utilities/accessibleColors";
 
 const FolderIconContainer = styled(Box)({
   display: "flex",
@@ -33,7 +35,7 @@ const FolderIconContainer = styled(Box)({
 const FolderBackground = styled(Box)({
   width: "32px",
   height: "32px",
-  backgroundColor: "#D63F09",
+  backgroundColor: AccessibleColors.secondary.light,
   borderRadius: "5px",
   display: "flex",
   alignItems: "center",
@@ -87,7 +89,7 @@ export default function ManageDocuments() {
     setError("");
     try {
       const token = await getIdToken();
-      const res = await fetch(`${DOCUMENTS_API}/files`, {
+      const res = await fetch(`${DOCUMENTS_API}files`, {
         method: "GET",
         headers: {
           "Content-Type":  "application/json",
@@ -138,6 +140,34 @@ export default function ManageDocuments() {
     }
   };
 
+  // Delete single file
+  const handleDeleteFile = async (deleteEndpoint, fileName) => {
+    if (!window.confirm(`Are you sure you want to delete "${fileName}"?`)) {
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      const token = await getIdToken();
+      const res = await fetch(deleteEndpoint, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Delete failed: ${res.status}`);
+      }
+
+      // refresh
+      await fetchDocuments();
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 3) Upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -149,7 +179,7 @@ export default function ManageDocuments() {
       try {
         const token = await getIdToken();
         const base64 = reader.result.split(",")[1];
-        await fetch(`${DOCUMENTS_API}/files`, {
+        const res = await fetch(`${DOCUMENTS_API}files`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -161,6 +191,11 @@ export default function ManageDocuments() {
             content:      base64,
           }),
         });
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Upload failed: ${res.status} - ${errorText}`);
+        }
         setUploadModalOpen(false);
         await fetchDocuments();
       } catch (err) {
@@ -292,13 +327,31 @@ export default function ManageDocuments() {
                     <TableCell>{doc.lastModified}</TableCell>
                     <TableCell>{doc.size}</TableCell>
                     <TableCell>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() => handleDownloadFile(doc.url, doc.name)}
-                      >
-                        Download
-                      </Button>
+                      <Box sx={{ display: "flex", gap: 1 }}>
+                        <Button
+                          variant="contained"
+                          size="small"
+                          onClick={() => handleDownloadFile(doc.url, doc.name)}
+                          sx={{
+                            backgroundColor: AccessibleColors.primary.light,
+                            color: AccessibleColors.text.inverse,
+                            fontWeight: 600,
+                            "&:hover": { backgroundColor: AccessibleColors.primary.main }
+                          }}
+                        >
+                          Download
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          color="error"
+                          startIcon={<DeleteIcon />}
+                          onClick={() => handleDeleteFile(doc.deleteEndpoint, doc.name)}
+                          disabled={loading}
+                        >
+                          Delete
+                        </Button>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -319,7 +372,12 @@ export default function ManageDocuments() {
           <Button
             variant="contained"
             component="label"
-            sx={{ backgroundColor: "#D63F09", "&:hover": { backgroundColor: "#B53207" } }}
+            sx={{
+              backgroundColor: AccessibleColors.secondary.light,
+              color: AccessibleColors.text.inverse,
+              fontWeight: 600,
+              "&:hover": { backgroundColor: AccessibleColors.secondary.main }
+            }}
           >
             Select File
             <input type="file" hidden onChange={handleFileUpload} />

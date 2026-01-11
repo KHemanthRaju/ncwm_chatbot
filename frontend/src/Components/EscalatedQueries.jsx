@@ -36,13 +36,14 @@ import axios from "axios";
 import AdminAppHeader from "./AdminAppHeader";
 import { DOCUMENTS_API } from "../utilities/constants";
 import { getIdToken } from "../utilities/auth";
+import AccessibleColors from "../utilities/accessibleColors";
 
 const ESCALATED_QUERIES_API = `${DOCUMENTS_API}escalated-queries`;
 
 const statusColors = {
-  pending: "#EA5E29",
-  in_progress: "#7FD3EE",
-  resolved: "#4CAF50",
+  pending: AccessibleColors.secondary.light,
+  in_progress: AccessibleColors.status.info,
+  resolved: AccessibleColors.status.success,
 };
 
 const statusIcons = {
@@ -177,7 +178,7 @@ function EscalatedQueries() {
           sx={{
             fontFamily: "Calibri, Ideal Sans, Arial, sans-serif",
             fontWeight: 700,
-            color: "#064F80",
+            color: AccessibleColors.primary.light,
             mb: 3,
           }}
         >
@@ -196,40 +197,40 @@ function EscalatedQueries() {
             sx={{
               p: 2,
               flex: 1,
-              background: "linear-gradient(135deg, #EA5E29 0%, #CB5223 100%)",
-              color: "white",
+              background: `linear-gradient(135deg, ${AccessibleColors.secondary.dark} 0%, ${AccessibleColors.secondary.main} 100%)`,
+              color: AccessibleColors.text.inverse,
             }}
           >
-            <Typography variant="h3" sx={{ fontWeight: 700 }}>
+            <Typography variant="h3" sx={{ fontWeight: 700, color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
               {summary.pending}
             </Typography>
-            <Typography variant="body1">Pending</Typography>
+            <Typography variant="body1" sx={{ color: '#ffffff', fontWeight: 600, textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>Pending</Typography>
           </Paper>
           <Paper
             sx={{
               p: 2,
               flex: 1,
-              background: "linear-gradient(135deg, #7FD3EE 0%, #4FB3D4 100%)",
-              color: "white",
+              background: `linear-gradient(135deg, ${AccessibleColors.status.info} 0%, #0277BD 100%)`,
+              color: AccessibleColors.text.inverse,
             }}
           >
-            <Typography variant="h3" sx={{ fontWeight: 700 }}>
+            <Typography variant="h3" sx={{ fontWeight: 700, color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
               {summary.in_progress}
             </Typography>
-            <Typography variant="body1">In Progress</Typography>
+            <Typography variant="body1" sx={{ color: '#ffffff', fontWeight: 600, textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>In Progress</Typography>
           </Paper>
           <Paper
             sx={{
               p: 2,
               flex: 1,
-              background: "linear-gradient(135deg, #4CAF50 0%, #388E3C 100%)",
-              color: "white",
+              background: `linear-gradient(135deg, ${AccessibleColors.status.success} 0%, #2E7D32 100%)`,
+              color: AccessibleColors.text.inverse,
             }}
           >
-            <Typography variant="h3" sx={{ fontWeight: 700 }}>
+            <Typography variant="h3" sx={{ fontWeight: 700, color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
               {summary.resolved}
             </Typography>
-            <Typography variant="body1">Resolved</Typography>
+            <Typography variant="body1" sx={{ color: '#ffffff', fontWeight: 600, textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>Resolved</Typography>
           </Paper>
         </Box>
 
@@ -320,7 +321,7 @@ function EscalatedQueries() {
                     <TableCell align="center">
                       <IconButton
                         onClick={() => handleViewDetails(query)}
-                        sx={{ color: "#064F80" }}
+                        sx={{ color: AccessibleColors.primary.light }}
                       >
                         <ViewIcon />
                       </IconButton>
@@ -342,8 +343,8 @@ function EscalatedQueries() {
       >
         <DialogTitle
           sx={{
-            background: "linear-gradient(135deg, #064F80 0%, #053E66 100%)",
-            color: "white",
+            background: `linear-gradient(135deg, ${AccessibleColors.primary.dark} 0%, ${AccessibleColors.primary.main} 100%)`,
+            color: AccessibleColors.text.inverse,
             fontFamily: "Calibri, Ideal Sans, Arial, sans-serif",
           }}
         >
@@ -436,11 +437,10 @@ function EscalatedQueries() {
             variant="contained"
             disabled={updating}
             sx={{
-              background:
-                "linear-gradient(135deg, #EA5E29 0%, #CB5223 100%)",
+              background: `linear-gradient(135deg, ${AccessibleColors.secondary.light} 0%, ${AccessibleColors.secondary.main} 100%)`,
+              color: AccessibleColors.text.inverse,
               "&:hover": {
-                background:
-                  "linear-gradient(135deg, #CB5223 0%, #B3421C 100%)",
+                background: `linear-gradient(135deg, ${AccessibleColors.secondary.main} 0%, ${AccessibleColors.secondary.dark} 100%)`,
               },
             }}
           >

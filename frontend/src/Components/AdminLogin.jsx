@@ -14,6 +14,7 @@ import { Psychology as PsychologyIcon, AdminPanelSettings as AdminIcon } from "@
 import { Amplify } from 'aws-amplify';
 import { signIn, fetchAuthSession, confirmSignIn } from 'aws-amplify/auth';
 import { COGNITO_CONFIG } from '../utilities/constants';
+import AccessibleColors from '../utilities/accessibleColors';
 
 // Configure Amplify
 Amplify.configure({
@@ -105,7 +106,7 @@ function AdminLogin() {
     <Box
       sx={{
         minHeight: "100vh",
-        background: 'linear-gradient(135deg, #064F80 0%, #053E66 100%)',
+        background: `linear-gradient(135deg, ${AccessibleColors.primary.dark} 0%, ${AccessibleColors.primary.main} 100%)`,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -128,22 +129,22 @@ function AdminLogin() {
                 width: 80,
                 height: 80,
                 borderRadius: "50%",
-                background: 'linear-gradient(135deg, #EA5E29 0%, #CB5223 100%)',
+                background: `linear-gradient(135deg, ${AccessibleColors.secondary.dark} 0%, ${AccessibleColors.secondary.main} 100%)`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: '0 auto 1.5rem',
-                boxShadow: '0 4px 12px rgba(234, 94, 41, 0.4)',
+                boxShadow: `0 4px 12px ${AccessibleColors.secondary.main}66`,
               }}
             >
-              <AdminIcon sx={{ color: 'white', fontSize: 42 }} />
+              <AdminIcon sx={{ color: AccessibleColors.text.inverse, fontSize: 42 }} />
             </Box>
             <Typography
               variant="h4"
               sx={{
                 fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
                 fontWeight: 700,
-                color: '#064F80',
+                color: AccessibleColors.primary.light,
                 mb: 0.5,
               }}
             >
@@ -153,7 +154,7 @@ function AdminLogin() {
               variant="body1"
               sx={{
                 fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
-                color: '#666',
+                color: AccessibleColors.text.tertiary,
               }}
             >
               Learning Navigator - MHFA Ecosystem
@@ -202,19 +203,19 @@ function AdminLogin() {
                 variant="contained"
                 onClick={handleLogin}
                 sx={{
-                  background: 'linear-gradient(135deg, #EA5E29 0%, #CB5223 100%)',
-                  color: 'white',
+                  background: `linear-gradient(135deg, ${AccessibleColors.secondary.light} 0%, ${AccessibleColors.secondary.main} 100%)`,
+                  color: AccessibleColors.text.inverse,
                   fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
                   fontWeight: 600,
                   padding: '12px',
                   fontSize: '1rem',
                   borderRadius: '8px',
-                  boxShadow: '0px 4px 12px rgba(234, 94, 41, 0.3)',
+                  boxShadow: `0px 4px 12px ${AccessibleColors.secondary.main}4D`,
                   mb: 2,
                   textTransform: 'none',
                   '&:hover': {
-                    background: 'linear-gradient(135deg, #CB5223 0%, #B3421C 100%)',
-                    boxShadow: '0px 6px 16px rgba(234, 94, 41, 0.4)',
+                    background: `linear-gradient(135deg, ${AccessibleColors.secondary.main} 0%, ${AccessibleColors.secondary.dark} 100%)`,
+                    boxShadow: `0px 6px 16px ${AccessibleColors.secondary.main}66`,
                   },
                 }}
               >
@@ -245,19 +246,19 @@ function AdminLogin() {
                 variant="contained"
                 onClick={handleNewPasswordSubmit}
                 sx={{
-                  background: 'linear-gradient(135deg, #EA5E29 0%, #CB5223 100%)',
-                  color: 'white',
+                  background: `linear-gradient(135deg, ${AccessibleColors.secondary.light} 0%, ${AccessibleColors.secondary.main} 100%)`,
+                  color: AccessibleColors.text.inverse,
                   fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
                   fontWeight: 600,
                   padding: '12px',
                   fontSize: '1rem',
                   borderRadius: '8px',
-                  boxShadow: '0px 4px 12px rgba(234, 94, 41, 0.3)',
+                  boxShadow: `0px 4px 12px ${AccessibleColors.secondary.main}4D`,
                   mb: 2,
                   textTransform: 'none',
                   '&:hover': {
-                    background: 'linear-gradient(135deg, #CB5223 0%, #B3421C 100%)',
-                    boxShadow: '0px 6px 16px rgba(234, 94, 41, 0.4)',
+                    background: `linear-gradient(135deg, ${AccessibleColors.secondary.main} 0%, ${AccessibleColors.secondary.dark} 100%)`,
+                    boxShadow: `0px 6px 16px ${AccessibleColors.secondary.main}66`,
                   },
                 }}
               >
@@ -277,8 +278,8 @@ function AdminLogin() {
               navigate("/admin-dashboard", { replace: true });
             }}
             sx={{
-              borderColor: "#064F80",
-              color: "#064F80",
+              borderColor: AccessibleColors.primary.light,
+              color: AccessibleColors.primary.light,
               fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
               fontWeight: 600,
               padding: '12px',
@@ -287,9 +288,9 @@ function AdminLogin() {
               borderWidth: '2px',
               textTransform: 'none',
               '&:hover': {
-                borderColor: "#064F80",
+                borderColor: AccessibleColors.primary.light,
                 borderWidth: '2px',
-                backgroundColor: "rgba(6, 79, 128, 0.04)"
+                backgroundColor: `${AccessibleColors.primary.light}0A`
               },
             }}
           >
@@ -302,7 +303,7 @@ function AdminLogin() {
               display: 'block',
               mt: 2,
               textAlign: 'center',
-              color: "text.secondary",
+              color: AccessibleColors.text.secondary,
               fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
             }}
           >
@@ -315,11 +316,11 @@ function AdminLogin() {
               variant="text"
               onClick={() => navigate("/")}
               sx={{
-                color: '#064F80',
+                color: AccessibleColors.primary.light,
                 fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
                 textTransform: 'none',
                 '&:hover': {
-                  backgroundColor: 'rgba(6, 79, 128, 0.04)',
+                  backgroundColor: `${AccessibleColors.primary.light}0A`,
                 },
               }}
             >
