@@ -39,11 +39,15 @@ def lambda_handler(event, context):
     log("Event:", json.dumps(event, default=str))
 
     # Handle OPTIONS for CORS
-    http_method = event.get("httpMethod") or event["requestContext"]["http"]["method"]
+    http_method = event.get("httpMethod", "")
     if http_method == "OPTIONS":
         return cors_response(200, {"message": "OK"})
 
-    # Parse query parameters
+    # Handle PUT requests (update query status)
+    if http_method == "PUT":
+        return handle_update_query_status(event)
+
+    # Parse query parameters for GET requests
     params = event.get("queryStringParameters") or {}
     status_filter = params.get("status")  # pending, in_progress, resolved
     limit = int(params.get("limit", 50))
@@ -103,7 +107,7 @@ def lambda_handler(event, context):
         return cors_response(500, {"error": str(e)})
 
 
-def update_query_status(event, context):
+def handle_update_query_status(event):
     """
     Update the status of an escalated query
     """
