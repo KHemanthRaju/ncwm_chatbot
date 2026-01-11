@@ -1,11 +1,30 @@
 import React from "react";
 import { Grid, AppBar, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Logout as LogoutIcon } from "@mui/icons-material";
+import { signOut } from 'aws-amplify/auth';
 import Switch from "./Switch.jsx";
 import { ALLOW_MULTLINGUAL_TOGGLE } from "../utilities/constants.js";
 
 function AdminAppHeader({ showSwitch }) {
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("idToken");
+      localStorage.removeItem("guestMode");
+      navigate("/admin-login", { replace: true });
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force logout even if signOut fails
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("idToken");
+      localStorage.removeItem("guestMode");
+      navigate("/admin-login", { replace: true });
+    }
+  };
 
   const showHomeButton = true;
 
@@ -54,6 +73,28 @@ function AdminAppHeader({ showSwitch }) {
                 </Button>
               </Grid>
             )}
+
+            <Grid item>
+              <Button
+                variant="outlined"
+                startIcon={<LogoutIcon />}
+                onClick={handleLogout}
+                sx={{
+                  borderColor: "#D63F09",
+                  color: "#D63F09",
+                  borderRadius: "20px",
+                  padding: "8px 20px",
+                  fontSize: "1rem",
+                  "&:hover": {
+                    borderColor: "#115293",
+                    color: "#115293",
+                    backgroundColor: "rgba(17, 82, 147, 0.04)",
+                  },
+                }}
+              >
+                Logout
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
