@@ -52,6 +52,7 @@ const sentimentIcons = {
 
 function ConversationLogs() {
   const [timeframe, setTimeframe] = useState("today");
+  const [sentimentFilter, setSentimentFilter] = useState("all");
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -101,6 +102,13 @@ function ConversationLogs() {
     }
   };
 
+  // Filter conversations by sentiment
+  const filteredConversations = sentimentFilter === "all"
+    ? conversations
+    : conversations.filter(conv =>
+        (conv.sentiment || 'neutral').toLowerCase() === sentimentFilter.toLowerCase()
+      );
+
   return (
     <Box sx={{ minHeight: "100vh" }}>
       {/* Fixed header */}
@@ -128,20 +136,51 @@ function ConversationLogs() {
           </Alert>
         )}
 
-        {/* Timeframe selector */}
-        <FormControl sx={{ mb: 3, minWidth: 200 }}>
-          <InputLabel>Timeframe</InputLabel>
-          <Select
-            value={timeframe}
-            onChange={(e) => setTimeframe(e.target.value)}
-            label="Timeframe"
-          >
-            <MenuItem value="today">Today</MenuItem>
-            <MenuItem value="weekly">This Week</MenuItem>
-            <MenuItem value="monthly">This Month</MenuItem>
-            <MenuItem value="yearly">This Year</MenuItem>
-          </Select>
-        </FormControl>
+        {/* Filters */}
+        <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>Timeframe</InputLabel>
+            <Select
+              value={timeframe}
+              onChange={(e) => setTimeframe(e.target.value)}
+              label="Timeframe"
+            >
+              <MenuItem value="today">Today</MenuItem>
+              <MenuItem value="weekly">This Week</MenuItem>
+              <MenuItem value="monthly">This Month</MenuItem>
+              <MenuItem value="yearly">This Year</MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>Filter by Sentiment</InputLabel>
+            <Select
+              value={sentimentFilter}
+              onChange={(e) => setSentimentFilter(e.target.value)}
+              label="Filter by Sentiment"
+            >
+              <MenuItem value="all">All Sentiments</MenuItem>
+              <MenuItem value="positive">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <HappyIcon sx={{ color: AccessibleColors.status.success, fontSize: 20 }} />
+                  Positive
+                </Box>
+              </MenuItem>
+              <MenuItem value="neutral">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <NeutralIcon sx={{ color: AccessibleColors.status.warning, fontSize: 20 }} />
+                  Neutral
+                </Box>
+              </MenuItem>
+              <MenuItem value="negative">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <SadIcon sx={{ color: AccessibleColors.status.error, fontSize: 20 }} />
+                  Negative
+                </Box>
+              </MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
 
         {/* Summary Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
@@ -165,15 +204,29 @@ function ConversationLogs() {
           </Grid>
         </Grid>
 
+        {/* Results Counter */}
+        {!loading && conversations.length > 0 && (
+          <Typography
+            variant="body2"
+            sx={{ mb: 2, color: AccessibleColors.text.secondary, fontWeight: 500 }}
+          >
+            Showing {filteredConversations.length} of {conversations.length} conversations
+            {sentimentFilter !== "all" && ` (${sentimentFilter} only)`}
+          </Typography>
+        )}
+
         {/* Conversations Table */}
         {loading ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
             <CircularProgress />
           </Box>
-        ) : conversations.length === 0 ? (
+        ) : filteredConversations.length === 0 ? (
           <Paper sx={{ p: 4, textAlign: "center" }}>
             <Typography variant="body1" color="text.secondary">
-              No conversations found for this timeframe.
+              {sentimentFilter === "all"
+                ? "No conversations found for this timeframe."
+                : `No ${sentimentFilter} conversations found for this timeframe.`
+              }
             </Typography>
           </Paper>
         ) : (
@@ -190,7 +243,7 @@ function ConversationLogs() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {conversations.map((conv, idx) => (
+                {filteredConversations.map((conv, idx) => (
                   <TableRow key={idx} hover>
                     <TableCell>{formatTimestamp(conv.timestamp)}</TableCell>
                     <TableCell>
