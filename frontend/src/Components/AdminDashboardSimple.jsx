@@ -16,6 +16,10 @@ import {
   Chip,
   IconButton,
   Collapse,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import {
   SentimentVerySatisfied as HappyIcon,
@@ -63,6 +67,7 @@ const SENTIMENT_COLORS = {
 function AdminDashboardSimple() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [sentimentFilter, setSentimentFilter] = useState("all");
   const [analytics, setAnalytics] = useState({
     sentiment: { positive: 0, neutral: 0, negative: 0 },
     user_count: 0,
@@ -120,6 +125,13 @@ function AdminDashboardSimple() {
       default: return <NeutralIcon />;
     }
   };
+
+  // Filter conversations by sentiment
+  const filteredConversations = sentimentFilter === "all"
+    ? analytics.conversations
+    : analytics.conversations.filter(conv =>
+        (conv.sentiment || 'neutral').toLowerCase() === sentimentFilter.toLowerCase()
+      );
 
   // Prepare chart data
   const sentimentChartData = [
@@ -646,25 +658,69 @@ function AdminDashboardSimple() {
 
         {/* Conversation Logs */}
         <Card sx={{ p: 3 }}>
-          <Typography
-            variant="h5"
-            sx={{
-              fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
-              fontWeight: 600,
-              color: '#064F80',
-              mb: 3,
-            }}
-          >
-            Recent Conversations ({analytics.conversations.length})
-          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
+                fontWeight: 600,
+                color: '#064F80',
+              }}
+            >
+              Recent Conversations ({analytics.conversations.length})
+            </Typography>
+
+            <FormControl sx={{ minWidth: 200 }} size="small">
+              <InputLabel>Filter by Sentiment</InputLabel>
+              <Select
+                value={sentimentFilter}
+                onChange={(e) => setSentimentFilter(e.target.value)}
+                label="Filter by Sentiment"
+              >
+                <MenuItem value="all">All Sentiments</MenuItem>
+                <MenuItem value="positive">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <HappyIcon sx={{ color: '#4CAF50', fontSize: 20 }} />
+                    Positive
+                  </Box>
+                </MenuItem>
+                <MenuItem value="neutral">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <NeutralIcon sx={{ color: '#FFC107', fontSize: 20 }} />
+                    Neutral
+                  </Box>
+                </MenuItem>
+                <MenuItem value="negative">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <SadIcon sx={{ color: '#F44336', fontSize: 20 }} />
+                    Negative
+                  </Box>
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          {/* Results Counter */}
+          {!loading && analytics.conversations.length > 0 && (
+            <Typography
+              variant="body2"
+              sx={{ mb: 2, color: '#666', fontWeight: 500 }}
+            >
+              Showing {filteredConversations.length} of {analytics.conversations.length} conversations
+              {sentimentFilter !== "all" && ` (${sentimentFilter} only)`}
+            </Typography>
+          )}
 
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
               <CircularProgress />
             </Box>
-          ) : analytics.conversations.length === 0 ? (
+          ) : filteredConversations.length === 0 ? (
             <Typography variant="body1" sx={{ textAlign: 'center', py: 4, color: '#666' }}>
-              No conversations yet today
+              {sentimentFilter === "all"
+                ? "No conversations yet today"
+                : `No ${sentimentFilter} conversations found`
+              }
             </Typography>
           ) : (
             <TableContainer component={Paper} sx={{ maxHeight: 600 }}>
@@ -679,7 +735,7 @@ function AdminDashboardSimple() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {analytics.conversations.map((conv, index) => (
+                  {filteredConversations.map((conv, index) => (
                     <React.Fragment key={`${conv.session_id}-${index}`}>
                       <TableRow hover>
                         <TableCell sx={{ fontFamily: 'monospace', fontSize: '0.85rem' }}>
