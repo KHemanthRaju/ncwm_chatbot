@@ -123,7 +123,7 @@ def lambda_handler(event, context):
 
     log(f"Feedback map size         : {len(feedback_map)}")
 
-    # 5) Aggregate using user feedback instead of AI sentiment
+    # 5) Aggregate using user feedback (thumbs up/down) only
     sessions = set()
     loc_counts = defaultdict(int)
     cat_counts = defaultdict(int)
@@ -131,6 +131,15 @@ def lambda_handler(event, context):
     feedback_sentiment_counts = {"positive": 0, "negative": 0}
     satisfaction_scores = []
     conversations = []
+
+    # Build a map of session_id+timestamp -> item for matching feedback
+    session_timestamp_map = {}
+    for it in items:
+        session_id = it.get("session_id")
+        timestamp = it.get("original_ts")
+        if session_id and timestamp:
+            key = f"{session_id}_{timestamp}"
+            session_timestamp_map[key] = it
 
     for it in items:
         if sid := it.get("session_id"):
@@ -143,23 +152,39 @@ def lambda_handler(event, context):
         if score := it.get("satisfaction_score"):
             satisfaction_scores.append(float(score))
 
-        # Build conversation log entry
-        conversations.append({
-            "session_id": it.get("session_id"),
-            "timestamp": it.get("original_ts"),
-            "query": it.get("query", ""),
-            "response": it.get("response", ""),
-            "category": it.get("category", "Unknown"),
-            "sentiment": it.get("sentiment", "neutral"),
-            "satisfaction_score": float(it.get("satisfaction_score", 50))
-        })
+        # Try to find user feedback for this conversation
+        # Feedback is stored with session_id, so we need to match it
+        session_id = it.get("session_id")
+        timestamp = it.get("original_ts")
+        user_feedback = None
 
-    # Count feedback sentiments (thumbs up/down)
-    for msg_id, feedback_type in feedback_map.items():
-        if feedback_type == "positive":
-            feedback_sentiment_counts["positive"] += 1
-        elif feedback_type == "negative":
-            feedback_sentiment_counts["negative"] += 1
+        # Check if there's feedback for this specific message
+        # In the feedback table, message_id might be the timestamp or a unique identifier
+        if session_id:
+            for msg_id, feedback_type in feedback_map.items():
+                # Try to match by checking if message_id contains session or timestamp info
+                if session_id in str(msg_id) or (timestamp and timestamp in str(msg_id)):
+                    user_feedback = feedback_type
+                    break
+
+        # Only include conversations that have user feedback (thumbs up/down)
+        if user_feedback:
+            # Count the feedback
+            if user_feedback == "positive":
+                feedback_sentiment_counts["positive"] += 1
+            elif user_feedback == "negative":
+                feedback_sentiment_counts["negative"] += 1
+
+            # Build conversation log entry with user feedback as sentiment
+            conversations.append({
+                "session_id": session_id,
+                "timestamp": timestamp,
+                "query": it.get("query", ""),
+                "response": it.get("response", ""),
+                "category": it.get("category", "Unknown"),
+                "sentiment": user_feedback,  # Use user feedback (positive/negative)
+                "satisfaction_score": float(it.get("satisfaction_score", 50))
+            })
 
     log(f"Feedback counts - Positive: {feedback_sentiment_counts['positive']}, Negative: {feedback_sentiment_counts['negative']}")
 
