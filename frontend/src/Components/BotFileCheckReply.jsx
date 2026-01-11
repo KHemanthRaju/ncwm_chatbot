@@ -171,7 +171,7 @@ function BotFileCheckReply({ message, fileName, fileStatus, citations, isLoading
           >
             <Box display="flex" alignItems="center" gap={1}>
               <CircularProgress
-                size={{ xs: 16, sm: 18, md: 20 }}
+                size={20}
                 sx={{ color: theme.palette.primary.main }}
               />
               <Typography
