@@ -198,25 +198,6 @@ function AdminDashboard() {
                 </Card>
               </Grid>
 
-              <Grid item xs={12} sm={6} md={3}>
-                <Card
-                  sx={{
-                    p: { xs: 2, sm: 2.5, md: 3 },
-                    textAlign: 'center',
-                    background: 'linear-gradient(135deg, #7FD3EE 0%, #4FB3D4 100%)',
-                    color: 'white',
-                    boxShadow: '0 4px 12px rgba(127, 211, 238, 0.3)',
-                  }}
-                >
-                  <TrendingIcon sx={{ fontSize: { xs: 32, sm: 36, md: 40 }, mb: 1 }} />
-                  <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5, fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' } }}>
-                    {analytics.avg_satisfaction}
-                  </Typography>
-                  <Typography variant="body1" sx={{ fontWeight: 500, fontSize: { xs: '0.875rem', sm: '1rem' } }}>
-                    Avg Score
-                  </Typography>
-                </Card>
-              </Grid>
             </Grid>
           )}
         </Box>

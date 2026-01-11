@@ -212,7 +212,6 @@ function ConversationLogs() {
                   <TableCell><strong>Query</strong></TableCell>
                   <TableCell><strong>Category</strong></TableCell>
                   <TableCell><strong>Sentiment</strong></TableCell>
-                  <TableCell><strong>Score</strong></TableCell>
                   <TableCell align="center"><strong>Actions</strong></TableCell>
                 </TableRow>
               </TableHead>
@@ -252,17 +251,6 @@ function ConversationLogs() {
                         size="small"
                         sx={{
                           backgroundColor: sentimentColors[conv.sentiment],
-                          color: "white",
-                          fontWeight: 600,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={`${conv.satisfaction_score}/100`}
-                        size="small"
-                        sx={{
-                          backgroundColor: getSentimentChipColor(conv.satisfaction_score),
                           color: "white",
                           fontWeight: 600,
                         }}
@@ -335,7 +323,7 @@ function ConversationLogs() {
               </Paper>
 
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                   <Typography variant="subtitle2" color="text.secondary">
                     Sentiment
                   </Typography>
@@ -344,19 +332,6 @@ function ConversationLogs() {
                     label={selectedConv.sentiment.toUpperCase()}
                     sx={{
                       backgroundColor: sentimentColors[selectedConv.sentiment],
-                      color: "white",
-                      fontWeight: 600,
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle2" color="text.secondary">
-                    Satisfaction Score
-                  </Typography>
-                  <Chip
-                    label={`${selectedConv.satisfaction_score}/100`}
-                    sx={{
-                      backgroundColor: getSentimentChipColor(selectedConv.satisfaction_score),
                       color: "white",
                       fontWeight: 600,
                     }}
