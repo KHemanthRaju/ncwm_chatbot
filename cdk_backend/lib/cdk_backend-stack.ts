@@ -87,9 +87,9 @@ export class LearningNavigatorStack extends cdk.Stack {
       uri: `s3://${supplementalBucket.bucketName}`
     });
     
-    const cris_sonnet_3_5_v2 = bedrock.CrossRegionInferenceProfile.fromConfig({
+    const cris_sonnet_4 = bedrock.CrossRegionInferenceProfile.fromConfig({
       geoRegion: bedrock.CrossRegionInferenceProfileRegion.US,
-      model: bedrock.BedrockFoundationModel.ANTHROPIC_CLAUDE_3_5_SONNET_V2_0,
+      model: bedrock.BedrockFoundationModel.ANTHROPIC_CLAUDE_4_SONNET_V1_0,
     });
 
     
@@ -235,7 +235,7 @@ export class LearningNavigatorStack extends cdk.Stack {
     const agent = new bedrock.Agent(this, 'Agent', {
       name: 'Learning-Navigator',
       description: 'AI-powered Learning Navigator for MHFA ecosystem - supports instructors, learners, and administrators.',
-      foundationModel: cris_sonnet_3_5_v2,
+      foundationModel: cris_sonnet_4,
       shouldPrepareAgent: true,
       userInputEnabled:true,
       knowledgeBases: [kb],
