@@ -103,11 +103,29 @@ function ConversationLogs() {
     }
   };
 
+  // Helper function to normalize sentiment value
+  const normalizeSentiment = (sentiment) => {
+    if (!sentiment) return 'neutral';
+    return sentiment.toLowerCase();
+  };
+
+  // Helper function to get sentiment color
+  const getSentimentColor = (sentiment) => {
+    const normalized = normalizeSentiment(sentiment);
+    return sentimentColors[normalized] || sentimentColors.neutral;
+  };
+
+  // Helper function to get sentiment icon
+  const getSentimentIcon = (sentiment) => {
+    const normalized = normalizeSentiment(sentiment);
+    return sentimentIcons[normalized] || sentimentIcons.neutral;
+  };
+
   // Filter conversations by sentiment
   const filteredConversations = sentimentFilter === "all"
     ? conversations
     : conversations.filter(conv =>
-        (conv.sentiment || 'neutral').toLowerCase() === sentimentFilter.toLowerCase()
+        normalizeSentiment(conv.sentiment) === sentimentFilter.toLowerCase()
       );
 
   return (
@@ -274,13 +292,16 @@ function ConversationLogs() {
                     </TableCell>
                     <TableCell>
                       <Chip
-                        icon={sentimentIcons[conv.sentiment]}
-                        label={conv.sentiment.toUpperCase()}
+                        icon={getSentimentIcon(conv.sentiment)}
+                        label={normalizeSentiment(conv.sentiment).charAt(0).toUpperCase() + normalizeSentiment(conv.sentiment).slice(1)}
                         size="small"
                         sx={{
-                          backgroundColor: sentimentColors[conv.sentiment],
+                          backgroundColor: getSentimentColor(conv.sentiment),
                           color: "white",
                           fontWeight: 600,
+                          '& .MuiChip-icon': {
+                            color: 'white'
+                          }
                         }}
                       />
                     </TableCell>
