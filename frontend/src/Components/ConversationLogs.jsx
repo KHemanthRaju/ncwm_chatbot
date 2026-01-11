@@ -58,7 +58,6 @@ function ConversationLogs() {
   const [selectedConv, setSelectedConv] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [sentiment, setSentiment] = useState({});
-  const [avgSatisfaction, setAvgSatisfaction] = useState(0);
 
   useEffect(() => {
     fetchConversations();
@@ -76,7 +75,6 @@ function ConversationLogs() {
 
       setConversations(data.conversations || []);
       setSentiment(data.sentiment || {});
-      setAvgSatisfaction(data.avg_satisfaction || 0);
     } catch (err) {
       console.error("Failed to fetch conversations:", err);
       setError("Failed to load conversation logs. Please try again.");
@@ -101,12 +99,6 @@ function ConversationLogs() {
     } catch {
       return timestamp;
     }
-  };
-
-  const getSentimentChipColor = (score) => {
-    if (score >= 70) return "#4CAF50";
-    if (score >= 40) return "#FFC107";
-    return "#F44336";
   };
 
   return (
@@ -153,7 +145,7 @@ function ConversationLogs() {
 
         {/* Summary Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={4}>
             <Card sx={{ p: 3, textAlign: "center", background: "linear-gradient(135deg, #4CAF50 0%, #388E3C 100%)", color: "white" }}>
               <HappyIcon sx={{ fontSize: 48, mb: 1 }} />
               <Typography variant="h3" sx={{ fontWeight: 700 }}>
@@ -162,7 +154,7 @@ function ConversationLogs() {
               <Typography variant="body1">Positive</Typography>
             </Card>
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={4}>
             <Card sx={{ p: 3, textAlign: "center", background: "linear-gradient(135deg, #FFC107 0%, #FFA000 100%)", color: "white" }}>
               <NeutralIcon sx={{ fontSize: 48, mb: 1 }} />
               <Typography variant="h3" sx={{ fontWeight: 700 }}>
@@ -171,22 +163,13 @@ function ConversationLogs() {
               <Typography variant="body1">Neutral</Typography>
             </Card>
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={4}>
             <Card sx={{ p: 3, textAlign: "center", background: "linear-gradient(135deg, #F44336 0%, #D32F2F 100%)", color: "white" }}>
               <SadIcon sx={{ fontSize: 48, mb: 1 }} />
               <Typography variant="h3" sx={{ fontWeight: 700 }}>
                 {sentiment.negative || 0}
               </Typography>
               <Typography variant="body1">Negative</Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <Card sx={{ p: 3, textAlign: "center", background: "linear-gradient(135deg, #064F80 0%, #053E66 100%)", color: "white" }}>
-              <Typography variant="caption" sx={{ opacity: 0.9 }}>Average Satisfaction</Typography>
-              <Typography variant="h3" sx={{ fontWeight: 700 }}>
-                {avgSatisfaction}
-              </Typography>
-              <Typography variant="body1">out of 100</Typography>
             </Card>
           </Grid>
         </Grid>
