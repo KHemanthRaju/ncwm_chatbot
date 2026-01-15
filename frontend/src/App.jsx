@@ -9,7 +9,7 @@ import nationalCouncilTheme from './theme/nationalCouncilTheme';
 import LandingPage from './Components/LandingPage';
 import ChatBody from './Components/ChatBody';
 import AdminLogin from './Components/AdminLogin';
-import AdminDashboardSimple from './Components/AdminDashboardSimple';
+import AdminDashboard from './Components/AdminDashboard';
 import ManageDocuments from './Components/ManageDocuments';
 import AdminAnalytics from './Components/AdminAnalytics';
 import EscalatedQueries from './Components/EscalatedQueries';
@@ -28,7 +28,7 @@ function App() {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/chat" element={<ChatBody />} />
                 <Route path="/admin" element={<AdminLogin />} />
-                <Route path="/admin-dashboard" element={<AdminDashboardSimple />} />
+                <Route path="/admin-dashboard" element={<AdminDashboard />} />
                 <Route path="/admin-documents" element={<ManageDocuments />} />
                 <Route path="/admin-analytics" element={<AdminAnalytics />} />
                 <Route path="/admin-queries" element={<EscalatedQueries />} />

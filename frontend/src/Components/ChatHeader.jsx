@@ -10,6 +10,7 @@ import {
 import { useLanguage } from "../utilities/LanguageContext";
 import { TEXT } from "../utilities/constants";
 import { useTheme } from "@mui/material/styles";
+import MHFALogo from "../Assets/mhfa_logo.png";
 
 function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange, userRole, onRoleChange }) {
   const { language: contextLanguage, setLanguage } = useLanguage();
@@ -76,7 +77,7 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange, userRole,
           zIndex: 1,
         }}
       >
-        {/* Left side - Menu Button and Title */}
+        {/* Left side - Menu Button, Logo and Title */}
         <Box display="flex" alignItems="center" gap={{ xs: 0.5, sm: 1, md: 2 }}>
           {/* Menu Button - Hidden on desktop when sidebar is visible */}
           <Tooltip title="Open Menu" arrow sx={{ display: { xs: 'inline-flex', lg: 'none' } }}>
@@ -94,6 +95,25 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange, userRole,
               <MenuIcon sx={{ fontSize: { xs: 20, sm: 24 } }} />
             </IconButton>
           </Tooltip>
+
+          {/* MHFA Logo */}
+          <Box
+            sx={{
+              height: { xs: 35, sm: 40, md: 50 },
+              display: 'flex',
+              alignItems: 'center',
+              padding: { xs: 0.5, sm: 0.75, md: 1 },
+              background: 'white',
+              borderRadius: '8px',
+            }}
+          >
+            <img
+              src={MHFALogo}
+              alt="Mental Health First Aid Logo"
+              style={{ height: '100%', width: 'auto', objectFit: 'contain' }}
+            />
+          </Box>
+
           <Box>
             <Typography
               variant="h5"
@@ -118,7 +138,7 @@ function ChatHeader({ selectedLanguage, onMenuClick, onLanguageChange, userRole,
                 display: { xs: 'none', sm: 'block' },
               }}
             >
-              MHFA Learning Ecosystem
+              AI-Powered Training Support
             </Typography>
           </Box>
         </Box>

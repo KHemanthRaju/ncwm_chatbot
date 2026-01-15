@@ -1,19 +1,55 @@
 import React, { useState, useRef, useEffect } from "react";
-import { TextField, Box, IconButton, CircularProgress } from "@mui/material";
+import { TextField, Box, IconButton, CircularProgress, Tooltip } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import MicIcon from "@mui/icons-material/Mic";
+import MicOffIcon from "@mui/icons-material/MicOff";
 import { useTheme } from "@mui/material/styles";
 
 function ChatInput({ onSendMessage, processing, message, setMessage }) {
   const [isFocused, setIsFocused] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
   const theme = useTheme();
   const inputRef = useRef(null);
+  const recognitionRef = useRef(null);
 
   useEffect(() => {
     // Auto-focus on mount
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, []);
+
+    // Check if speech recognition is supported
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      setSpeechSupported(true);
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setMessage(transcript);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, [setMessage]);
 
   const handleTyping = (event) => {
     setMessage(event.target.value);
@@ -23,6 +59,23 @@ function ChatInput({ onSendMessage, processing, message, setMessage }) {
     if (message?.trim() !== "" && !processing) {
       onSendMessage(message);
       setMessage("");
+    }
+  };
+
+  const toggleSpeechRecognition = () => {
+    if (!recognitionRef.current) return;
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+      } catch (error) {
+        console.error('Error starting speech recognition:', error);
+        setIsListening(false);
+      }
     }
   };
 
@@ -91,6 +144,60 @@ function ChatInput({ onSendMessage, processing, message, setMessage }) {
           }}
         />
       </Box>
+
+      {/* Speech Recognition Button */}
+      {speechSupported && (
+        <Tooltip title={isListening ? "Stop recording" : "Voice input"} arrow>
+          <IconButton
+            aria-label="voice input"
+            disabled={processing}
+            onClick={toggleSpeechRecognition}
+            sx={{
+              backgroundColor: isListening ? '#EF4444' : theme.palette.secondary.main,
+              color: "white",
+              width: { xs: "44px", sm: "48px", md: "52px" },
+              height: { xs: "44px", sm: "48px", md: "52px" },
+              borderRadius: "50%",
+              boxShadow: isListening
+                ? '0 4px 12px rgba(239, 68, 68, 0.4)'
+                : '0 4px 12px rgba(6, 79, 128, 0.3)',
+              transition: 'all 0.3s ease',
+              animation: isListening ? 'pulse 1.5s ease-in-out infinite' : 'none',
+              "@keyframes pulse": {
+                "0%, 100%": {
+                  transform: 'scale(1)',
+                  opacity: 1,
+                },
+                "50%": {
+                  transform: 'scale(1.05)',
+                  opacity: 0.8,
+                },
+              },
+              "&:hover": {
+                backgroundColor: isListening ? '#DC2626' : '#053E66',
+                boxShadow: isListening
+                  ? '0 6px 16px rgba(239, 68, 68, 0.5)'
+                  : '0 6px 16px rgba(6, 79, 128, 0.4)',
+                transform: 'scale(1.05)',
+              },
+              "&:active": {
+                transform: 'scale(0.95)',
+              },
+              "&:disabled": {
+                backgroundColor: theme.palette.grey[300],
+                color: theme.palette.grey[500],
+                boxShadow: 'none',
+              },
+            }}
+          >
+            {isListening ? (
+              <MicOffIcon sx={{ fontSize: { xs: 20, sm: 22, md: 24 } }} />
+            ) : (
+              <MicIcon sx={{ fontSize: { xs: 20, sm: 22, md: 24 } }} />
+            )}
+          </IconButton>
+        </Tooltip>
+      )}
 
       <IconButton
         aria-label="send"
