@@ -105,9 +105,9 @@ GET /session-logs?timeframe=today
 
 ### 1. Conversation Logging
 ```
-User Query → WebSocket → cfEvaluator Lambda → Bedrock Agent
+User Query → WebSocket → chatResponseHandler Lambda → Bedrock Agent
      ↓
-Response ← WebSocket ← cfEvaluator Lambda ← Bedrock Agent
+Response ← WebSocket ← chatResponseHandler Lambda ← Bedrock Agent
      ↓
 Log Classifier Lambda → Analyzes sentiment & category
      ↓
@@ -233,7 +233,7 @@ POST /session-logs (internal)
 **Log Groups:**
 - `/aws/lambda/retrieveSessionLogs`
 - `/aws/lambda/logclassifier`
-- `/aws/lambda/cfEvaluator`
+- `/aws/lambda/chatResponseHandler`
 
 **Useful Queries:**
 ```

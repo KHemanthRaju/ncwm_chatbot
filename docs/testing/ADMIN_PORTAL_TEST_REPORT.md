@@ -806,7 +806,7 @@ Session 5: satisfaction_score = 85 (Positive)
 4. **Sentiment Analysis Flow:**
    ```
    User sends chat message → WebSocket to Lambda → Bedrock Agent responds
-   → cfEvaluator invokes logclassifier → Nova Lite analyzes sentiment
+   → chatResponseHandler invokes logclassifier → Nova Lite analyzes sentiment
    → Score stored in DynamoDB → Visible in admin portal
    ```
    **Status:** ✅ Working (verified with real sentiment scores)

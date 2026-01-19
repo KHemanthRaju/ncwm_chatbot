@@ -92,11 +92,11 @@ The Learning Navigator chatbot is a **serverless, AI-powered application** built
 │                           AWS LAMBDA FUNCTIONS                                   │
 │                                                                                  │
 │  ┌─────────────────────┐  ┌─────────────────────┐  ┌────────────────────────┐  │
-│  │ websocketHandler    │  │ cfEvaluator         │  │ logclassifier          │  │
+│  │ websocketHandler    │  │ chatResponseHandler         │  │ logclassifier          │  │
 │  │ • Receives user     │  │ • Invokes Bedrock   │  │ • Analyzes chat logs   │  │
 │  │   messages          │  │   Agent             │  │ • Sentiment scoring    │  │
 │  │ • Invokes           │─▶│ • Streams responses │  │ • Stores in DynamoDB   │  │
-│  │   cfEvaluator       │  │ • Computes          │  │                        │  │
+│  │   chatResponseHandler       │  │ • Computes          │  │                        │  │
 │  │ • Manages WebSocket │  │   confidence score  │  │                        │  │
 │  │   connections       │  │ • Handles citations │  │                        │  │
 │  └─────────────────────┘  └──────────┬──────────┘  └────────────────────────┘  │
@@ -206,7 +206,7 @@ The Learning Navigator chatbot is a **serverless, AI-powered application** built
 │  ┌────────────────────────────────────────┐  │   │  └──────────────────────┘  │
 │  │  Logs                                  │  │   └────────────────────────────┘
 │  │  • /aws/lambda/websocketHandler        │  │
-│  │  • /aws/lambda/cfEvaluator             │  │   ┌────────────────────────────┐
+│  │  • /aws/lambda/chatResponseHandler             │  │   ┌────────────────────────────┐
 │  │  • /aws/lambda/logclassifier           │  │   │  AWS SECRETS MANAGER       │
 │  │  • /aws/lambda/emailHandler            │  │   │  ┌──────────────────────┐  │
 │  │  • /aws/lambda/adminFile               │  │   │  │  github-secret-token │  │
@@ -334,8 +334,8 @@ frontend:
 ```
 1. User sends chat message → WebSocket message
 2. API Gateway routes to websocketHandler Lambda
-3. Lambda invokes cfEvaluator for Bedrock processing
-4. cfEvaluator streams response back via WebSocket
+3. Lambda invokes chatResponseHandler for Bedrock processing
+4. chatResponseHandler streams response back via WebSocket
 5. Frontend displays response in real-time
 ```
 
@@ -384,20 +384,20 @@ frontend:
 ```python
 1. Receive message from API Gateway event
 2. Extract connectionId and user message
-3. Invoke cfEvaluator Lambda asynchronously
+3. Invoke chatResponseHandler Lambda asynchronously
 4. Return 200 OK to API Gateway
 ```
 
 **Environment Variables:**
-- `RESPONSE_FUNCTION_ARN`: ARN of cfEvaluator Lambda
+- `RESPONSE_FUNCTION_ARN`: ARN of chatResponseHandler Lambda
 
 **Permissions:**
-- Invoke cfEvaluator Lambda
+- Invoke chatResponseHandler Lambda
 - Execute API Gateway connections (send messages back to client)
 
 ---
 
-#### cfEvaluator
+#### chatResponseHandler
 **Runtime**: Python 3.12 (Docker build)
 **Trigger**: Invoked by websocketHandler
 **Purpose**: Core chat logic, Bedrock agent invocation, confidence scoring
@@ -435,7 +435,7 @@ frontend:
 
 #### logclassifier
 **Runtime**: Python 3.12
-**Trigger**: Invoked by cfEvaluator after each chat interaction
+**Trigger**: Invoked by chatResponseHandler after each chat interaction
 **Purpose**: AI-powered sentiment analysis and session logging
 
 **Logic:**
@@ -447,7 +447,7 @@ frontend:
    - 31-70: Neutral sentiment
    - 71-100: Positive sentiment
 4. Store results in DynamoDB (NCMWDashboardSessionlogs)
-5. Return sentiment score to cfEvaluator
+5. Return sentiment score to chatResponseHandler
 ```
 
 **Environment Variables:**
@@ -604,7 +604,7 @@ paths:
 
 **Logic:**
 ```python
-1. Query CloudWatch Logs Insights for cfEvaluator logs
+1. Query CloudWatch Logs Insights for chatResponseHandler logs
 2. Filter for structured log events (chat sessions)
 3. Extract session metadata:
    - session_id, user_id, timestamp
@@ -894,7 +894,7 @@ courses, instructor/learner support, and administrative guidance."
 **Bucket 1: national-council-s3-pdfs** (Knowledge Base)
 - **Purpose**: Store PDF documents for knowledge base
 - **Contents**: MHFA training materials, guides, FAQs
-- **Access**: Read by cfEvaluator, Read/Write by adminFile, emailHandler
+- **Access**: Read by chatResponseHandler, Read/Write by adminFile, emailHandler
 - **Versioning**: Recommended for production
 - **Lifecycle Policy**: Archive to Glacier after 90 days (cost optimization)
 
@@ -1034,7 +1034,7 @@ Value: inbound-smtp.us-west-2.amazonaws.com
 | Log Group | Purpose | Retention |
 |-----------|---------|-----------|
 | `/aws/lambda/websocketHandler` | WebSocket messages | 7 days |
-| `/aws/lambda/cfEvaluator` | Chat processing logs | 14 days |
+| `/aws/lambda/chatResponseHandler` | Chat processing logs | 14 days |
 | `/aws/lambda/logclassifier` | Sentiment analysis | 7 days |
 | `/aws/lambda/emailHandler` | Email processing | 7 days |
 | `/aws/lambda/adminFile` | File operations | 7 days |
@@ -1139,7 +1139,7 @@ fields @timestamp, sentiment_score
   - AWSLambdaBasicExecutionRole (CloudWatch logs)
   - Custom policies for function-specific resources
 - **Examples**:
-  - `cfEvaluator`: Bedrock, API Gateway, S3 read
+  - `chatResponseHandler`: Bedrock, API Gateway, S3 read
   - `adminFile`: S3 read/write, Bedrock (sync)
   - `notifyAdmin`: SES send email, DynamoDB write
   - `emailHandler`: S3 read/write, Bedrock, SES receive
@@ -1223,13 +1223,13 @@ fields @timestamp, sentiment_score
 ┌─────────────────────────┐
 │  websocketHandler       │
 │  • Extracts message     │
-│  • Invokes cfEvaluator  │
+│  • Invokes chatResponseHandler  │
 └────┬────────────────────┘
      │
      │ 5. Invokes (async)
      ▼
 ┌─────────────────────────┐
-│  cfEvaluator            │
+│  chatResponseHandler            │
 │  • Prepares context     │
 │  • Invokes Bedrock Agent│
 └────┬────────────────────┘
@@ -1263,7 +1263,7 @@ fields @timestamp, sentiment_score
      │ 9. Streams response
      ▼
 ┌─────────────────────────┐
-│  cfEvaluator            │
+│  chatResponseHandler            │
 │  • Receives stream      │
 │  • Sends to WebSocket   │
 │  • Invokes logclassifier│
@@ -1316,7 +1316,7 @@ Sources:
 ┌─────────────────────────┐
 │  React App → WebSocket  │
 │  → websocketHandler     │
-│  → cfEvaluator          │
+│  → chatResponseHandler          │
 └────┬────────────────────┘
      │
      │ 2. Invokes Bedrock Agent
@@ -1331,7 +1331,7 @@ Sources:
      │ 3. Returns response with escalation prompt
      ▼
 ┌─────────────────────────┐
-│  cfEvaluator            │
+│  chatResponseHandler            │
 │  • Detects low          │
 │    confidence < 90      │
 │  • Returns escalation   │
@@ -1354,7 +1354,7 @@ Sources:
 ┌─────────────────────────┐
 │  React App → WebSocket  │
 │  → websocketHandler     │
-│  → cfEvaluator          │
+│  → chatResponseHandler          │
 └────┬────────────────────┘
      │
      │ 6. Invokes Bedrock Agent with email
@@ -1735,7 +1735,7 @@ User sends message → Response displayed: ~3-8 seconds
 
 1. WebSocket message (user → API Gateway): 50-100 ms
 2. websocketHandler Lambda (cold start): 500-1000 ms (first time), 10-50 ms (warm)
-3. cfEvaluator Lambda (cold start): 1000-2000 ms (first time), 50-100 ms (warm)
+3. chatResponseHandler Lambda (cold start): 1000-2000 ms (first time), 50-100 ms (warm)
 4. Bedrock Agent invocation:
    - Knowledge Base query: 500-1000 ms
    - Claude 3.5 Sonnet generation: 2000-5000 ms (streaming)

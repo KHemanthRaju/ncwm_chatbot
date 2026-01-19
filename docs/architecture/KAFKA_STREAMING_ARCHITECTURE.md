@@ -9,7 +9,7 @@ This document outlines how to implement Kafka (Amazon MSK) for streaming chatbot
 ### Option 1: Kafka as Message Queue (Recommended for Multi-Consumer)
 
 ```
-User → WebSocket API → Lambda (cfEvaluator) → Kafka Topic → Consumer Lambda → WebSocket Response
+User → WebSocket API → Lambda (chatResponseHandler) → Kafka Topic → Consumer Lambda → WebSocket Response
                                                       ↓
                                               Analytics/Logging Consumers
 ```
@@ -20,14 +20,14 @@ User → WebSocket API → Lambda (cfEvaluator) → Kafka Topic → Consumer Lam
 - Better for analytics and logging
 
 **Implementation:**
-1. Lambda (cfEvaluator) publishes chunks to Kafka topic
+1. Lambda (chatResponseHandler) publishes chunks to Kafka topic
 2. Consumer Lambda reads from Kafka and sends to WebSocket
 3. Additional consumers for analytics/logging
 
 ### Option 2: Kafka as Buffer with Direct WebSocket (Hybrid)
 
 ```
-User → WebSocket API → Lambda (cfEvaluator) → Kafka Topic (async)
+User → WebSocket API → Lambda (chatResponseHandler) → Kafka Topic (async)
                                               ↓
                                          WebSocket (direct, real-time)
 ```
@@ -63,7 +63,7 @@ const kafkaCluster = new msk.Cluster(this, 'ChatbotKafkaCluster', {
 ### Step 2: Update Lambda to Publish to Kafka
 
 ```python
-# In cfEvaluator/handler.py
+# In chatResponseHandler/handler.py
 import boto3
 from kafka import KafkaProducer
 import json
@@ -166,7 +166,7 @@ For your current use case (single-user chat streaming), **stick with direct WebS
 Keep WebSocket for real-time streaming, add Kafka/Kinesis for analytics:
 
 ```python
-# In cfEvaluator/handler.py
+# In chatResponseHandler/handler.py
 for part in parts:
     # Real-time: Send directly to WebSocket
     send_ws_response(connection_id, chunk_payload)

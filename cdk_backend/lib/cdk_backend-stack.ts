@@ -321,10 +321,10 @@ export class LearningNavigatorStack extends cdk.Stack {
       cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonBedrockFullAccess'),
     );
 
-    const cfEvaluator = new lambda.Function(this, 'cfEvaluator', {
+    const chatResponseHandler = new lambda.Function(this, 'chatResponseHandler', {
       runtime: lambda.Runtime.PYTHON_3_12,
       handler: 'handler.lambda_handler',
-      code: lambda.Code.fromDockerBuild('lambda/cfEvaluator'), 
+      code: lambda.Code.fromDockerBuild('lambda/chatResponseHandler'),
       architecture: lambdaArchitecture,
       environment: {
         WS_API_ENDPOINT: webSocketStage.callbackUrl,
@@ -335,14 +335,14 @@ export class LearningNavigatorStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(120),
     });
 
-    knowledgeBaseDataBucket.grantRead(cfEvaluator);
-    logclassifier.grantInvoke(cfEvaluator);
+    knowledgeBaseDataBucket.grantRead(chatResponseHandler);
+    logclassifier.grantInvoke(chatResponseHandler);
 
-    cfEvaluator.role?.addManagedPolicy(
+    chatResponseHandler.role?.addManagedPolicy(
       cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonBedrockFullAccess'),
     );
-    // api gateway 
-    cfEvaluator.role?.addManagedPolicy(
+    // api gateway
+    chatResponseHandler.role?.addManagedPolicy(
       cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonAPIGatewayInvokeFullAccess'),
     );
 
@@ -352,11 +352,11 @@ export class LearningNavigatorStack extends cdk.Stack {
       handler: 'handler.lambda_handler',
       timeout: cdk.Duration.seconds(120),
       environment: {
-        RESPONSE_FUNCTION_ARN: cfEvaluator.functionArn
+        RESPONSE_FUNCTION_ARN: chatResponseHandler.functionArn
       }
     });
 
-    cfEvaluator.grantInvoke(webSocketHandler)
+    chatResponseHandler.grantInvoke(webSocketHandler)
 
     const webSocketIntegration = new apigatewayv2_integrations.WebSocketLambdaIntegration('web-socket-integration', webSocketHandler);
 
@@ -658,15 +658,15 @@ export class LearningNavigatorStack extends cdk.Stack {
       authorizationType: apigateway.AuthorizationType.COGNITO,
     });
 
-    const logGroupNamecfEvaluator = `/aws/lambda/${cfEvaluator.functionName}`;
+    const logGroupNameChatResponseHandler = `/aws/lambda/${chatResponseHandler.functionName}`;
 
     const sessionLogsFn = new lambda.Function(this, 'SessionLogsHandler', {
       runtime: lambda.Runtime.PYTHON_3_12,
       handler: 'handler.lambda_handler',
-      code: lambda.Code.fromAsset('lambda/sessionLogs'),  
+      code: lambda.Code.fromAsset('lambda/sessionLogs'),
       timeout: cdk.Duration.seconds(30),
       environment: {
-        GROUP_NAME: logGroupNamecfEvaluator,  
+        GROUP_NAME: logGroupNameChatResponseHandler,
         BUCKET:     dashboardLogsBucket.bucketName,
         DYNAMODB_TABLE: sessionLogsTable.tableName,
       },
@@ -677,7 +677,7 @@ export class LearningNavigatorStack extends cdk.Stack {
         'logs:StartQuery',
         'logs:GetQueryResults',
       ],
-      resources: [`arn:aws:logs:${this.region}:${this.account}:log-group:${logGroupNamecfEvaluator}:*`],
+      resources: [`arn:aws:logs:${this.region}:${this.account}:log-group:${logGroupNameChatResponseHandler}:*`],
     }));
 
     dashboardLogsBucket.grantPut(sessionLogsFn);

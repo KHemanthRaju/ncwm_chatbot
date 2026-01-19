@@ -254,7 +254,7 @@ cdk deploy --all \
 - Creates all AWS resources:
   - S3 buckets (document storage)
   - DynamoDB tables (user profiles, session logs)
-  - Lambda functions (websocketHandler, cfEvaluator, email, adminFile, logclassifier, userProfile, escalatedQueries)
+  - Lambda functions (websocketHandler, chatResponseHandler, email, adminFile, logclassifier, userProfile, escalatedQueries)
   - API Gateway (REST and WebSocket APIs)
   - Cognito User Pool (authentication)
   - Bedrock Knowledge Base and Agent

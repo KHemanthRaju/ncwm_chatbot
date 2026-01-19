@@ -27,7 +27,7 @@ The application features a serverless architecture built on AWS services, with r
 │   ├── bin/                  # CDK app entry point
 │   ├── lambda/               # Lambda functions for various services
 │   │   ├── adminFile/        # Admin file management handler
-│   │   ├── cfEvaluator/      # Chat flow evaluation logic
+│   │   ├── chatResponseHandler/      # Chat flow evaluation logic
 │   │   ├── email/           # Email notification service
 │   │   ├── logclassifier/   # Session log classification
 │   │   ├── escalatedQueries/ # Escalated query management
@@ -36,10 +36,11 @@ The application features a serverless architecture built on AWS services, with r
 │   │   └── websocketHandler/ # Real-time communication handler
 │   └── lib/                 # CDK stack definitions
 ├── docs/                     # 📚 All project documentation
-│   ├── architecture/         # Architecture diagrams and designs
+│   ├── TECHNICAL_OVERVIEW.md # ⭐ Quick technical reference
+│   ├── SIMPLE_ARCHITECTURE.md # High-level architecture overview
+│   ├── architecture/         # Detailed architecture diagrams
 │   ├── deployment/          # Deployment guides and configurations
 │   ├── features/            # Feature documentation and guides
-│   ├── guides/              # User and developer guides
 │   └── testing/             # Test reports and quality assurance
 ├── scripts/                  # 🛠️ Utility scripts
 │   ├── deploy.sh            # Automated deployment script
@@ -379,7 +380,7 @@ Component interactions:
 
 Lambda Functions:
 - `adminFile`: Manages document uploads and knowledge base updates
-- `cfEvaluator`: Evaluates chat flow and confidence scores
+- `chatResponseHandler`: Evaluates chat flow and confidence scores
 - `email`: Handles admin notifications and escalated queries
 - `logclassifier`: Categorizes and analyzes session logs with AI sentiment analysis
 - `websocketHandler`: Manages real-time WebSocket communication
@@ -399,3 +400,24 @@ Environment Variables:
 - `REACT_APP_ANALYTICS_API`: Analytics API endpoint
 - `REACT_APP_COGNITO_USER_POOL_ID`: Cognito user pool ID
 - `REACT_APP_COGNITO_CLIENT_ID`: Cognito client ID
+
+---
+
+## 📚 Documentation
+
+### Quick Start
+- **[Technical Overview](docs/TECHNICAL_OVERVIEW.md)** ⭐ - Crisp technical reference with architecture, flows, and service connections
+- **[Simple Architecture](docs/SIMPLE_ARCHITECTURE.md)** - High-level diagrams for stakeholders
+
+### Detailed Documentation
+- **[User AWS Architecture](docs/USER_AWS_ARCHITECTURE.md)** - Complete user flow with 7 detailed diagrams
+- **[Admin AWS Architecture](docs/ADMIN_AWS_ARCHITECTURE.md)** - Complete admin flow with 6 detailed diagrams
+- **[User Flow Steps](docs/USER_FLOW_STEPS.md)** - 32-step user interaction breakdown
+- **[Admin Flow Steps](docs/ADMIN_FLOW_STEPS.md)** - 39-step admin workflow breakdown
+- **[Complete Technical Docs](docs/architecture/TECHNICAL_DOCUMENTATION.md)** - Full technical reference (2100+ lines)
+- **[Documentation Index](docs/DOCUMENTATION_INDEX.md)** - Complete documentation catalog
+
+### Features & Operations
+- **[Admin Features](docs/features/ADMIN_FEATURES.md)** - Admin portal capabilities
+- **[Deployment Guide](docs/deployment/CLIENT_DEPLOYMENT_GUIDE.md)** - Step-by-step deployment
+- **[Troubleshooting](docs/TROUBLESHOOTING_FILE_UPLOAD.md)** - Common issues and solutions

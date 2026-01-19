@@ -118,9 +118,9 @@ An error occurred (accessDeniedException) when calling the InvokeAgent operation
 Access denied when calling Bedrock. Check your request permissions and retry the request.
 ```
 
-**Root Cause:** The cfEvaluator Lambda function (`BlueberryStackLatest-cfEvaluatorFC18B8AA-IHPtXe2az5N8`) did not have permission to invoke the Bedrock agent. This is the function that actually calls `bedrock_agent.invoke_agent()`.
+**Root Cause:** The chatResponseHandler Lambda function (`BlueberryStackLatest-chatResponseHandlerFC18B8AA-IHPtXe2az5N8`) did not have permission to invoke the Bedrock agent. This is the function that actually calls `bedrock_agent.invoke_agent()`.
 
-**Solution:** Added inline IAM policy to BOTH Lambda roles (websocketHandler and cfEvaluator):
+**Solution:** Added inline IAM policy to BOTH Lambda roles (websocketHandler and chatResponseHandler):
 ```json
 {
   "Version": "2012-10-17",
@@ -141,9 +141,9 @@ Access denied when calling Bedrock. Check your request permissions and retry the
 
 **Commands Used:**
 ```bash
-# Add permission to cfEvaluator (the function that invokes Bedrock)
+# Add permission to chatResponseHandler (the function that invokes Bedrock)
 aws iam put-role-policy \
-  --role-name BlueberryStackLatest-cfEvaluatorServiceRoleDB58196F-VRU4ZBHxFjoj \
+  --role-name BlueberryStackLatest-chatResponseHandlerServiceRoleDB58196F-VRU4ZBHxFjoj \
   --policy-name BedrockAgentInvokePolicy \
   --policy-document file:///tmp/bedrock-agent-policy.json
 

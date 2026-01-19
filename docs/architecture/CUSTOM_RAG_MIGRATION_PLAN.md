@@ -8,7 +8,7 @@ This document outlines the plan to replace Amazon Bedrock Agents with a custom L
 ```
 ┌─────────┐    WebSocket    ┌──────────┐    invoke_agent    ┌───────────────┐
 │ Frontend│ ──────────────► │  Lambda  │ ─────────────────► │ Bedrock Agent │
-└─────────┘                 │(cfEvaluator)                   │   (Managed)   │
+└─────────┘                 │(chatResponseHandler)                   │   (Managed)   │
                             └──────────┘                     └───────┬───────┘
                                                                      │
                                                     ┌────────────────┴────────────┐
@@ -572,7 +572,7 @@ customRagHandler.addToRolePolicy(new iam.PolicyStatement({
   resources: ['*']
 }));
 
-// Update WebSocket route to use new handler instead of cfEvaluator
+// Update WebSocket route to use new handler instead of chatResponseHandler
 const sendMessageRoute = websocketApi.addRoute('sendMessage', {
   integration: new apigatewayv2_integrations.WebSocketLambdaIntegration(
     'SendMessageIntegration',

@@ -22,7 +22,7 @@ graph TB
 
     subgraph "Lambda Functions"
         E1[WebSocket Handler]
-        E2[cfEvaluator]
+        E2[chatResponseHandler]
         E3[Log Classifier]
         E4[Email Reply Handler]
         E5[Notify Admin]
@@ -242,7 +242,7 @@ sequenceDiagram
     participant Frontend as React Frontend
     participant WSGateway as WebSocket API Gateway
     participant WSHandler as WebSocket Handler Lambda
-    participant CFEval as cfEvaluator Lambda
+    participant CFEval as chatResponseHandler Lambda
     participant Agent as Bedrock Agent
     participant KB as Knowledge Base
     participant S3 as S3 (PDFs)

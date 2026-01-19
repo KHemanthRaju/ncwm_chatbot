@@ -1,3 +1,18 @@
+"""
+Chat Response Handler Lambda Function
+(Formerly known as cfEvaluator)
+
+This is the core chatbot orchestration engine that:
+1. Receives user queries from websocketHandler Lambda
+2. Invokes Amazon Bedrock Agent with role-specific personalization (learner, instructor, staff)
+3. Streams AI-generated responses back to users via WebSocket API Gateway
+4. Extracts confidence scores and knowledge base citations from agent responses
+5. Triggers background analytics via logclassifier Lambda for sentiment analysis
+
+The function handles both high-confidence responses (direct answers) and low-confidence
+scenarios (email escalation to administrators).
+"""
+
 import json
 import boto3
 import os
@@ -10,7 +25,7 @@ api_gateway = boto3.client('apigatewaymanagementapi', endpoint_url=os.environ['W
 lambda_client = boto3.client('lambda')
 
 agent_id = os.environ["AGENT_ID"]
-agent_alias_id = os.environ["AGENT_ALIAS_ID"] 
+agent_alias_id = os.environ["AGENT_ALIAS_ID"]
 LOG_CLASSIFIER_FN_NAME = os.environ['LOG_CLASSIFIER_FN_NAME']
 
 def send_ws_response(connection_id, response):
