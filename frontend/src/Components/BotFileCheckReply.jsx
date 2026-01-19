@@ -57,14 +57,26 @@ function BotFileCheckReply({ message, fileName, fileStatus, citations, isLoading
     setFeedbackSubmitting(false);
   };
 
+  // Function to clean up excessive blank lines from text
+  const cleanupText = (text) => {
+    if (!text) return '';
+
+    // Replace 3 or more consecutive newlines with exactly 2 newlines
+    // This preserves intentional paragraph breaks while removing excessive spacing
+    return text.replace(/\n{3,}/g, '\n\n');
+  };
+
   // Function to convert URLs in text to clickable links
   const renderMessageWithLinks = (text) => {
     if (!text) return null;
 
+    // Clean up excessive blank lines first
+    const cleanedText = cleanupText(text);
+
     // Regular expression to match URLs
     // eslint-disable-next-line no-useless-escape
     const urlRegex = /(https?:\/\/[^\s<>"{}|\\^`\[\]]+)/g;
-    const parts = text.split(urlRegex);
+    const parts = cleanedText.split(urlRegex);
 
     return parts.map((part, index) => {
       if (part.match(urlRegex)) {
