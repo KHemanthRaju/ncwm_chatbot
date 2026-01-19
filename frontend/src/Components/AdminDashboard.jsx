@@ -10,15 +10,16 @@ import {
   Tab,
   IconButton,
   Chip,
-  Button
+  Button,
+  Snackbar,
+  Alert
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   ChatBubbleOutline as ChatIcon,
   TrendingUp as TrendingUpIcon,
   TrendingDown as TrendingDownIcon,
   Refresh as RefreshIcon,
-  Translate as TranslateIcon,
   Logout as LogoutIcon
 } from "@mui/icons-material";
 import {
@@ -43,6 +44,7 @@ const ANALYTICS_API = `${DOCUMENTS_API}session-logs`;
 
 function AdminDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
   const [analytics, setAnalytics] = useState({
@@ -54,10 +56,20 @@ function AdminDashboard() {
     conversations: []
   });
   const [usageTrends, setUsageTrends] = useState([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   useEffect(() => {
     fetchAnalytics();
-  }, []);
+
+    // Check if we just logged in
+    if (location.state?.loginSuccess) {
+      setToastMessage('Login successful! Welcome to the admin dashboard.');
+      setShowToast(true);
+      // Clear the state to prevent showing toast on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   const fetchAnalytics = async () => {
     try {
@@ -131,8 +143,14 @@ function AdminDashboard() {
 
   // Handle logout
   const handleLogout = () => {
-    logout();
-    navigate('/admin');
+    setToastMessage('Logout successful! Redirecting...');
+    setShowToast(true);
+
+    // Wait for toast to show, then logout and navigate
+    setTimeout(() => {
+      logout();
+      navigate('/admin', { state: { logoutSuccess: true } });
+    }, 1000);
   };
 
   // Calculate percentage changes (mock)
@@ -260,18 +278,6 @@ function AdminDashboard() {
               </Box>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <IconButton
-                onClick={() => navigate('/chat')}
-                sx={{
-                  background: AccessibleColors.primary.main,
-                  color: 'white',
-                  '&:hover': {
-                    background: AccessibleColors.primary.dark
-                  }
-                }}
-              >
-                <TranslateIcon />
-              </IconButton>
               <Chip
                 label="Admin"
                 sx={{
@@ -809,6 +815,28 @@ function AdminDashboard() {
           </>
         )}
       </Container>
+
+      {/* Toast Notification */}
+      <Snackbar
+        open={showToast}
+        autoHideDuration={3000}
+        onClose={() => setShowToast(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert
+          onClose={() => setShowToast(false)}
+          severity="success"
+          variant="filled"
+          sx={{
+            width: '100%',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
+            fontWeight: 600
+          }}
+        >
+          {toastMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

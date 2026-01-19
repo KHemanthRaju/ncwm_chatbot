@@ -1,5 +1,5 @@
 // Authentication utility functions
-import { fetchAuthSession } from 'aws-amplify/auth';
+import { fetchAuthSession, signOut } from 'aws-amplify/auth';
 
 /**
  * Retrieves the ID token from AWS Amplify Auth session
@@ -98,9 +98,18 @@ export function isAuthenticated() {
 }
 
 /**
- * Clears authentication data from localStorage
+ * Clears authentication data from localStorage and signs out from Cognito
  */
-export function logout() {
+export async function logout() {
+  try {
+    // Sign out from Cognito
+    await signOut();
+    console.log('[AUTH] Signed out from Cognito');
+  } catch (error) {
+    console.warn('[AUTH] Error signing out from Cognito:', error);
+  }
+
+  // Clear localStorage
   localStorage.removeItem("accessToken");
   localStorage.removeItem("idToken");
   localStorage.removeItem("guestMode");

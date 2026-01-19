@@ -274,12 +274,33 @@ function ChatBody() {
     };
   };
 
-  /* ────────────────────── suggested prompts ─────────────────────────── */
-  const suggestedPrompts = [
-    { icon: <TipsIcon />, text: TEXT.CHAT_PROMPT_ABOUT_MHFA_DESC, label: TEXT.CHAT_PROMPT_ABOUT_MHFA },
-    { icon: <LocationIcon />, text: TEXT.CHAT_PROMPT_INSTRUCTOR_CERT_DESC, label: TEXT.CHAT_PROMPT_INSTRUCTOR_CERT },
-    { icon: <AutoAwesomeIcon />, text: TEXT.CHAT_PROMPT_TRAINING_COURSES_DESC, label: TEXT.CHAT_PROMPT_TRAINING_COURSES }
-  ];
+  /* ────────────────────── suggested prompts (role-based) ─────────────────────────── */
+  const getSuggestedPrompts = () => {
+    // Return role-specific prompts based on user role
+    switch(userRole) {
+      case 'instructor':
+        return [
+          { icon: <SchoolIcon />, text: TEXT.CHAT_PROMPT_INSTRUCTOR_1_DESC, label: TEXT.CHAT_PROMPT_INSTRUCTOR_1 },
+          { icon: <TipsIcon />, text: TEXT.CHAT_PROMPT_INSTRUCTOR_2_DESC, label: TEXT.CHAT_PROMPT_INSTRUCTOR_2 },
+          { icon: <SupportIcon />, text: TEXT.CHAT_PROMPT_INSTRUCTOR_3_DESC, label: TEXT.CHAT_PROMPT_INSTRUCTOR_3 }
+        ];
+      case 'staff':
+        return [
+          { icon: <QuestionIcon />, text: TEXT.CHAT_PROMPT_STAFF_1_DESC, label: TEXT.CHAT_PROMPT_STAFF_1 },
+          { icon: <SupportIcon />, text: TEXT.CHAT_PROMPT_STAFF_2_DESC, label: TEXT.CHAT_PROMPT_STAFF_2 },
+          { icon: <AutoAwesomeIcon />, text: TEXT.CHAT_PROMPT_STAFF_3_DESC, label: TEXT.CHAT_PROMPT_STAFF_3 }
+        ];
+      case 'learner':
+      default:
+        return [
+          { icon: <TipsIcon />, text: TEXT.CHAT_PROMPT_LEARNER_1_DESC, label: TEXT.CHAT_PROMPT_LEARNER_1 },
+          { icon: <LocationIcon />, text: TEXT.CHAT_PROMPT_LEARNER_2_DESC, label: TEXT.CHAT_PROMPT_LEARNER_2 },
+          { icon: <AutoAwesomeIcon />, text: TEXT.CHAT_PROMPT_LEARNER_3_DESC, label: TEXT.CHAT_PROMPT_LEARNER_3 }
+        ];
+    }
+  };
+
+  const suggestedPrompts = getSuggestedPrompts();
 
   const handleSuggestedPrompt = (promptText) => {
     handleSend(promptText);

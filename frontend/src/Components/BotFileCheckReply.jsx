@@ -27,6 +27,16 @@ function BotFileCheckReply({ message, fileName, fileStatus, citations, isLoading
   const [feedback, setFeedback] = useState(null); // null, 'positive', or 'negative'
   const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
 
+  // Animated dots for loading state
+  useEffect(() => {
+    if (isLoading) {
+      const interval = setInterval(() => {
+        setDots((prev) => (prev.length >= 3 ? "" : prev + "."));
+      }, 500);
+      return () => clearInterval(interval);
+    }
+  }, [isLoading]);
+
   const handleFeedback = async (type) => {
     if (feedbackSubmitting || !messageId) return;
 

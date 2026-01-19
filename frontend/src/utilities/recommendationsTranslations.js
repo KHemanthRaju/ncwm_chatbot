@@ -50,12 +50,38 @@ export const RECOMMENDATIONS_TEXT = {
     CHAT_WELCOME_TITLE: 'Welcome to Learning Navigator',
     CHAT_WELCOME_SUBTITLE: 'Your AI-powered guide for the MHFA Learning Ecosystem. I\'m here to help instructors, learners, and administrators navigate training resources and answer your questions.',
     CHAT_TRY_ASKING: 'Try asking me about:',
+
+    // Default prompts (shown when no role selected or for learners)
     CHAT_PROMPT_ABOUT_MHFA: 'About MHFA',
     CHAT_PROMPT_ABOUT_MHFA_DESC: 'What is Mental Health First Aid?',
     CHAT_PROMPT_INSTRUCTOR_CERT: 'Instructor Certification',
     CHAT_PROMPT_INSTRUCTOR_CERT_DESC: 'How do I become a certified MHFA instructor?',
     CHAT_PROMPT_TRAINING_COURSES: 'Training Courses',
     CHAT_PROMPT_TRAINING_COURSES_DESC: 'Tell me about MHFA training courses',
+
+    // Instructor-specific prompts
+    CHAT_PROMPT_INSTRUCTOR_1: 'Course Planning',
+    CHAT_PROMPT_INSTRUCTOR_1_DESC: 'How do I prepare for my first MHFA class?',
+    CHAT_PROMPT_INSTRUCTOR_2: 'Instructor Renewal',
+    CHAT_PROMPT_INSTRUCTOR_2_DESC: 'How do I renew my instructor certification?',
+    CHAT_PROMPT_INSTRUCTOR_3: 'Teaching Resources',
+    CHAT_PROMPT_INSTRUCTOR_3_DESC: 'Where can I find instructor resources and materials?',
+
+    // Staff-specific prompts
+    CHAT_PROMPT_STAFF_1: 'Program Management',
+    CHAT_PROMPT_STAFF_1_DESC: 'How do I schedule and coordinate MHFA training sessions?',
+    CHAT_PROMPT_STAFF_2: 'Instructor Support',
+    CHAT_PROMPT_STAFF_2_DESC: 'How do I onboard new MHFA instructors?',
+    CHAT_PROMPT_STAFF_3: 'Analytics & Reports',
+    CHAT_PROMPT_STAFF_3_DESC: 'Show me training program metrics and analytics',
+
+    // Learner-specific prompts
+    CHAT_PROMPT_LEARNER_1: 'Course Registration',
+    CHAT_PROMPT_LEARNER_1_DESC: 'How do I register for an MHFA course?',
+    CHAT_PROMPT_LEARNER_2: 'Certification',
+    CHAT_PROMPT_LEARNER_2_DESC: 'How do I get certified in Mental Health First Aid?',
+    CHAT_PROMPT_LEARNER_3: 'ALGEE Action Plan',
+    CHAT_PROMPT_LEARNER_3_DESC: 'What is the ALGEE action plan?',
 
     // Tooltips
     TOOLTIP_PROFILE: 'My Profile & Recommendations',
@@ -120,12 +146,38 @@ export const RECOMMENDATIONS_TEXT = {
     CHAT_WELCOME_TITLE: 'Bienvenido al Navegador de Aprendizaje',
     CHAT_WELCOME_SUBTITLE: 'Tu guía impulsada por IA para el Ecosistema de Aprendizaje MHFA. Estoy aquí para ayudar a instructores, estudiantes y administradores a navegar recursos de capacitación y responder tus preguntas.',
     CHAT_TRY_ASKING: 'Prueba preguntarme sobre:',
+
+    // Default prompts
     CHAT_PROMPT_ABOUT_MHFA: 'Acerca de MHFA',
     CHAT_PROMPT_ABOUT_MHFA_DESC: '¿Qué es Primeros Auxilios en Salud Mental?',
     CHAT_PROMPT_INSTRUCTOR_CERT: 'Certificación de Instructor',
     CHAT_PROMPT_INSTRUCTOR_CERT_DESC: '¿Cómo me convierto en instructor certificado de MHFA?',
     CHAT_PROMPT_TRAINING_COURSES: 'Cursos de Capacitación',
     CHAT_PROMPT_TRAINING_COURSES_DESC: 'Cuéntame sobre los cursos de capacitación de MHFA',
+
+    // Instructor-specific prompts
+    CHAT_PROMPT_INSTRUCTOR_1: 'Planificación de Cursos',
+    CHAT_PROMPT_INSTRUCTOR_1_DESC: '¿Cómo me preparo para mi primera clase de MHFA?',
+    CHAT_PROMPT_INSTRUCTOR_2: 'Renovación de Instructor',
+    CHAT_PROMPT_INSTRUCTOR_2_DESC: '¿Cómo renuevo mi certificación de instructor?',
+    CHAT_PROMPT_INSTRUCTOR_3: 'Recursos de Enseñanza',
+    CHAT_PROMPT_INSTRUCTOR_3_DESC: '¿Dónde puedo encontrar recursos y materiales para instructores?',
+
+    // Staff-specific prompts
+    CHAT_PROMPT_STAFF_1: 'Gestión de Programas',
+    CHAT_PROMPT_STAFF_1_DESC: '¿Cómo programo y coordino sesiones de capacitación de MHFA?',
+    CHAT_PROMPT_STAFF_2: 'Apoyo a Instructores',
+    CHAT_PROMPT_STAFF_2_DESC: '¿Cómo incorporo nuevos instructores de MHFA?',
+    CHAT_PROMPT_STAFF_3: 'Análisis e Informes',
+    CHAT_PROMPT_STAFF_3_DESC: 'Muéstrame métricas y análisis del programa de capacitación',
+
+    // Learner-specific prompts
+    CHAT_PROMPT_LEARNER_1: 'Registro de Curso',
+    CHAT_PROMPT_LEARNER_1_DESC: '¿Cómo me registro para un curso de MHFA?',
+    CHAT_PROMPT_LEARNER_2: 'Certificación',
+    CHAT_PROMPT_LEARNER_2_DESC: '¿Cómo me certifico en Primeros Auxilios en Salud Mental?',
+    CHAT_PROMPT_LEARNER_3: 'Plan de Acción ALGEE',
+    CHAT_PROMPT_LEARNER_3_DESC: '¿Qué es el plan de acción ALGEE?',
 
     // Tooltips
     TOOLTIP_PROFILE: 'Mi Perfil y Recomendaciones',

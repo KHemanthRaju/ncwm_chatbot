@@ -7,12 +7,13 @@ import {
   Typography,
   Box,
   Alert,
-  Paper
+  Paper,
+  Snackbar
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Psychology as PsychologyIcon, AdminPanelSettings as AdminIcon } from "@mui/icons-material";
+import { AdminPanelSettings as AdminIcon } from "@mui/icons-material";
 import { Amplify } from 'aws-amplify';
-import { signIn, fetchAuthSession, confirmSignIn } from 'aws-amplify/auth';
+import { signIn, fetchAuthSession, confirmSignIn, signOut } from 'aws-amplify/auth';
 import { COGNITO_CONFIG } from '../utilities/constants';
 import AccessibleColors from '../utilities/accessibleColors';
 
@@ -38,6 +39,15 @@ function AdminLogin() {
   const handleLogin = async () => {
     setLoginError("");
     try {
+      // Sign out any existing session first
+      try {
+        await signOut();
+        console.log('Signed out existing session');
+      } catch (signOutError) {
+        // Ignore sign out errors (no session to sign out)
+        console.log('No existing session to sign out');
+      }
+
       const { isSignedIn, nextStep } = await signIn({
         username: fullName,
         password: password
@@ -52,7 +62,7 @@ function AdminLogin() {
         if (accessToken && idToken) {
           localStorage.setItem("accessToken", accessToken);
           localStorage.setItem("idToken", idToken);
-          navigate("/admin-dashboard", { replace: true });
+          navigate("/admin-dashboard", { replace: true, state: { loginSuccess: true } });
         }
       } else if (nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
         setShowNewPasswordForm(true);
@@ -73,7 +83,14 @@ function AdminLogin() {
 
     try {
       const result = await confirmSignIn({
-        challengeResponse: newPassword
+        challengeResponse: newPassword,
+        options: {
+          userAttributes: {
+            given_name: fullName.split('@')[0] || 'Admin',
+            family_name: 'User',
+            name: fullName.split('@')[0] || 'Admin'
+          }
+        }
       });
 
       console.log('Password change result:', result);
@@ -87,7 +104,7 @@ function AdminLogin() {
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("idToken", idToken);
         console.log('Tokens stored, navigating to dashboard');
-        navigate("/admin-dashboard", { replace: true });
+        navigate("/admin-dashboard", { replace: true, state: { loginSuccess: true } });
       } else {
         console.error('No tokens found after password change');
         setLoginError("Password changed successfully! Please sign in with your new password.");
