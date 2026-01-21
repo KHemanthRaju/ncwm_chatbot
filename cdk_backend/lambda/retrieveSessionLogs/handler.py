@@ -56,18 +56,36 @@ def lambda_handler(event, context):
     tf = (params.get("timeframe") or "today").lower()
 
     now = datetime.utcnow()
-    if tf == "today":
+
+    # Support custom date range
+    if tf == "custom":
+        start_date_str = params.get("start_date")
+        end_date_str = params.get("end_date")
+
+        if not start_date_str or not end_date_str:
+            return bad_request('Custom timeframe requires both start_date and end_date parameters')
+
+        try:
+            # Parse dates in YYYY-MM-DD format
+            start = datetime.strptime(start_date_str, "%Y-%m-%d")
+            end = datetime.strptime(end_date_str, "%Y-%m-%d").replace(hour=23, minute=59, second=59)
+        except ValueError as e:
+            return bad_request(f'Invalid date format. Use YYYY-MM-DD: {str(e)}')
+    elif tf == "today":
         start = datetime(now.year, now.month, now.day)
+        end = now
     elif tf == "weekly":
         start = (now - timedelta(days=now.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
+        end = now
     elif tf == "monthly":
         start = datetime(now.year, now.month, 1)
+        end = now
     elif tf == "yearly":
         start = datetime(now.year, 1, 1)
+        end = now
     else:
-        return bad_request(f'Invalid timeframe "{tf}"')
+        return bad_request(f'Invalid timeframe "{tf}". Use: today, weekly, monthly, yearly, or custom')
 
-    end = now
     log("Timeframe                 :", tf)
     log("Start / End UTC           :", start, "/", end)
 
