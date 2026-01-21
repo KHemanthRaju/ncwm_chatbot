@@ -738,17 +738,6 @@ function AdminDashboard() {
                               fontWeight: 600
                             }}
                           />
-                          {conv.satisfaction_score && (
-                            <Chip
-                              label={`Score: ${Math.round(conv.satisfaction_score)}`}
-                              size="small"
-                              sx={{
-                                background: '#EEF2FF',
-                                color: '#4338CA',
-                                fontWeight: 600
-                              }}
-                            />
-                          )}
                         </Box>
                       </Box>
                     ))}

@@ -26,13 +26,10 @@ Quick-view cards showing percentage changes in usage, satisfaction, and user eng
 ## 💬 Conversation Management
 
 ### 6. Conversation Logs
-Browse and review complete chat transcripts with timestamps, user roles, and quality scores.
-
-### 7. Sentiment Scores
-Each conversation displays an AI-calculated quality score (0-100) based on relevance, completeness, clarity, and actionability.
+Browse and review complete chat transcripts with timestamps and user roles.
 
 ### 8. Search & Filter
-Find specific conversations by date range, user role, language, or sentiment score.
+Find specific conversations by date range, user role, or language preference.
 
 ### 9. Top Questions View
 See the most frequently asked questions to identify common user needs and popular topics.
@@ -49,12 +46,6 @@ Upload training documents, manuals, and resources to expand the chatbot's knowle
 
 ### 12. Document Library
 View all uploaded documents with file names, sizes, upload dates, and sync status.
-
-### 13. Knowledge Base Sync
-Trigger manual synchronization to immediately update the chatbot with newly uploaded content.
-
-### 14. Bulk Upload
-Upload multiple PDF files at once to save time when adding large amounts of content.
 
 ### 15. Document Status Tracking
 Monitor which documents are synced, pending, or failed, with clear status indicators.
@@ -158,53 +149,10 @@ See which documents are most frequently referenced in chatbot responses.
 ### 40. Historical Data
 Access past data with customizable date ranges for trend analysis and reporting.
 
----
-
-## 🛠️ Administrative Tools
-
-### 41. Feedback Collection
-View user feedback (thumbs up/down) to identify high and low-quality responses.
-
-### 42. User Profile Management
-(If enabled) Manage admin user accounts and permissions.
-
-### 43. System Health Monitoring
-Track response times and system performance indicators.
-
-### 44. Knowledge Base Coverage
-Identify topics with low confidence scores that need additional documentation.
-
----
-
-## 💡 Intelligence & Automation
-
-### 45. AI Quality Scoring
-Automatic evaluation of every conversation using four factors: relevance, completeness, clarity, and actionability.
-
-### 46. Smart Recommendations
-System suggests which documents to upload based on common unanswered questions.
-
-### 47. Auto-Classification
-Conversations automatically categorized by topic for easier organization and analysis.
-
-### 48. Continuous Learning
-Every resolved escalation improves the knowledge base, making future responses more accurate.
-
----
-
 ## 📱 Accessibility
 
-### 49. Keyboard Navigation
+### 41. Keyboard Navigation
 Full portal functionality accessible via keyboard for users with mobility limitations.
 
-### 50. Screen Reader Support
+### 42. Screen Reader Support
 Compatible with assistive technologies for visually impaired administrators.
-
----
-
-**Total Features:** 50 comprehensive capabilities designed to give administrators complete control and visibility over the Learning Navigator chatbot system.
-
----
-
-**Last Updated:** January 21, 2026
-**Purpose:** Non-technical feature overview for stakeholders and administrators
