@@ -3,7 +3,7 @@ import * as cdk from 'aws-cdk-lib';
 import { LearningNavigatorStack } from '../lib/cdk_backend-stack';
 
 const app = new cdk.App();
-new LearningNavigatorStack(app, 'national_council_backend', {
+new LearningNavigatorStack(app, 'LearningNavigatorFeatures', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
