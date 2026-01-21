@@ -58,7 +58,7 @@ The Learning Navigator is an AI-powered chatbot designed to serve the Mental Hea
 │  ┌──────────────────────────────────────────┐                 │
 │  │     AWS Bedrock Agent (AI Engine)        │                 │
 │  │  ┌────────────────────────────────────┐  │                 │
-│  │  │  Claude 3.5 Sonnet                 │  │                 │
+│  │  │  Claude Sonnet 4                 │  │                 │
 │  │  │  - Natural language understanding  │  │                 │
 │  │  │  - Context-aware responses         │  │                 │
 │  │  └────────────────────────────────────┘  │                 │
@@ -183,7 +183,7 @@ Admin Answer → Knowledge Base Update → Future Queries Improved
 ### Technology Stack
 - **Infrastructure**: AWS CDK (TypeScript)
 - **Compute**: AWS Lambda (Python 3.12)
-- **AI Engine**: AWS Bedrock (Claude 3.5 Sonnet)
+- **AI Engine**: AWS Bedrock (Claude Sonnet 4)
 - **Database**: DynamoDB (NoSQL)
 - **Storage**: Amazon S3
 - **Authentication**: Amazon Cognito
@@ -208,7 +208,7 @@ Admin Answer → Knowledge Base Update → Future Queries Improved
 
 ### AWS Bedrock Integration
 
-**Model Used:** Claude 3.5 Sonnet
+**Model Used:** Claude Sonnet 4
 - **Strengths**: Long context window, accurate reasoning, citation generation
 - **Use Case**: Natural language understanding and response generation
 - **Configuration**: Temperature 0.7, Max tokens 2048

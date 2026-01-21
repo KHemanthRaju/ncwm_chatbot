@@ -64,7 +64,7 @@ I've prepared a comprehensive testing package with the following documentation:
 
 **For End Users:**
 - ✅ **No Login Required** - Start chatting immediately in guest mode
-- ✅ **AI-Powered Responses** - AWS Bedrock with Claude 3.5 Sonnet
+- ✅ **AI-Powered Responses** - AWS Bedrock with Claude Sonnet 4
 - ✅ **Real-Time Streaming** - Watch responses generate live with citations
 - ✅ **Bilingual Support** - One-click toggle between English and Spanish
 - ✅ **Role-Based Personalization** - Customized content for Instructors, Staff, and Learners
@@ -112,7 +112,7 @@ I've prepared a comprehensive testing package with the following documentation:
 **Architecture:**
 - **Frontend:** React 18 with Material-UI, hosted on AWS Amplify
 - **Backend:** Serverless AWS Lambda functions (Python 3.12)
-- **AI Engine:** AWS Bedrock with Claude 3.5 Sonnet (managed AI service)
+- **AI Engine:** AWS Bedrock with Claude Sonnet 4 (managed AI service)
 - **Knowledge Base:** Vector database with semantic search (Amazon OpenSearch Serverless)
 - **Database:** Amazon DynamoDB for logs and analytics
 - **Authentication:** Amazon Cognito for admin users

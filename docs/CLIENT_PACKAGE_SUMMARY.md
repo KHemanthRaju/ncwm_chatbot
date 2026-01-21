@@ -32,7 +32,7 @@ Your complete client testing package includes 5 comprehensive documents totaling
 - 3 key user flows (public chat, admin portal, escalation)
 - Frontend architecture (React, WebSocket, MUI)
 - Backend architecture (8 Lambda functions)
-- AI & knowledge base details (Claude 3.5 Sonnet, vector search)
+- AI & knowledge base details (Claude Sonnet 4, vector search)
 - Data storage (DynamoDB, S3)
 - Security & authentication
 - Analytics & monitoring
@@ -205,7 +205,7 @@ Before sending to client, ensure:
 - **Step-by-step instructions with expected behaviors**
 
 ### Key Features Documented:
-1. ✅ AI-Powered Responses (AWS Bedrock + Claude 3.5 Sonnet)
+1. ✅ AI-Powered Responses (AWS Bedrock + Claude Sonnet 4)
 2. ✅ Real-Time Streaming Chat
 3. ✅ Bilingual Support (English/Spanish)
 4. ✅ Role-Based Personalization (3 roles, 36+ queries)

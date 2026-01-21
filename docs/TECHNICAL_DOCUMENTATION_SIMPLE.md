@@ -47,7 +47,7 @@ Learning Navigator is an AI-powered chatbot for the Mental Health First Aid (MHF
        ↓
 ┌─────────────────────────────────────────┐
 │  AWS Bedrock Agent                      │
-│  - Claude 3.5 Sonnet (AI model)        │
+│  - Claude Sonnet 4 (AI model)          │
 │  - Knowledge Base (vector search)      │
 └──────┬──────────────────────────────────┘
        │
@@ -146,7 +146,7 @@ Works on phones, tablets, and desktops.
 ### **4. AWS Bedrock**
 **What it does:** Provides AI capabilities
 **Why we use it:**
-- Claude 3.5 Sonnet for natural language understanding
+- Claude Sonnet 4 for natural language understanding
 - Knowledge Base with vector search for document retrieval
 - Managed service (no AI infrastructure to maintain)
 
@@ -183,7 +183,7 @@ Works on phones, tablets, and desktops.
 3. **API Gateway triggers** → Lambda (chatResponseHandler)
 4. **Lambda invokes** → AWS Bedrock Agent
 5. **Bedrock searches** → Knowledge Base (finds relevant PDFs in S3)
-6. **Bedrock generates answer** → Claude 3.5 Sonnet
+6. **Bedrock generates answer** → Claude Sonnet 4
 7. **Lambda streams response back** → API Gateway → Frontend
 8. **Lambda saves conversation** → DynamoDB
 
@@ -241,7 +241,7 @@ Lambda Function
     ↓
 Bedrock Agent ←→ Knowledge Base (S3)
     ↓
-Claude 3.5 Sonnet
+Claude Sonnet 4
     ↓
 Stream Response Back
     ↓
@@ -327,7 +327,7 @@ All AWS services use **pay-per-use** pricing:
 
 **AI:**
 - AWS Bedrock
-- Claude 3.5 Sonnet
+- Claude Sonnet 4
 - Vector embeddings (Titan)
 
 ---
