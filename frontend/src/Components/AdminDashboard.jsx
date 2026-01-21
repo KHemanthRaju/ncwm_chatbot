@@ -113,10 +113,13 @@ function AdminDashboard() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const totalSentiment = (data.sentiment?.positive || 0) + (data.sentiment?.negative || 0);
+      // Calculate total queries including neutral (no feedback) conversations
+      const totalSentiment = (data.sentiment?.positive || 0) +
+                            (data.sentiment?.negative || 0) +
+                            (data.sentiment?.neutral || 0);
 
       setAnalytics({
-        sentiment: data.sentiment || { positive: 0, negative: 0 },
+        sentiment: data.sentiment || { positive: 0, negative: 0, neutral: 0 },
         avg_satisfaction: data.avg_satisfaction || 0,
         user_count: data.user_count || 0,
         total_queries: totalSentiment,
@@ -164,11 +167,12 @@ function AdminDashboard() {
     return changes[type] || 0;
   };
 
-  // Prepare pie chart data (only positive and negative)
+  // Prepare pie chart data (positive, negative, and neutral)
   const sentimentData = [
-    { name: 'Positive', value: analytics.sentiment.positive, color: '#7DD3FC' },
-    { name: 'Negative', value: analytics.sentiment.negative, color: '#F97316' }
-  ];
+    { name: 'Positive', value: analytics.sentiment.positive, color: '#10B981' },  // Green
+    { name: 'Neutral', value: analytics.sentiment.neutral || 0, color: '#6B7280' },  // Gray
+    { name: 'Negative', value: analytics.sentiment.negative, color: '#EF4444' }  // Red
+  ].filter(item => item.value > 0);  // Only show categories with data
 
   const MetricCard = ({ icon, title, value, change, suffix = '' }) => (
     <Card
