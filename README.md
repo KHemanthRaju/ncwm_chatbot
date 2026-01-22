@@ -7,7 +7,7 @@ A comprehensive chatbot application that provides real-time guidance for the Men
 This application combines natural language processing capabilities with a knowledge base of MHFA training resources to deliver accurate, context-aware responses to instructors, learners, and administrators. The system includes a user-friendly chat interface, multilingual support, and an administrative portal for managing content and monitoring user interactions.
 
 The application features a serverless architecture built on AWS services, with real-time communication through WebSockets, secure file management, and detailed analytics. Key features include:
-- AI-powered responses using AWS Bedrock with Claude 3.5 Sonnet
+- AI-powered responses using AWS Bedrock with Claude Sonnet 4
 - **Personalized Recommendations** - Role-based content for Instructors, Staff, and Learners
 - **Guest Access** - No login required for main chatbot (guest/anonymous mode)
 - **Language Toggle** - Switch between English and Spanish with one click
@@ -85,7 +85,7 @@ The application features a serverless architecture built on AWS services, with r
 - Enable the following AWS Bedrock models in your AWS account:
   - `TITAN_EMBED_TEXT_V2_1024`
   - `ANTHROPIC_CLAUDE_HAIKU_V1_0`
-  - `ANTHROPIC_CLAUDE_3_5_SONNET_V2_0`
+  - `ANTHROPIC_CLAUDE_4_SONNET_V1_0`
   - `NOVA_LITE`
 
   To request access to these models:
@@ -406,18 +406,18 @@ Environment Variables:
 ## 📚 Documentation
 
 ### Quick Start
-- **[Technical Overview](docs/TECHNICAL_OVERVIEW.md)** ⭐ - Crisp technical reference with architecture, flows, and service connections
-- **[Simple Architecture](docs/SIMPLE_ARCHITECTURE.md)** - High-level diagrams for stakeholders
+- **[Technical Documentation (Simple)](docs/TECHNICAL_DOCUMENTATION_SIMPLE.md)** ⭐ - Concise technical overview with architecture, AWS services, and service connections
+- **[High-Level Design](docs/HIGH_LEVEL_DESIGN.md)** - System architecture with detailed diagrams for stakeholders
 
-### Detailed Documentation
-- **[User AWS Architecture](docs/USER_AWS_ARCHITECTURE.md)** - Complete user flow with 7 detailed diagrams
-- **[Admin AWS Architecture](docs/ADMIN_AWS_ARCHITECTURE.md)** - Complete admin flow with 6 detailed diagrams
-- **[User Flow Steps](docs/USER_FLOW_STEPS.md)** - 32-step user interaction breakdown
-- **[Admin Flow Steps](docs/ADMIN_FLOW_STEPS.md)** - 39-step admin workflow breakdown
-- **[Complete Technical Docs](docs/architecture/TECHNICAL_DOCUMENTATION.md)** - Full technical reference (2100+ lines)
-- **[Documentation Index](docs/DOCUMENTATION_INDEX.md)** - Complete documentation catalog
+### Client Testing Package
+- **[Client Testing Package](docs/CLIENT_TESTING_PACKAGE.md)** - Complete guide for client testing
+- **[User Workflows](docs/USER_WORKFLOWS.md)** - 9 detailed step-by-step user interaction flows
+- **[Admin Workflows](docs/ADMIN_WORKFLOWS.md)** - 10 complete admin operation workflows
+- **[Client Email Template](docs/CLIENT_EMAIL_TEMPLATE.md)** - Ready-to-send email templates for client outreach
+- **[Client Package Summary](docs/CLIENT_PACKAGE_SUMMARY.md)** - Quick reference for sending client package
 
 ### Features & Operations
-- **[Admin Features](docs/features/ADMIN_FEATURES.md)** - Admin portal capabilities
-- **[Deployment Guide](docs/deployment/CLIENT_DEPLOYMENT_GUIDE.md)** - Step-by-step deployment
-- **[Troubleshooting](docs/TROUBLESHOOTING_FILE_UPLOAD.md)** - Common issues and solutions
+- **[Admin Portal Features](docs/ADMIN_PORTAL_FEATURES_SUMMARY.md)** - Simple list of 42 admin features (non-technical)
+- **[Admin Features (Detailed)](docs/features/ADMIN_FEATURES.md)** - Comprehensive admin portal capabilities
+- **[Personalized Recommendations Guide](docs/features/PERSONALIZED_RECOMMENDATIONS_GUIDE.md)** - Role-based features
+- **[Backend README](cdk_backend/README.md)** - Backend infrastructure and Lambda functions documentation
