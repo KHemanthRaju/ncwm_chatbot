@@ -91,6 +91,9 @@ function AdminDashboardSimple() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      console.log('📊 Admin Analytics Data:', data);
+      console.log('📊 Sentiment Counts:', data.sentiment);
+
       setAnalytics({
         sentiment: data.sentiment || { positive: 0, neutral: 0, negative: 0 },
         user_count: data.user_count || 0,
@@ -133,12 +136,16 @@ function AdminDashboardSimple() {
         (conv.sentiment || 'neutral').toLowerCase() === sentimentFilter.toLowerCase()
       );
 
-  // Prepare chart data
+  // Prepare chart data - filter out zero values for pie chart display
+  // But always show all three in the custom legend below
   const sentimentChartData = [
     { name: 'Positive', value: analytics.sentiment.positive || 0, color: SENTIMENT_COLORS.positive },
     { name: 'Neutral', value: analytics.sentiment.neutral || 0, color: SENTIMENT_COLORS.neutral },
     { name: 'Negative', value: analytics.sentiment.negative || 0, color: SENTIMENT_COLORS.negative },
-  ];
+  ].filter(item => item.value > 0); // Only show non-zero slices in pie chart
+
+  console.log('📊 Sentiment Chart Data:', sentimentChartData);
+  console.log('📊 Analytics State:', analytics.sentiment);
 
   // Category distribution
   const categoryData = analytics.conversations.reduce((acc, conv) => {
@@ -344,32 +351,53 @@ function AdminDashboardSimple() {
                     </PieChart>
                   </ResponsiveContainer>
                   {/* Custom Legend - Always show all three sentiments */}
-                  <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 1 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 2, flexWrap: 'wrap' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: SENTIMENT_COLORS.positive }} />
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                        Positive
+                      <Box sx={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: '50%',
+                        backgroundColor: SENTIMENT_COLORS.positive,
+                        border: '2px solid #fff',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }} />
+                      <Typography variant="body2" sx={{ fontWeight: 600, color: '#333' }}>
+                        Positive:
                       </Typography>
-                      <Typography variant="body2" sx={{ color: '#666', fontWeight: 600 }}>
-                        {Math.round((analytics.sentiment.positive / (analytics.sentiment.positive + analytics.sentiment.neutral + analytics.sentiment.negative) * 100) || 0)}%
+                      <Typography variant="body2" sx={{ color: SENTIMENT_COLORS.positive, fontWeight: 700, fontSize: '0.95rem' }}>
+                        {analytics.sentiment.positive || 0}
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: SENTIMENT_COLORS.neutral }} />
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                        Neutral
+                      <Box sx={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: '50%',
+                        backgroundColor: SENTIMENT_COLORS.neutral,
+                        border: '2px solid #fff',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }} />
+                      <Typography variant="body2" sx={{ fontWeight: 600, color: '#333' }}>
+                        Neutral:
                       </Typography>
-                      <Typography variant="body2" sx={{ color: '#666', fontWeight: 600 }}>
-                        {Math.round((analytics.sentiment.neutral / (analytics.sentiment.positive + analytics.sentiment.neutral + analytics.sentiment.negative) * 100) || 0)}%
+                      <Typography variant="body2" sx={{ color: SENTIMENT_COLORS.neutral, fontWeight: 700, fontSize: '0.95rem' }}>
+                        {analytics.sentiment.neutral || 0}
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: SENTIMENT_COLORS.negative }} />
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                        Negative
+                      <Box sx={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: '50%',
+                        backgroundColor: SENTIMENT_COLORS.negative,
+                        border: '2px solid #fff',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }} />
+                      <Typography variant="body2" sx={{ fontWeight: 600, color: '#333' }}>
+                        Negative:
                       </Typography>
-                      <Typography variant="body2" sx={{ color: '#666', fontWeight: 600 }}>
-                        {Math.round((analytics.sentiment.negative / (analytics.sentiment.positive + analytics.sentiment.neutral + analytics.sentiment.negative) * 100) || 0)}%
+                      <Typography variant="body2" sx={{ color: SENTIMENT_COLORS.negative, fontWeight: 700, fontSize: '0.95rem' }}>
+                        {analytics.sentiment.negative || 0}
                       </Typography>
                     </Box>
                   </Box>
