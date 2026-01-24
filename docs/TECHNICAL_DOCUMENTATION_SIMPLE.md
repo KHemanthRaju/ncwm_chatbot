@@ -187,8 +187,6 @@ Works on phones, tablets, and desktops.
 7. **Lambda streams response back** → API Gateway → Frontend
 8. **Lambda saves conversation** → DynamoDB
 
-**Time:** ~15-25 seconds for first-time queries
-
 ---
 
 ### **Document Upload Flow (Admin Adds PDF)**
@@ -201,8 +199,6 @@ Works on phones, tablets, and desktops.
 6. **Knowledge Base processes PDF** → Extracts text, creates embeddings
 7. **Lambda returns success** → Frontend shows confirmation
 
-**Time:** 2-5 minutes for sync
-
 ---
 
 ### **Analytics Flow (Admin Views Dashboard)**
@@ -213,8 +209,6 @@ Works on phones, tablets, and desktops.
 4. **Lambda queries** → DynamoDB (scan with date filter)
 5. **Lambda returns results** → Frontend
 6. **Frontend displays charts** → Usage trends, sentiment pie chart
-
-**Time:** <3 seconds
 
 ---
 
@@ -250,63 +244,6 @@ Save to DynamoDB
 
 ---
 
-## 🔐 Security
-
-- **Frontend:** HTTPS only, hosted on AWS Amplify
-- **API Gateway:** Rate limiting, request validation
-- **Lambda:** IAM roles with minimal permissions
-- **Cognito:** Secure admin authentication, password policies
-- **DynamoDB:** Encryption at rest
-- **S3:** Private buckets, encryption at rest
-
----
-
-## 📊 Performance
-
-- **First Response:** 15-25 seconds (includes knowledge base search)
-- **Streaming:** Text appears in real-time as generated
-- **Dashboard Load:** <3 seconds
-- **Concurrent Users:** Supports 10,000+ simultaneous connections
-- **Uptime Target:** 99.9%
-
----
-
-## 💰 Cost Model
-
-All AWS services use **pay-per-use** pricing:
-- **Bedrock:** Per input/output token (~$0.003 per query)
-- **Lambda:** Per invocation and compute time (~$0.0001 per request)
-- **DynamoDB:** Per read/write operation (on-demand pricing)
-- **S3:** Per GB stored (~$0.023/GB/month)
-- **Amplify:** Hosting and build minutes
-
-**Estimated Monthly Cost:** $50-$200 depending on usage
-
----
-
-## 🚀 Deployment
-
-### **Frontend Deployment**
-1. Push code to GitHub `main` branch
-2. AWS Amplify detects push
-3. Builds React app automatically
-4. Deploys to production URL
-5. Takes ~5 minutes
-
-### **Backend Deployment**
-1. Update Lambda code locally
-2. Package as ZIP or Docker image
-3. Deploy via AWS CLI or CDK
-4. Lambda updates instantly
-
-### **Knowledge Base Update**
-1. Upload PDF to S3 via admin portal
-2. Click "Sync Knowledge Base"
-3. Bedrock processes documents
-4. New content available in 2-5 minutes
-
----
-
 ## 📱 Technology Stack
 
 **Frontend:**
@@ -329,67 +266,3 @@ All AWS services use **pay-per-use** pricing:
 - AWS Bedrock
 - Claude Sonnet 4
 - Vector embeddings (Titan)
-
----
-
-## 🔧 Configuration
-
-**Environment Variables (Frontend):**
-```
-REACT_APP_WEBSOCKET_API - WebSocket endpoint
-REACT_APP_ANALYTICS_API - REST API endpoint
-REACT_APP_COGNITO_USER_POOL_ID - Auth pool ID
-REACT_APP_COGNITO_CLIENT_ID - Auth client ID
-```
-
-**Environment Variables (Lambda):**
-```
-KNOWLEDGE_BASE_ID - Bedrock KB ID
-AGENT_ID - Bedrock Agent ID
-DYNAMODB_TABLE - Table name
-S3_BUCKET_NAME - Document bucket
-ADMIN_EMAIL - Notification email
-```
-
----
-
-## 📝 Key Files
-
-**Frontend:**
-- `src/Components/ChatBody.jsx` - Main chat interface
-- `src/Components/AdminDashboard.jsx` - Analytics dashboard
-- `src/utilities/constants.js` - API endpoints and config
-
-**Backend:**
-- `cdk_backend/lib/cdk_backend-stack.ts` - Infrastructure definition
-- `cdk_backend/lambda/chatResponseHandler/handler.py` - Chat logic
-- `cdk_backend/lambda/retrieveSessionLogs/handler.py` - Analytics API
-
----
-
-## 🐛 Common Issues
-
-**Issue:** Usage Trends shows no data
-**Cause:** No conversations in last 7 days
-**Fix:** Use the chat to generate data, then refresh dashboard
-
-**Issue:** Total Queries shows 0
-**Cause:** All conversations are neutral (no feedback)
-**Fix:** Already fixed - now counts all conversations
-
-**Issue:** Response takes 20+ seconds
-**Cause:** Knowledge base vector search is slow on first query
-**Fix:** This is expected behavior for AWS Bedrock
-
----
-
-## 📞 Support
-
-**Repository:** https://github.com/KHemanthRaju/ncwm_chatbot_2
-**Region:** us-west-2 (Oregon)
-**Stack Name:** LearningNavigatorFeatures
-
----
-
-**Document Version:** 1.0
-**Prepared:** January 21, 2026
