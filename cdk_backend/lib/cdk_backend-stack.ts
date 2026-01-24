@@ -322,9 +322,9 @@ export class LearningNavigatorStack extends cdk.Stack {
     );
 
     const chatResponseHandler = new lambda.Function(this, 'chatResponseHandler', {
-      runtime: lambda.Runtime.PYTHON_3_12,
-      handler: 'handler.lambda_handler',
-      code: lambda.Code.fromDockerBuild('lambda/chatResponseHandler'),
+      runtime: lambda.Runtime.NODEJS_20_X,
+      handler: 'handler.handler',
+      code: lambda.Code.fromAsset('lambda/chatResponseHandler'),
       architecture: lambdaArchitecture,
       environment: {
         WS_API_ENDPOINT: webSocketStage.callbackUrl,
@@ -654,7 +654,14 @@ export class LearningNavigatorStack extends cdk.Stack {
     });
 
     sync.addMethod('POST', integ, {
-      authorizer: userPoolAuthorizer, 
+      authorizer: userPoolAuthorizer,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+    });
+
+    // Add presigned-url endpoint for secure PDF access
+    const presignedUrl = AdminApi.root.addResource('presigned-url');
+    presignedUrl.addMethod('POST', integ, {
+      authorizer: userPoolAuthorizer,
       authorizationType: apigateway.AuthorizationType.COGNITO,
     });
 
