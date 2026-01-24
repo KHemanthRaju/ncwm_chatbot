@@ -404,7 +404,7 @@ function AdminDashboardSimple() {
                 </Box>
               ) : (
                 <>
-                  <ResponsiveContainer width="100%" height={250}>
+                  <ResponsiveContainer width="100%" height={250} minWidth={0} minHeight={250}>
                     <PieChart>
                       <Pie
                         data={sentimentChartData}
@@ -490,7 +490,7 @@ function AdminDashboardSimple() {
                   <CircularProgress />
                 </Box>
               ) : (
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={300} minWidth={0} minHeight={300}>
                   <BarChart data={categoryChartData} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
                     <XAxis type="number" />
@@ -524,7 +524,7 @@ function AdminDashboardSimple() {
                   <CircularProgress />
                 </Box>
               ) : (
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={300} minWidth={0} minHeight={300}>
                   <AreaChart data={usageTrendsData}>
                     <defs>
                       <linearGradient id="colorConversations" x1="0" y1="0" x2="0" y2="1">
