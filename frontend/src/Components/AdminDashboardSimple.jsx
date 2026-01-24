@@ -323,26 +323,57 @@ function AdminDashboardSimple() {
                   <CircularProgress />
                 </Box>
               ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={sentimentChartData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {sentimentChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
+                <>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <PieChart>
+                      <Pie
+                        data={sentimentChartData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={100}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {sentimentChartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  {/* Custom Legend - Always show all three sentiments */}
+                  <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: SENTIMENT_COLORS.positive }} />
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Positive
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#666', fontWeight: 600 }}>
+                        {Math.round((analytics.sentiment.positive / (analytics.sentiment.positive + analytics.sentiment.neutral + analytics.sentiment.negative) * 100) || 0)}%
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: SENTIMENT_COLORS.neutral }} />
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Neutral
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#666', fontWeight: 600 }}>
+                        {Math.round((analytics.sentiment.neutral / (analytics.sentiment.positive + analytics.sentiment.neutral + analytics.sentiment.negative) * 100) || 0)}%
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box sx={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: SENTIMENT_COLORS.negative }} />
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Negative
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#666', fontWeight: 600 }}>
+                        {Math.round((analytics.sentiment.negative / (analytics.sentiment.positive + analytics.sentiment.neutral + analytics.sentiment.negative) * 100) || 0)}%
+                      </Typography>
+                    </Box>
+                  </Box>
+                </>
               )}
             </Card>
           </Grid>
