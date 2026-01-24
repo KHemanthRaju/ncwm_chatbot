@@ -131,15 +131,17 @@ def lambda_handler(event, context):
 
     log(f"Total feedback items      : {len(feedback_items)}")
 
-    # Build feedback map: message_id -> feedback (positive/negative)
-    feedback_map = {}
+    # Build feedback map: session_id -> list of feedback (positive/negative)
+    # Each session can have multiple messages with feedback
+    feedback_by_session = defaultdict(list)
     for fb in feedback_items:
-        msg_id = fb.get("message_id")
+        session_id = fb.get("session_id")
         feedback_type = fb.get("feedback")
-        if msg_id and feedback_type:
-            feedback_map[msg_id] = feedback_type
+        if session_id and feedback_type:
+            feedback_by_session[session_id].append(feedback_type)
 
-    log(f"Feedback map size         : {len(feedback_map)}")
+    log(f"Feedback map size         : {len(feedback_by_session)}")
+    log(f"Total feedback entries    : {sum(len(fb_list) for fb_list in feedback_by_session.values())}")
 
     # 5) Aggregate using user feedback (thumbs up/down) with neutral for no feedback
     sessions = set()
@@ -149,15 +151,6 @@ def lambda_handler(event, context):
     feedback_sentiment_counts = {"positive": 0, "negative": 0, "neutral": 0}
     satisfaction_scores = []
     conversations = []
-
-    # Build a map of session_id+timestamp -> item for matching feedback
-    session_timestamp_map = {}
-    for it in items:
-        session_id = it.get("session_id")
-        timestamp = it.get("original_ts")
-        if session_id and timestamp:
-            key = f"{session_id}_{timestamp}"
-            session_timestamp_map[key] = it
 
     for it in items:
         if sid := it.get("session_id"):
@@ -170,20 +163,19 @@ def lambda_handler(event, context):
         if score := it.get("satisfaction_score"):
             satisfaction_scores.append(float(score))
 
-        # Try to find user feedback for this conversation
-        # Feedback is stored with session_id, so we need to match it
+        # Get user feedback for this conversation's session
         session_id = it.get("session_id")
         timestamp = it.get("original_ts")
-        user_feedback = None
 
-        # Check if there's feedback for this specific message
-        # In the feedback table, message_id might be the timestamp or a unique identifier
-        if session_id:
-            for msg_id, feedback_type in feedback_map.items():
-                # Try to match by checking if message_id contains session or timestamp info
-                if session_id in str(msg_id) or (timestamp and timestamp in str(msg_id)):
-                    user_feedback = feedback_type
-                    break
+        # Check if there's any feedback for this session
+        # If a session has multiple feedback entries, use the most recent one (last in list)
+        user_feedback = None
+        if session_id and session_id in feedback_by_session:
+            session_feedback_list = feedback_by_session[session_id]
+            if session_feedback_list:
+                # Use the last feedback entry for this session
+                user_feedback = session_feedback_list[-1]
+                log(f"Found feedback for session {session_id}: {user_feedback}")
 
         # Determine sentiment based on user feedback:
         # - positive: User clicked thumbs up
