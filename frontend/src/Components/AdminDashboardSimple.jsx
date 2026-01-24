@@ -267,9 +267,11 @@ function AdminDashboardSimple() {
           >
             Admin Dashboard
           </Typography>
-          <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel>Timeframe</InputLabel>
+          <FormControl sx={{ minWidth: 200 }} variant="outlined">
+            <InputLabel id="timeframe-select-label">Timeframe</InputLabel>
             <Select
+              labelId="timeframe-select-label"
+              id="timeframe-select"
               value={timeframe}
               onChange={(e) => setTimeframe(e.target.value)}
               label="Timeframe"
