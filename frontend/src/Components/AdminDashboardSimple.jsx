@@ -68,6 +68,7 @@ function AdminDashboardSimple() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [sentimentFilter, setSentimentFilter] = useState("all");
+  const [timeframe, setTimeframe] = useState("today");
   const [analytics, setAnalytics] = useState({
     sentiment: { positive: 0, neutral: 0, negative: 0 },
     user_count: 0,
@@ -77,17 +78,14 @@ function AdminDashboardSimple() {
 
   useEffect(() => {
     fetchAnalytics();
-    // Refresh every 30 seconds for real-time data
-    const interval = setInterval(fetchAnalytics, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  }, [timeframe]); // Re-fetch when timeframe changes
 
   const fetchAnalytics = async () => {
     try {
       setLoading(true);
       const token = await getIdToken();
       const { data } = await axios.get(ANALYTICS_API, {
-        params: { timeframe: 'today' },
+        params: { timeframe: timeframe },
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -160,18 +158,71 @@ function AdminDashboardSimple() {
   }));
 
 
-  // Hourly activity
-  const hourlyData = Array.from({ length: 12 }, (_, i) => {
-    const hour = i + 8; // 8 AM to 7 PM
-    const conversations = analytics.conversations.filter(conv => {
-      const convHour = new Date(conv.timestamp).getHours();
-      return convHour === hour;
-    }).length;
-    return {
-      hour: `${hour}:00`,
-      conversations
-    };
-  });
+  // Dynamic usage trends based on timeframe
+  const getUsageTrendsData = () => {
+    if (timeframe === 'today') {
+      // Hourly data (8 AM - 7 PM)
+      return Array.from({ length: 12 }, (_, i) => {
+        const hour = i + 8;
+        const conversations = analytics.conversations.filter(conv => {
+          const convHour = new Date(conv.timestamp).getHours();
+          return convHour === hour;
+        }).length;
+        return {
+          label: `${hour}:00`,
+          conversations
+        };
+      });
+    } else if (timeframe === 'weekly') {
+      // Daily data (Mon - Sun)
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      return days.map((day, dayIndex) => {
+        const conversations = analytics.conversations.filter(conv => {
+          const convDay = new Date(conv.timestamp).getDay();
+          // Convert Sunday (0) to 6, Monday (1) to 0, etc.
+          const adjustedDay = convDay === 0 ? 6 : convDay - 1;
+          return adjustedDay === dayIndex;
+        }).length;
+        return {
+          label: day,
+          conversations
+        };
+      });
+    } else if (timeframe === 'monthly') {
+      // Daily data for last 30 days
+      return Array.from({ length: 30 }, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - (29 - i)); // Go back 29 days from today
+        const dayOfMonth = date.getDate();
+
+        const conversations = analytics.conversations.filter(conv => {
+          const convDate = new Date(conv.timestamp);
+          return convDate.getDate() === dayOfMonth &&
+                 convDate.getMonth() === date.getMonth();
+        }).length;
+
+        return {
+          label: `${date.getMonth() + 1}/${dayOfMonth}`,
+          conversations
+        };
+      });
+    } else if (timeframe === 'yearly') {
+      // Monthly data (Jan - Dec)
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return months.map((month, monthIndex) => {
+        const conversations = analytics.conversations.filter(conv => {
+          return new Date(conv.timestamp).getMonth() === monthIndex;
+        }).length;
+        return {
+          label: month,
+          conversations
+        };
+      });
+    }
+    return [];
+  };
+
+  const usageTrendsData = getUsageTrendsData();
 
   // Custom tooltip for charts
   const CustomTooltip = ({ active, payload }) => {
@@ -204,18 +255,38 @@ function AdminDashboardSimple() {
       </Box>
 
       <Container maxWidth="xl" sx={{ pt: '100px', pb: 4 }}>
-        {/* Page Title */}
-        <Typography
-          variant="h4"
-          sx={{
-            fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
-            fontWeight: 700,
-            color: '#064F80',
-            mb: 4,
-          }}
-        >
-          Admin Dashboard - Today's Activity
-        </Typography>
+        {/* Page Title and Timeframe Selector */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, flexWrap: 'wrap', gap: 2 }}>
+          <Typography
+            variant="h4"
+            sx={{
+              fontFamily: 'Calibri, Ideal Sans, Arial, sans-serif',
+              fontWeight: 700,
+              color: '#064F80',
+            }}
+          >
+            Admin Dashboard
+          </Typography>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>Timeframe</InputLabel>
+            <Select
+              value={timeframe}
+              onChange={(e) => setTimeframe(e.target.value)}
+              label="Timeframe"
+              sx={{
+                backgroundColor: 'white',
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#064F80',
+                },
+              }}
+            >
+              <MenuItem value="today">Today</MenuItem>
+              <MenuItem value="weekly">This Week</MenuItem>
+              <MenuItem value="monthly">This Month</MenuItem>
+              <MenuItem value="yearly">This Year</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
 
         {/* Basic Analytics Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
@@ -435,11 +506,16 @@ function AdminDashboardSimple() {
             </Card>
           </Grid>
 
-          {/* Hourly Activity Area Chart */}
+          {/* Usage Trends Area Chart */}
           <Grid item xs={12} md={6}>
             <Card sx={{ p: 3, height: '400px' }}>
               <Typography variant="h6" sx={{ fontWeight: 600, color: '#064F80', mb: 2 }}>
-                Hourly Activity (Today)
+                Usage Trends ({
+                  timeframe === 'today' ? 'Hourly' :
+                  timeframe === 'weekly' ? 'Daily (This Week)' :
+                  timeframe === 'monthly' ? 'Daily (Last 30 Days)' :
+                  'Monthly (This Year)'
+                })
               </Typography>
               {loading ? (
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
@@ -447,7 +523,7 @@ function AdminDashboardSimple() {
                 </Box>
               ) : (
                 <ResponsiveContainer width="100%" height={300}>
-                  <AreaChart data={hourlyData}>
+                  <AreaChart data={usageTrendsData}>
                     <defs>
                       <linearGradient id="colorConversations" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#7FD3EE" stopOpacity={0.8}/>
@@ -456,8 +532,11 @@ function AdminDashboardSimple() {
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
                     <XAxis
-                      dataKey="hour"
+                      dataKey="label"
                       style={{ fontSize: '12px' }}
+                      angle={timeframe === 'monthly' ? -45 : 0}
+                      textAnchor={timeframe === 'monthly' ? 'end' : 'middle'}
+                      height={timeframe === 'monthly' ? 60 : 30}
                     />
                     <YAxis />
                     <Tooltip content={<CustomTooltip />} />
